@@ -1,0 +1,114 @@
+[
+  {
+    "index": 1,
+    "original": "Hero. .HEIC",
+    "safeName": "hero___heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 2,
+    "original": "Commercial .HEIC",
+    "safeName": "commercial__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 3,
+    "original": "Hero  (1).HEIC",
+    "safeName": "hero___1__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 4,
+    "original": "Hero.HEIC",
+    "safeName": "hero_heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 5,
+    "original": "IMG_5798.HEIC",
+    "safeName": "img_5798_heic.jpg",
+    "width": 4284,
+    "height": 5712,
+    "aspectRatio": "0.75"
+  },
+  {
+    "index": 6,
+    "original": "IMG_5348.HEIC",
+    "safeName": "img_5348_heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 7,
+    "original": "IMG_6583.HEIC",
+    "safeName": "img_6583_heic.jpg",
+    "width": 4896,
+    "height": 3672,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 8,
+    "original": "Residencial .HEIC",
+    "safeName": "residencial__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 9,
+    "original": "Residential. .HEIC",
+    "safeName": "residential___heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 10,
+    "original": "Residential.HEIC",
+    "safeName": "residential_heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 11,
+    "original": "Hero .HEIC",
+    "safeName": "hero__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 12,
+    "original": "Contractor  (1).HEIC",
+    "safeName": "contractor___1__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 13,
+    "original": "Contractor .HEIC",
+    "safeName": "contractor__heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  },
+  {
+    "index": 14,
+    "original": "Commercial.HEIC",
+    "safeName": "commercial_heic.jpg",
+    "width": 5712,
+    "height": 4284,
+    "aspectRatio": "1.33"
+  }
+]

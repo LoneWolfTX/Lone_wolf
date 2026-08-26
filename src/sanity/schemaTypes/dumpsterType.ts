@@ -1,0 +1,20 @@
+export const dumpsterType = {
+  name: 'dumpster',
+  title: 'Dumpster Sizes & Specifications',
+  type: 'document',
+  fields: [
+    { name: 'name', title: 'Product Name', type: 'string', validation: (Rule: any) => Rule.required() },
+    { name: 'shortName', title: 'Short Name (e.g. 20 Yard)', type: 'string' },
+    { name: 'startingPrice', title: 'Starting Price ($)', type: 'number', validation: (Rule: any) => Rule.required().positive() },
+    { name: 'badge', title: 'Badge Label (e.g. MEDIUM REMODELS)', type: 'string' },
+    { name: 'description', title: 'Description', type: 'text', rows: 3 },
+    { name: 'dimensionsText', title: 'Dimensions (e.g. 16\' L × 7.5\' W × 4.5\' H)', type: 'string' },
+    { name: 'weightIncludedText', title: 'Included Weight (e.g. 2.0 Tons / 4,000 lbs)', type: 'string' },
+    { name: 'maxCapacityText', title: 'Maximum Safe Load Capacity', type: 'string', initialValue: '4.5 Tons (9,000 lbs) Max Road Load' },
+    { name: 'rentalPeriodText', title: 'Rental Period (e.g. 3, 5, or 7 Days)', type: 'string' },
+    { name: 'extraDayPrice', title: 'Extra Day Price', type: 'string', initialValue: '$20 / additional day' },
+    { name: 'overagePrice', title: 'Overage Tonnage Price', type: 'string', initialValue: '$80 / ton ($40 per 1,000 lbs)' },
+    { name: 'bestFor', title: 'Best For Bullet Points', type: 'array', of: [{ type: 'string' }] },
+    { name: 'image', title: 'Image URL or Asset', type: 'image' },
+  ],
+};

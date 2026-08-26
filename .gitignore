@@ -1,0 +1,27 @@
+# Node & Build Output
+node_modules/
+.next/
+out/
+out*/
+
+# Production ZIPs, Videos & Dumps
+*.zip
+*.mp4
+*.HEIC
+*.docx
+*.txt
+*.html
+*_files/
+*_Preview/
+*_LAUNCH_*/
+*_Build/
+artifacts/
+scratch/
+preview_package/
+BUSINESS_TERMS_CONFIRMATION.md
+extracted_tail.css
+
+# System & IDE
+.DS_Store
+*.log
+.vercel
