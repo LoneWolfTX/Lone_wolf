@@ -327,6 +327,8 @@ export const InteractiveServiceMap: React.FC = () => {
           <input
             type="text"
             placeholder="Search city or ZIP..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search delivery area"
             style={{
               backgroundColor: '#1e293b',
