@@ -78,7 +78,7 @@ export default function TwentyYardDumpsterClient() {
 
               <div style={{ textAlign: 'center', backgroundColor: '#ffffff', padding: '16px', borderRadius: '6px', border: '1px solid #cbd5e1' }}>
                 <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>
-                  UPFRONT FLAT-RATE PRICE
+                  Simple, Upfront Pricing.
                 </div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1, margin: '4px 0 8px 0' }}>
                   {content.priceDisplay}
@@ -87,13 +87,6 @@ export default function TwentyYardDumpsterClient() {
                   Delivery, pickup, and municipal disposal included.
                 </p>
               </div>
-
-              {/* Important Notice */}
-              {content.importantNotice && (
-                <div style={{ marginTop: '16px', backgroundColor: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.3)', borderRadius: '6px', padding: '12px 14px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
-                  <strong style={{ color: '#dc2626' }}>⚠ Important:</strong> {content.importantNotice}
-                </div>
-              )}
             </div>
 
             {/* Best For Projects */}

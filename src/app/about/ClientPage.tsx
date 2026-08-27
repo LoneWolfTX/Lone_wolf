@@ -40,8 +40,8 @@ export default function AboutPageClient() {
         headlineWhite={ab.titleWhite}
         headlineRed={ab.titleRed}
         description={ab.heroDescription}
-        imageSrc="/images/lone-wolf/real/about_owner_photo.jpg"
-        imageAlt="Lone Wolf Dumpsters Heavy-Duty Roll-Off Dumpster on Job Site in DFW"
+        imageSrc="/images/lone-wolf/real/hero_fleet_environment.jpg"
+        imageAlt="Lone Wolf Dumpsters Roll-Off Container Fleet in DFW"
       />
 
       {/* 2. Owner Story & Values Section */}

@@ -37,203 +37,218 @@ export const ReviewsAndProofSection: React.FC = () => {
   ];
 
   return (
-    <section
-      style={{
-        backgroundColor: '#ffffff',
-        color: '#1e293b',
-        padding: '48px 0 44px 0',
-        borderBottom: '1px solid #e2e8f0',
-      }}
-      aria-label="Customer Reviews and Service Areas"
-    >
-      <div className="container">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '24px',
-            alignItems: 'stretch',
-          }}
-        >
-          {/* Left Block: Google Rating Card & 3 Quotes */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: '1 1 340px' }}>
-            
-            {/* Google Rating Banner */}
-            <div
+    <>
+      {/* SECTION 1: CUSTOMER REVIEWS (Horizontal Left-to-Right) */}
+      <section
+        style={{
+          backgroundColor: '#ffffff',
+          color: '#1e293b',
+          padding: '48px 0 36px 0',
+          borderBottom: '1px solid #e2e8f0',
+        }}
+        aria-label="Customer Reviews"
+      >
+        <div className="container">
+          {/* Header & Rating Badge */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px',
+              marginBottom: '24px',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              padding: '16px 20px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 900,
+                  fontSize: '1.3rem',
+                  color: '#4285F4',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+                }}
+              >
+                G
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a' }}>5.0</span>
+                  <div style={{ display: 'flex', gap: '3px' }}>
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={16} fill="#eab308" color="#eab308" />
+                    ))}
+                  </div>
+                </div>
+                <span style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>
+                  Verified 5.0 Google Reviews across DFW
+                </span>
+              </div>
+            </div>
+
+            <a
+              href="https://www.google.com/search?q=Lone+Wolf+Dumpsters+LLC"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
-                borderRadius: '6px',
-                padding: '14px 18px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '12px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                color: 'var(--accent-red)',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                letterSpacing: '0.5px',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 900,
-                    fontSize: '1.2rem',
-                    color: '#4285F4',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-                  }}
-                >
-                  G
-                </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>5.0</span>
-                    <div style={{ display: 'flex', gap: '2px' }}>
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={14} fill="#eab308" color="#eab308" />
-                      ))}
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.76rem', color: '#64748b', fontWeight: 600 }}>5.0 Rated DFW Service</span>
-                </div>
-              </div>
-
-              <a
-                href="https://www.google.com/search?q=Lone+Wolf+Dumpsters+LLC"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-red)', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                VIEW ALL REVIEWS ON GOOGLE →
-              </a>
-            </div>
-
-            {/* 3 Review Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', flexGrow: 1 }}>
-              {reviews.map((rev, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '6px',
-                    padding: '12px 14px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
-                  }}
-                >
-                  <p style={{ fontSize: '0.82rem', color: '#334155', lineHeight: '1.4', margin: '0 0 8px 0', fontStyle: 'italic' }}>
-                    &ldquo;{rev.quote}&rdquo;
-                  </p>
-                  <div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', marginBottom: '2px' }}>
-                      - {rev.author}
-                    </div>
-                    <div style={{ display: 'flex', gap: '2px' }}>
-                      {[...Array(rev.rating)].map((_, i) => (
-                        <Star key={i} size={12} fill="#eab308" color="#eab308" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+              VIEW ALL REVIEWS ON GOOGLE →
+            </a>
           </div>
 
-          {/* Right Block: Proudly Serving Dallas-Fort Worth */}
+          {/* 3 Review Cards Horizontal Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '18px',
+            }}
+          >
+            {reviews.map((rev, idx) => (
+              <div
+                key={idx}
+                style={{
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  padding: '20px 22px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                }}
+              >
+                <p style={{ fontSize: '0.92rem', color: '#334155', lineHeight: '1.5', margin: '0 0 14px 0', fontStyle: 'italic' }}>
+                  &ldquo;{rev.quote}&rdquo;
+                </p>
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#0f172a' }}>
+                    - {rev.author}
+                  </div>
+                  <div style={{ display: 'flex', gap: '2px' }}>
+                    {[...Array(rev.rating)].map((_, i) => (
+                      <Star key={i} size={13} fill="#eab308" color="#eab308" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2: SERVICE AREAS (Distinct Section Directly Below Reviews) */}
+      <section
+        style={{
+          backgroundColor: '#f8fafc',
+          color: '#1e293b',
+          padding: '44px 0 48px 0',
+          borderBottom: '1px solid #e2e8f0',
+        }}
+        aria-label="Service Areas Footprint"
+      >
+        <div className="container">
           <div
             style={{
               backgroundColor: '#ffffff',
               border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              padding: '20px 22px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-              flex: '1 1 300px',
+              borderRadius: '8px',
+              padding: '28px 26px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
             }}
           >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                <MapPin size={18} color="var(--accent-red)" />
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '1.15rem',
-                    fontWeight: 800,
-                    color: '#0f172a',
-                    textTransform: 'uppercase',
-                    margin: 0,
-                  }}
-                >
-                  PROUDLY SERVING DALLAS-FORT WORTH AND SURROUNDING AREAS
-                </h3>
-              </div>
-
-              {/* City Grid */}
-              <div
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <MapPin size={22} color="var(--accent-red)" />
+              <h2
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '8px',
-                  marginTop: '12px',
-                  marginBottom: '14px',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(1.4rem, 2.8vw, 1.8rem)',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                  textTransform: 'uppercase',
+                  margin: 0,
+                  letterSpacing: '0.02em',
                 }}
               >
-                {cities.map((city, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      padding: '6px 8px',
-                      backgroundColor: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '4px',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                      color: '#1e293b',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {city.slug ? (
-                      <Link href={`/service-areas/${city.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                        {city.name}
-                      </Link>
-                    ) : (
-                      <span>{city.name}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
+                PROUDLY SERVING DALLAS-FORT WORTH &amp; 48 SURROUNDING CITIES
+              </h2>
+            </div>
+            <p style={{ fontSize: '0.92rem', color: '#64748b', margin: '0 0 18px 0' }}>
+              Fast, driveway-safe roll-off dumpster delivery across Tarrant, Dallas, and Denton Counties. Choose your city below:
+            </p>
+
+            {/* City Grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                gap: '10px',
+                marginBottom: '20px',
+              }}
+            >
+              {cities.map((city, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: '8px 10px',
+                    backgroundColor: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '4px',
+                    fontSize: '0.84rem',
+                    fontWeight: 700,
+                    color: '#1e293b',
+                    textAlign: 'center',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <Link href={`/service-areas/${city.slug}`} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
+                    {city.name}
+                  </Link>
+                </div>
+              ))}
             </div>
 
-            <div style={{ textAlign: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+            <div style={{ textAlign: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
               <Link
                 href="/service-areas"
                 style={{
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
                   color: 'var(--accent-red)',
                   textTransform: 'uppercase',
                   textDecoration: 'none',
+                  letterSpacing: '0.5px',
                 }}
               >
-                VIEW ALL AREAS →
+                <span>VIEW ALL 48 SERVICE AREAS &amp; LOCAL MAPS</span>
+                <span>→</span>
               </Link>
             </div>
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };

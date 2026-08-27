@@ -40,7 +40,7 @@ export default function ResidentialPageClient() {
 
   const residentialBestFors = {
     '15-yard-dumpster': 'Small cleanouts, garage cleanouts, yard debris, light projects',
-    '20-yard-dumpster': 'Medium projects, renovations, roofing jobs, large garage cleanouts',
+    '20-yard-dumpster': 'Medium projects, kitchen renovations, home cleanouts, decluttering',
     '25-yard-dumpster': 'Large projects, construction, estate cleanouts, commercial use',
   };
 

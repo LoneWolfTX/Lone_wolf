@@ -5,6 +5,8 @@ import { ClosingCtaBanner } from '@/components/shared/ClosingCtaBanner';
 import { blogPosts } from '@/data/blogPosts';
 import { Clock, ArrowRight } from 'lucide-react';
 
+import Image from 'next/image';
+
 export const metadata: Metadata = {
   title: 'DFW Dumpster Rental Resource Center | Lone Wolf Dumpsters',
   description: 'Straight answers about dumpster sizes, pricing, prohibited materials, project planning, and roll-off rentals across Dallas–Fort Worth.',
@@ -41,7 +43,7 @@ export default function BlogIndexPage() {
                   backgroundColor: '#ffffff',
                   border: '1px solid #e2e8f0',
                   borderRadius: '6px',
-                  padding: '24px',
+                  padding: '20px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -49,6 +51,18 @@ export default function BlogIndexPage() {
                 }}
               >
                 <div>
+                  {post.image && (
+                    <div style={{ position: 'relative', width: '100%', height: '180px', borderRadius: '4px', overflow: 'hidden', marginBottom: '16px', backgroundColor: '#0a0d12' }}>
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 400px"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <span style={{ backgroundColor: '#fee2e2', color: 'var(--accent-red)', padding: '2px 8px', borderRadius: '3px', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase' }}>
                       {post.category}

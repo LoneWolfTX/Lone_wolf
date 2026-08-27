@@ -127,7 +127,7 @@ export interface MaterialPolicy {
   id: string;
   name: string;
   category: 'prohibited' | 'restricted' | 'special';
-  status: 'Prohibited' | 'Restricted' | 'Requires Notice';
+  status: 'Prohibited' | 'Restricted' | 'Requires Notice' | 'Prior Approval Required';
   shortDescription: string;
   fullDescription: string;
   fee?: number;
@@ -312,7 +312,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       category: "prohibited",
       status: "Prohibited",
       shortDescription: "Heavy dense masonry materials are strictly prohibited in standard roll-off containers due to highway road limits.",
-      fullDescription: "Standard containers loaded with concrete, dirt, rock, brick, or asphalt exceed the maximum Texas highway weight limit of 4.5 tons (9,000 lbs). Contact dispatch for dedicated heavy material solutions.",
+      fullDescription: "Standard containers loaded with concrete, dirt, rock, brick, or asphalt exceed maximum road limits. Contact dispatch for dedicated heavy material solutions.",
       active: true
     },
     {
@@ -320,8 +320,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       name: "Wet Paints, Stains & Solvents",
       category: "prohibited",
       status: "Prohibited",
-      shortDescription: "Liquid chemicals, paints, stains, and solvents cannot be deposited into municipal landfills.",
-      fullDescription: "Liquid paints must be completely dried with kitty litter or sand before disposal. Uncured liquid paints and chemical solvents are strictly prohibited.",
+      shortDescription: "Liquid chemicals, wet paints, stains, and solvents cannot be deposited into municipal landfills.",
+      fullDescription: "Liquid paints must be completely dried before disposal. Uncured liquid paints and chemical solvents are strictly prohibited.",
       active: true
     },
     {
@@ -330,17 +330,16 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       category: "prohibited",
       status: "Prohibited",
       shortDescription: "Flammable fuels, motor oils, and combustible liquids present a severe fire hazard.",
-      fullDescription: "Combustible fuels and oils are prohibited by Texas environmental regulations. Drain all small engine equipment prior to disposal.",
+      fullDescription: "Combustible fuels and oils are prohibited by Texas environmental regulations.",
       active: true
     },
     {
       id: "tires",
       name: "Car & Truck Tires",
-      category: "restricted",
-      status: "Requires Notice",
-      shortDescription: "Tires require specialized recycling facilities.",
-      fullDescription: "Landfills charge extra processing surcharges for tires. Tires may be placed in containers only with prior dispatch approval.",
-      fee: 25,
+      category: "prohibited",
+      status: "Prohibited",
+      shortDescription: "Car and truck tires are prohibited in standard containers.",
+      fullDescription: "Tires require specialized recycling facilities.",
       active: true
     },
     {
@@ -348,13 +347,13 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       name: "Lead-Acid & Lithium Batteries",
       category: "prohibited",
       status: "Prohibited",
-      shortDescription: "Lead-acid vehicle batteries and lithium ion cells must be recycled separately.",
+      shortDescription: "Lead-acid vehicle batteries and lithium ion cells are prohibited.",
       fullDescription: "Batteries contain toxic heavy metals and acid. Recycle auto batteries at local auto parts retailers.",
       active: true
     },
     {
       id: "propane",
-      name: "Propane Tanks & Compressed Gas",
+      name: "Propane Tanks & Compressed Gas Cylinders",
       category: "prohibited",
       status: "Prohibited",
       shortDescription: "Pressurized gas cylinders can explode when crushed in landfill compactors.",
@@ -366,18 +365,27 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       name: "Asbestos & Hazardous Materials",
       category: "prohibited",
       status: "Prohibited",
-      shortDescription: "Toxic substances, medical waste, and asbestos require licensed hazardous transport.",
+      shortDescription: "Toxic substances, medical waste, and asbestos materials are strictly prohibited.",
       fullDescription: "Hazardous waste must be handled by certified toxic waste contractors.",
       active: true
     },
     {
-      id: "refrigerants",
-      name: "Refrigerants & Freon Units",
+      id: "ac_units",
+      name: "Air Conditioning Units",
+      category: "prohibited",
+      status: "Prohibited",
+      shortDescription: "Air conditioning units are strictly prohibited.",
+      fullDescription: "AC units contain regulated refrigerants and are prohibited in standard containers.",
+      active: true
+    },
+    {
+      id: "freon_refrigerators",
+      name: "Refrigerators Containing Freon",
       category: "restricted",
-      status: "Requires Notice",
-      shortDescription: "Refrigerators, freezers, and AC units require EPA Freon evacuation certification.",
-      fullDescription: "Appliance units containing Freon require certified evacuation tags prior to landfill disposal.",
-      fee: 50,
+      status: "Prior Approval Required",
+      shortDescription: "Refrigerators containing Freon require prior approval before loading.",
+      fullDescription: "Customers must contact Lone Wolf Dumpsters before loading a Freon-containing refrigerator.",
+      fee: 0,
       active: true
     }
   ],
@@ -387,9 +395,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     "Gasoline, Oil & Flammable Liquids",
     "Car & Truck Tires",
     "Lead-Acid Batteries",
-    "Propane Tanks & Compressed Gas",
-    "Asbestos & Hazardous Materials",
-    "Refrigerants & Freon Units"
+    "Propane Tanks & Compressed Gas Cylinders",
+    "Asbestos / Asbestos-Containing Materials",
+    "Air Conditioning Units"
   ],
   promotions: [
     {
@@ -511,7 +519,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     ownerBadgeSub: "Direct Local Accountability",
     storyHeadlineWhite: "STRAIGHTFORWARD SERVICE.",
     storyHeadlineRed: "LOCAL ACCOUNTABILITY.",
-    storyParagraph: "Lone Wolf Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, treat every driveway with care and wood board protection, and provide transparent flat-rate pricing with zero hidden fees.",
+    storyParagraph: "Lone Wolf Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, protect every driveway with care and board protection, and make dumpster rental simple with direct communication, reliable service, and clear pricing from the start.",
     storyQuote: "When you rent from Lone Wolf Dumpsters, you deal directly with our local team. We make waste removal straightforward, reliable, and hassle-free for homeowners and contractors across the metroplex."
   },
   dumpsterEntities: [
@@ -526,12 +534,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 1.5,
       includedLbs: 3000,
       overageRate: 80,
-      rentalPeriod: "1 to 7 Days Included",
+      rentalPeriod: "3–5 days",
       additionalDayFee: 20,
       dimensions: "14' L × 7.5' W × 4' H",
       image: "/images/lone-wolf/dumpster-15.jpeg",
       imageAlt: "Lone Wolf 15-yard roll-off dumpster rental on residential driveway in Dallas-Fort Worth",
-      badgeText: "STARTING AT $385 • 1.5 TONS INCLUDED",
+      badgeText: "3 DAYS — $385 • 1.5 TONS INCLUDED",
       description: "Ideal for small home cleanouts, single-room remodels, yard debris, and light renovation projects.",
       bestFor: [
         "Garage & attic cleanouts",
@@ -539,7 +547,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Flooring removal & yard debris",
         "4.5 Tons Max Safe Road Load"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       active: true,
       sortOrder: 1
     },
@@ -559,15 +567,15 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       dimensions: "16' L × 7.5' W × 4.5' H",
       image: "/images/lone-wolf/dumpster-20.jpeg",
       imageAlt: "Lone Wolf 20-yard roll-off dumpster container for residential and contractor projects",
-      badgeText: "STARTING AT $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
-      description: "Our most versatile container. Perfect for kitchen remodels, roof replacements, and medium cleanouts. Max safe load capacity: 4.5 tons.",
+      badgeText: "3 DAYS — $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
+      description: "Our most versatile container. Perfect for kitchen remodels, home cleanouts, and medium renovation projects. Driveway-safe placement.",
       bestFor: [
-        "Kitchen & multiple room remodels",
-        "Roofing replacements",
-        "Whole-home decluttering",
-        "4.5 Tons Max Safe Road Load"
+        "Kitchen & Multiple Room Remodels",
+        "Moving & Decluttering",
+        "Garage & Home Cleanouts",
+        "Property Cleanouts"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       active: true,
       sortOrder: 2
     },
@@ -587,15 +595,17 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       dimensions: "16' L × 7.5' W × 6' H",
       image: "/images/lone-wolf/dumpster-25.jpeg",
       imageAlt: "Lone Wolf 25-yard heavy-duty roll-off dumpster on commercial contractor job site",
-      badgeText: "STARTING AT $475 • 2.2 TONS INCLUDED",
-      description: "Maximum capacity for major construction, large residential additions, and commercial demolition work. Max safe load capacity: 4.5 tons.",
+      badgeText: "3 DAYS — $475 • 2.2 TONS INCLUDED",
+      description: "Maximum capacity for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bestFor: [
-        "Major home renovations",
-        "Commercial job sites",
-        "Large demolition & estate clearouts",
-        "4.5 Tons Max Safe Road Load"
+        "Major Home Renovations",
+        "Large Home Cleanouts",
+        "Moving & Decluttering",
+        "Commercial Cleanouts",
+        "Warehouses & Packaging Cleanouts",
+        "Property Cleanouts"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       active: true,
       sortOrder: 3
     }
@@ -603,7 +613,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   dumpsterPages: [
     {
       id: "15-yard-dumpster",
-      badgeText: "STARTING AT $385 • 1.5 TONS INCLUDED",
+      badgeText: "3 DAYS — $385 • 1.5 TONS INCLUDED",
       heroDescription: "Compact, driveway-friendly, and perfect for small home cleanouts, garage organizing, yard debris, and light bathroom or kitchen remodeling.",
       bodyDescription: "The 15-yard roll-off container holds approximately 6 pickup truck loads of debris. It is low enough for easy over-the-side loading and includes a swinging rear door for walk-in ground access.",
       priceDisplay: "$385",
@@ -615,7 +625,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Flooring removal & yard debris",
         "4.5 Tons Max Safe Road Load"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       ctaText: "Book 15 Yard Now →",
       image: {
         src: "/images/lone-wolf/real/dumpster_15_environment.jpg",
@@ -625,19 +635,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "20-yard-dumpster",
-      badgeText: "STARTING AT $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
-      heroDescription: "Our versatile container size across DFW. Handles medium-to-large home renovations, roofing replacements, garage cleanouts, and flooring swaps.",
+      badgeText: "3 DAYS — $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
+      heroDescription: "Our versatile container size across DFW. Handles medium-to-large home renovations, garage cleanouts, and flooring swaps.",
       bodyDescription: "The 20-yard roll-off container holds approximately 8 pickup truck loads of waste. Feature low 4.5-ft sidewalls for effortless loading and wood board driveway protection included.",
       priceDisplay: "$425",
       weightIncludedText: "2.0 Tons (4,000 lbs) Included",
       overagePrice: "$80 / ton",
       bestFor: [
-        "Kitchen & multiple room remodels",
-        "Roofing replacements",
-        "Whole-home decluttering",
-        "4.5 Tons Max Safe Road Load"
+        "Kitchen & Multiple Room Remodels",
+        "Moving & Decluttering",
+        "Garage & Home Cleanouts",
+        "Property Cleanouts"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       ctaText: "Book 20 Yard Now →",
       image: {
         src: "/images/lone-wolf/real/contractor_environment_showcase.jpg",
@@ -647,19 +657,21 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "25-yard-dumpster",
-      badgeText: "STARTING AT $475 • 2.2 TONS INCLUDED",
-      heroDescription: "Our maximum volume container for large residential remodels, whole-house estate cleanouts, commercial construction, and contractor demolition.",
+      badgeText: "3 DAYS — $475 • 2.2 TONS INCLUDED",
+      heroDescription: "Our maximum volume container for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bodyDescription: "The 25-yard container holds approximately 10 pickup truck loads of debris. Built with reinforced steel walls and heavy-duty rear doors for efficient loading on major jobsites.",
       priceDisplay: "$475",
       weightIncludedText: "2.2 Tons (4,400 lbs) Included",
       overagePrice: "$80 / ton",
       bestFor: [
-        "Major home renovations",
-        "Commercial job sites",
-        "Large demolition & estate clearouts",
-        "4.5 Tons Max Safe Road Load"
+        "Major Home Renovations",
+        "Large Home Cleanouts",
+        "Moving & Decluttering",
+        "Commercial Cleanouts",
+        "Warehouses & Packaging Cleanouts",
+        "Property Cleanouts"
       ],
-      importantNotice: "Standard containers CANNOT include prohibited or heavy restricted debris (concrete, dirt, rock, brick, asphalt, tires, batteries, paint, hazardous materials). Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      importantNotice: "",
       ctaText: "Book 25 Yard Now →",
       image: {
         src: "/images/lone-wolf/real/commercial_environment_showcase.jpg",
@@ -689,9 +701,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "res-4",
-      title: "Roofing Tear-Offs & Shingles",
-      description: "Ideal capacity for residential asphalt shingle tear-offs. We protect your driveway throughout delivery and haul-off.",
-      tag: "Roofing"
+      title: "Full Home & Remodel Cleanouts",
+      description: "Ideal capacity for major home cleanup debris, drywall, fixtures, framing lumber, and whole-house renovation waste.",
+      tag: "Remodel & Cleanouts"
     },
     {
       id: "res-5",
@@ -709,21 +721,21 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   contractorCards: [
     {
       id: "con-1",
-      title: "General Contracting & Additions",
-      description: "Dependable roll-off containers placed directly on residential and commercial jobsites with priority swap availability.",
-      tag: "General Construction"
+      title: "Carpenters & Woodworkers",
+      description: "Fast, reliable container drop-offs for framing lumber, cabinetry trim, sawdust, and wood shop waste.",
+      tag: "Carpentry & Woodwork"
     },
     {
       id: "con-2",
-      title: "Roofing Tear-Offs & Shingle Removal",
-      description: "Heavy-duty steel containers designed for asphalt shingles, underlayment, flashing, and decking debris.",
-      tag: "Roofing Contractors"
+      title: "Flooring & Tile Contractors",
+      description: "Low-profile sidewalls make loading old tile, carpet rolls, hardwood planks, and underlayment easy.",
+      tag: "Flooring & Tile"
     },
     {
       id: "con-3",
-      title: "Demolition & Gut-Out Jobs",
-      description: "Handle structural drywall, lumber, framing, tile, plaster, and interior tear-down materials safely.",
-      tag: "Demolition"
+      title: "General Construction & Remodeling",
+      description: "Dependable roll-off containers placed directly on active remodels with fast, reliable swap scheduling.",
+      tag: "General Remodeling"
     },
     {
       id: "con-4",
@@ -753,9 +765,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "com-2",
-      title: "Industrial & Warehouse Debris",
-      description: "Dispose of pallet debris, packaging waste, shelving, cardboard, and light industrial non-hazardous scrap.",
-      tag: "Industrial Facilities"
+      title: "Industrial, Distribution & Logistics Centers",
+      description: "Dispose of packaging materials, cardboard, pallet debris, shelving, plastic wrap, and facility cleanout waste.",
+      tag: "Distribution & Logistics"
     },
     {
       id: "com-3",
@@ -765,19 +777,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "com-4",
-      title: "Commercial Demolition",
-      description: "High-capacity containers for interior tear-outs, drywall, drop-ceiling acoustic tile, and commercial framing.",
-      tag: "Demolition Contractors"
+      title: "Commercial Cleanouts & Remodels",
+      description: "High-capacity containers for retail cleanouts, office tear-outs, drywall, drop-ceiling tile, and commercial framing.",
+      tag: "Commercial Cleanouts"
     },
     {
       id: "com-5",
-      title: "Restaurants & Hospitality",
-      description: "Dining room renovations, kitchen equipment upgrades, outdoor patio clearouts, and high-volume commercial trash removal.",
-      tag: "Hospitality"
+      title: "Cardboard & Packaging Waste",
+      description: "Dedicated dumpster placements for high-volume commercial shipping, receiving, cardboard, and packaging disposal.",
+      tag: "Cardboard & Packaging"
     },
     {
       id: "com-6",
-      title: "Custom Commercial Solutions",
+      title: "Custom Commercial Operations",
       description: "Tailored multi-container roll-off placements, custom swap frequencies, and dedicated site waste plans for large commercial operations.",
       tag: "Custom Operations"
     }
@@ -786,19 +798,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-1",
       question: "What dumpster sizes do you offer and how much do they cost?",
-      answer: "We offer 3 versatile sizes across Dallas-Fort Worth: 15-Yard ($385 flat-rate, includes 1.5 tons), 20-Yard ($425 flat-rate, includes 2.0 tons), and 25-Yard ($475 flat-rate, includes 2.2 tons). Each rental includes delivery, driveway protection boards, pick-up, and municipal disposal.",
+      answer: "We offer 3 versatile sizes across Dallas-Fort Worth: 15-Yard ($385, includes 1.5 tons), 20-Yard ($425, includes 2.0 tons), and 25-Yard ($475, includes 2.2 tons). All pricing is simple and upfront with 3 days included, delivery, driveway protection boards, pick-up, and municipal disposal.",
       category: "pricing"
     },
     {
       id: "faq-2",
       question: "What is included in the flat-rate pricing?",
-      answer: "Our flat-rate price covers your initial rental period (1 to 7 days), delivery to your site, heavy-duty wooden driveway protection boards, pick-up, and the included weight allowance (1.5, 2.0, or 2.2 tons depending on size). There are no hidden delivery fees or environmental surcharges.",
+      answer: "Our simple upfront price covers 3 days included, delivery to your site, heavy-duty wooden driveway protection boards, pick-up, and the included weight allowance (1.5, 2.0, or 2.2 tons depending on size). There are no hidden fees.",
       category: "pricing"
     },
     {
       id: "faq-3",
       question: "How long can I keep the dumpster?",
-      answer: "Standard rental options include up to 7 days. Need it longer? Extra days are just $20/day. If you finish early, call or text us for quick pickup!",
+      answer: "Rentals are available for 1–7 days. Additional days are $20/day. If the customer finishes early, they can call or text to schedule pickup, which ends the rental period.",
       category: "booking"
     },
     {
@@ -810,26 +822,26 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-5",
       question: "What items and materials are prohibited?",
-      answer: "Tires, batteries, bricks, concrete, dirt, asphalt, railroad ties, asbestos, oils, chemicals, paint, hazardous or flammable materials, and unapproved refrigerated appliances are prohibited. Contact Lone Wolf before loading restricted or unusually heavy materials.",
+      answer: "Concrete, dirt, rock, brick, asphalt, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, car/truck tires, lead-acid batteries, propane tanks, compressed gas cylinders, asbestos, and AC units are prohibited. Refrigerators containing Freon require prior approval. Contact Lone Wolf before loading restricted or unusually heavy materials.",
       category: "materials"
     },
     {
       id: "faq-6",
       question: "What happens if I exceed the included weight allowance?",
-      answer: "If your load exceeds the included weight allowance (1.5t for 15yd, 2.0t for 20yd, 2.2t for 25yd), additional weight is billed at a flat $80 per ton based on certified landfill weight tickets. Maximum safe total load capacity is 4.5 tons (9,000 lbs).",
+      answer: "If your load exceeds the included weight allowance (1.5t for 15yd, 2.0t for 20yd, 2.2t for 25yd), additional weight is billed at $80 per ton based on certified landfill weight tickets. Maximum allowed weight is 4.5 tons.",
       category: "pricing"
     },
     {
       id: "faq-7",
-      question: "Do you offer same-day or next-day delivery?",
-      answer: "Yes! We offer same-day delivery when available and do our best to accommodate urgent scheduling across Tarrant, Dallas, and Denton counties. Call or text (214) 876-0321 for live dispatch schedule.",
+      question: "Do I need to be home for delivery?",
+      answer: "It is recommended that someone be present for delivery. If you cannot be there, please designate someone or send us a photo with clear instructions showing exactly where you want the dumpster placed.",
       category: "booking"
     },
     {
       id: "faq-8",
-      question: "What areas in DFW do you service?",
-      answer: "We serve 48 cities and municipalities across Tarrant, Dallas, and Denton Counties including Fort Worth, Arlington, Keller, Southlake, Colleyville, Grapevine, Mansfield, Grand Prairie, Irving, Carrollton, Lewisville, Flower Mound, Denton, and surrounding communities.",
-      category: "placement"
+      question: "What if I need more time?",
+      answer: "We’re flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20/day and must be confirmed with us in advance by phone. Rentals can be extended up to 10 days total. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.",
+      category: "booking"
     }
   ],
   guides: [
@@ -862,18 +874,18 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       excerpt: "Learn how wooden buffer boards prevent driveway scratches, cracking, and damage when renting a roll-off dumpster."
     },
     {
-      slug: "what-can-you-put-in-a-dumpster",
-      title: "Allowed vs. Prohibited Materials in Roll-Off Dumpsters",
-      category: "Disposal Rules",
-      readTime: "5 min read",
-      excerpt: "Avoid unexpected fees: full list of allowed household items and restricted/prohibited waste in Texas dumpsters."
+      slug: "commercial-dumpster-rentals-warehouses-distribution-centers",
+      title: "Commercial Dumpster Rentals for Warehouses & Distribution Centers",
+      category: "Commercial & Warehouses",
+      readTime: "4 min read",
+      excerpt: "Streamline warehouse cleanouts, packaging disposal, shipping/receiving waste, and pallet clearing for DFW industrial facilities."
     },
     {
-      slug: "roofing-dumpster-rental-guide",
-      title: "Roofing Dumpster Rental Guide for DFW Contractors",
-      category: "Contractor Guide",
+      slug: "dumpster-rental-moving-home-cleanouts",
+      title: "Dumpster Rental for Moving & Home Cleanouts",
+      category: "Home & Moving",
       readTime: "4 min read",
-      excerpt: "Calculate shingle square weight, choose the right container size, and ensure fast swaps on roofing jobsites."
+      excerpt: "Practical advice for homeowners decluttering before a move, garage clearouts, estate cleanups, and furniture removal in DFW."
     }
   ]
 };

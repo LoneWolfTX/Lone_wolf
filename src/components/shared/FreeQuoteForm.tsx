@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Phone, MapPin, Star, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 import { siteSettings } from '@/data/siteSettings';
 import { trackLeadSubmitted } from '@/lib/tracking';
@@ -341,6 +342,46 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
                 </div>
               </div>
 
+              {/* Authentic Delivery Photo Showcase Card */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '180px',
+                  borderRadius: '6px',
+                  overflow: 'hidden',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                  backgroundColor: '#0a0d12',
+                }}
+              >
+                <Image
+                  src="/images/lone-wolf/real/real_dumpster_6082.jpg"
+                  alt="Lone Wolf Roll-Off Dumpster Delivery in DFW"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  style={{ objectFit: 'cover' }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '8px',
+                    left: '8px',
+                    right: '8px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                    backdropFilter: 'blur(4px)',
+                    color: '#ffffff',
+                    padding: '6px 10px',
+                    borderRadius: '4px',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                  }}
+                >
+                  📍 Direct Owner-Operator Dispatch Across 48 DFW Cities
+                </div>
+              </div>
             </div>
           </div>
 

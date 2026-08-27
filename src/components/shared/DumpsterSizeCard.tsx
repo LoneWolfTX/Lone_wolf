@@ -204,7 +204,7 @@ export const DumpsterSizeCard: React.FC<DumpsterSizeCardProps> = ({
         >
           <div>
             <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              STARTING AT
+              3 DAYS INCLUDED
             </div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.1rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>
               {dynamicPrice}

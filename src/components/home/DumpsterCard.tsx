@@ -92,8 +92,8 @@ export const DumpsterCard: React.FC<DumpsterCardProps> = ({ product }) => {
         {/* Pricing Header */}
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
           <div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', display: 'block' }}>
-              {product.priceUnit || 'Starting at'}
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block' }}>
+              3 DAYS
             </span>
             <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>
               {product.priceDisplay || `$${product.startingPrice}`}

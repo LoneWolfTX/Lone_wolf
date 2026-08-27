@@ -42,9 +42,9 @@ export default function ContractorPageClient() {
   ];
 
   const contractorBestFors = {
-    '15-yard-dumpster': 'Roofing tear-offs, small remodel, bath gut, drywall, tile, and wood framing',
-    '20-yard-dumpster': 'Full roof replacements, siding, multi-room additions, framing scrap',
-    '25-yard-dumpster': 'Commercial tenant demo, whole-structure clearouts, heavy framing debris',
+    '15-yard-dumpster': 'Small remodels, bath gut, drywall, tile, and wood framing',
+    '20-yard-dumpster': 'Kitchen remodels, siding, multi-room additions, framing scrap',
+    '25-yard-dumpster': 'Commercial tenant build-outs, whole-structure clearouts, heavy framing debris',
   };
 
   return (
@@ -68,7 +68,7 @@ export default function ContractorPageClient() {
       <BenefitIconGrid
         titleBlack="A CONTRACTOR PARTNER YOU CAN"
         titleRed="COUNT ON"
-        subtitle="We know downtime costs you money. That's why general contractors, roofers, and remodelers across DFW rely on Lone Wolf Dumpsters for zero-hassle job site waste logistics."
+        subtitle="We know downtime costs you money. That's why general contractors, carpenters, and remodelers across DFW rely on Lone Wolf Dumpsters for zero-hassle job site waste logistics."
         items={contractorBenefits}
         columns={5}
         iconStyle="circle-red"
@@ -93,7 +93,7 @@ export default function ContractorPageClient() {
               BUILT FOR DFW <span style={{ color: 'var(--accent-red)' }}>TRADE CONTRACTORS</span>
             </h2>
             <p style={{ fontSize: '0.92rem', color: '#64748b', margin: '6px auto 0 auto', maxWidth: '620px' }}>
-              From single-day roof tear-offs to multi-month commercial renovations, we customize delivery schedules to your crew&apos;s workflow.
+              From custom carpentry to commercial renovations, we customize delivery schedules to your crew&apos;s workflow.
             </p>
           </div>
 

@@ -50,44 +50,51 @@ export default function TermsOfServicePage() {
         <div className="container" style={{ maxWidth: '860px', lineHeight: 1.7, fontSize: '1rem' }}>
           
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
-            Rental Periods &amp; Extensions
+            1. Rental Period &amp; Extensions
           </h2>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
-            Standard roll-off dumpster rentals include {content.rentalPeriods?.standardDays || '1 to 7 Days Included'}. Additional rental days are {formatExtraDayRate(pr.extraDay)}, subject to availability.
+            Standard rental periods are 1–7 days. Additional days are {formatExtraDayRate(pr.extraDay)}, subject to availability and advance confirmation. Rentals may be extended up to 10 days total. For longer-term rentals, multiple-week projects, recurring service, or ongoing business and contractor needs, customers should contact Lone Wolf Dumpsters by email or phone to discuss availability and pricing.
           </p>
 
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
-            Weight Allowances &amp; Overage Fees
+            2. Weight Allowance &amp; Overage Fees
           </h2>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
-            {terms?.generalTerms || `Each dumpster includes a designated weight allowance: 15-Yard: ${formatTonnage(1.5)}, 20-Yard: ${formatTonnage(2.0)}, 25-Yard: ${formatTonnage(2.2)}. Additional weight is billed at ${formatOverageRate(pr.extraTonnage)}, based on verified landfill weight tickets. Maximum total safe road load is ${pr.maxCapacityTons} tons (${pr.maxCapacityLbs.toLocaleString()} lbs).`}
+            Each dumpster includes a specified weight allowance based on dumpster size and rental agreement (15-Yard: {formatTonnage(1.5)}, 20-Yard: {formatTonnage(2.0)}, 25-Yard: {formatTonnage(2.2)}). Additional charges apply when included weight is exceeded, billed at {formatOverageRate(pr.extraTonnage)}. Final weight is determined by official landfill/disposal facility scale weight ticket. Maximum total allowed weight is {pr.maxCapacityTons} tons ({pr.maxCapacityLbs.toLocaleString()} lbs).
           </p>
 
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
-            Prohibited &amp; Restricted Materials
+            3. Prohibited &amp; Restricted Materials
+          </h2>
+          <p style={{ marginBottom: '12px', color: '#334155' }}>
+            The following materials are NOT accepted: {content.prohibitedMaterialsList?.join(', ') || 'Concrete, Dirt, Rock, Brick, Asphalt, Wet paint, Stains, Solvents, Gasoline, Oil, Flammable liquids, Chemicals, Hazardous materials, Car and truck tires, Lead-acid batteries, Propane tanks, Compressed gas cylinders, Asbestos / asbestos-containing materials, AC units'}.
+          </p>
+          <p style={{ marginBottom: '24px', color: '#334155' }}>
+            Refrigerators containing Freon require prior approval—customers must contact Lone Wolf Dumpsters before loading a Freon-containing unit. All waste restrictions are subject to applicable Texas and federal environmental regulations and landfill disposal-facility requirements.
+          </p>
+
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
+            4. Loading &amp; Property Access
           </h2>
           <p style={{ marginBottom: '14px', color: '#334155' }}>
-            Accepted materials include wood, drywall, roofing materials, demolition debris, furniture, carpet, household trash, and yard/landscaping debris.
+            Materials must remain below the top edge of the dumpster and be evenly distributed for safe highway transport and tarping. Customers are responsible for providing safe, unobstructed access for delivery and pickup and obtaining any required municipal permits.
           </p>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
-            The following materials are not accepted: {content.prohibitedMaterialsList?.join(', ') || 'tires, batteries, bricks, concrete, dirt, asphalt, railroad ties, asbestos, oils, chemicals, hazardous or flammable materials, paint, and refrigerated appliances unless approved in advance'}.
+            Lone Wolf Dumpsters lays down heavy-duty wooden driveway protection boards under container rollers on all residential placements.
           </p>
 
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
-            Loading &amp; Property Access
+            5. Payment, Cancellation &amp; Additional Charges
           </h2>
-          <p style={{ marginBottom: '14px', color: '#334155' }}>
-            Do not fill the dumpster above the top edge. Customers are responsible for providing safe and unobstructed access for delivery and pickup and obtaining any required permits.
-          </p>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
-            Lone Wolf Dumpsters uses heavy-duty wooden driveway protection boards under container rollers on residential placements.
+            Payment is due before or upon container delivery. Additional charges may apply for extra rental days, excess weight over included tonnage, prohibited materials, or requested additional services. Cancellation terms may vary and are provided with your invoice.
           </p>
 
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px', textTransform: 'uppercase' }}>
-            Payment, Cancellation &amp; Additional Charges
+            6. Additional Rental Terms
           </h2>
-          <p style={{ marginBottom: '24px', color: '#334155' }}>
-            {terms?.paymentTerms || 'Payment is due upon booking or delivery. We accept major credit/debit cards, Zelle, check, and cash.'}
+          <p style={{ marginBottom: '32px', color: '#334155' }}>
+            Individual pricing, rental dates, weight allowances, additional charges, and rental-specific conditions may be provided on the customer&apos;s invoice and apply to that rental agreement.
           </p>
 
           <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', marginBottom: '32px' }}>
