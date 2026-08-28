@@ -5,7 +5,7 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
-  trailingSlash: false,
+  trailingSlash: true,
 };
 
 export default nextConfig;
