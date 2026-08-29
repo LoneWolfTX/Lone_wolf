@@ -44,93 +44,26 @@ export const ContactBookingSection: React.FC = () => {
       notes: projectDetails,
     };
 
-    const notificationDiagnostics = {
-      timestamp: new Date().toISOString(),
-      recipientEmailPresent: true,
-      recipientPhonePresent: true,
-      phpEndpoint: { invoked: false, status: 0, emailSent: false, smsSent: false, error: null as string | null },
-      emailProvider: { name: 'FormSubmit.co', invoked: false, status: 0, success: false, message: null as string | null },
-      smsProvider: { name: 'Email-to-SMS Gateway / Webhook', invoked: false, status: 0, success: false, gatewayResults: [] as any[] }
-    };
-
     try {
-      // 1. Primary: Server API Route (/api/quote) for Upstash Redis Lead Persistence
-      try {
-        notificationDiagnostics.phpEndpoint.invoked = true;
-        const res = await fetch('/api/quote', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const apiData = await res.json().catch(() => null);
+
+      if (res.ok && apiData?.success) {
+        setFormSubmitted(true);
+        trackLeadSubmitted({
+          service: dumpsterSize,
+          projectType: cleaningType,
+          location: deliveryAddress,
         });
-        notificationDiagnostics.phpEndpoint.status = res.status;
-        const apiData = await res.json().catch(() => null);
-        if (res.ok && apiData?.success) {
-          notificationDiagnostics.phpEndpoint.emailSent = apiData?.email?.status === 'sent';
-        } else if (apiData?.error) {
-          notificationDiagnostics.phpEndpoint.error = apiData.error;
-        }
-      } catch (err: any) {
-        notificationDiagnostics.phpEndpoint.error = err.message || 'Fetch failed';
+      } else {
+        setErrorMessage(apiData?.error || 'Server error submitting quote request. Please try again.');
       }
-
-      // 2. FormSubmit.co fallback
-      try {
-        notificationDiagnostics.emailProvider.invoked = true;
-        const formSubmitRes = await fetch('https://formsubmit.co/ajax/lonewolfdumpsters@gmail.com', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            _subject: `🐺 New Quote Request: ${fullName} (${phoneNumber})`,
-            Name: fullName,
-            Phone: phoneNumber,
-            'Delivery Address': deliveryAddress,
-            'Dumpster Size': dumpsterSize,
-            'Project Type': cleaningType,
-            'Preferred Date': deliveryDate || 'As soon as possible',
-            Notes: projectDetails || 'None',
-          }),
-        });
-        notificationDiagnostics.emailProvider.status = formSubmitRes.status;
-        const fsData = await formSubmitRes.json().catch(() => null);
-        notificationDiagnostics.emailProvider.success = formSubmitRes.ok && fsData?.success !== 'false';
-        notificationDiagnostics.emailProvider.message = fsData?.message || (formSubmitRes.ok ? 'Accepted' : 'HTTP Error');
-      } catch (err: any) {
-        notificationDiagnostics.emailProvider.message = err.message || 'Network error';
-      }
-
-      // 3. Automatic SMS notification
-      notificationDiagnostics.smsProvider.invoked = true;
-      const smsGateways = ['2148760321@vtext.com', '2148760321@txt.att.net', '2148760321@tmomail.net'];
-      for (const gateway of smsGateways) {
-        try {
-          const res = await fetch(`https://formsubmit.co/ajax/${gateway}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              _subject: `New Dumpster Quote`,
-              Quote: `${fullName} - ${phoneNumber} - ${dumpsterSize} at ${deliveryAddress}`,
-            }),
-          });
-          const gwData = await res.json().catch(() => null);
-          notificationDiagnostics.smsProvider.gatewayResults.push({
-            gateway,
-            status: res.status,
-            success: res.ok && gwData?.success !== 'false',
-          });
-        } catch (gwErr: any) {
-          notificationDiagnostics.smsProvider.gatewayResults.push({
-            gateway,
-            status: 0,
-            error: gwErr.message,
-          });
-        }
-      }
-
-      console.log('🐺 Lone Wolf Contact Form Notification Diagnostics:', notificationDiagnostics);
-
-      setFormSubmitted(true);
-      trackLeadSubmitted({ service: dumpsterSize, projectType: cleaningType, location: deliveryAddress });
-    } catch {
+    } catch (err: any) {
       setErrorMessage('Connection error. Please call or text our team directly at (214) 876-0321.');
     } finally {
       setSubmitting(false);

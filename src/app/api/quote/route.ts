@@ -7,7 +7,8 @@ const RECIPIENT_EMAIL = process.env.NOTIFICATION_EMAIL || 'lonewolfdumpsters@gma
 
 /**
  * POST /api/quote
- * Single Server-Side Lead Intake & Notification Pipeline
+ * Server-side lead intake & direct Resend email delivery pipeline.
+ * FormSubmit dependency completely removed.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     const fullAddress = deliveryAddress || `${streetAddress} ${city} ${zip}`.trim() || 'DFW Metroplex';
 
-    // 1. DURABLE LEAD PERSISTENCE IN UPSTASH REDIS (Lead cannot disappear!)
+    // 1. DURABLE LEAD PERSISTENCE IN UPSTASH REDIS FIRST (Lead cannot disappear!)
     const savedLead = await saveLeadInRedis({
       name,
       phone,
@@ -50,114 +51,81 @@ export async function POST(req: NextRequest) {
 
     const leadId = savedLead ? savedLead.id : `lead_${Date.now()}`;
 
-    const emailStatus = { status: 'failed', provider: 'FormSubmit.co', error: null as string | null };
-    const pushAlertStatus = { status: 'not_configured', provider: 'None', note: 'Optional $0 Telegram/Discord webhook env vars' };
-    const smsStatus = { status: 'NOT_IMPLEMENTED', provider: 'Paid Provider Required', note: 'Native SMS omitted due to 0-recurring-cost constraint' };
+    const emailStatus = {
+      status: 'pending',
+      provider: 'Resend API',
+      recipient: RECIPIENT_EMAIL,
+      error: null as string | null,
+    };
 
-    // 2. SERVER-SIDE EMAIL NOTIFICATION DISPATCH
-    try {
-      if (process.env.RESEND_API_KEY) {
+    const smsStatus = {
+      status: 'NOT_IMPLEMENTED',
+      provider: 'Paid Provider Required',
+      note: 'Native SMS omitted due to zero-recurring-cost requirement',
+    };
+
+    // 2. DIRECT SERVER-SIDE EMAIL DELIVERY (Resend Vercel API)
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (resendApiKey) {
+      try {
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+            Authorization: `Bearer ${resendApiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             from: 'Lone Wolf Dumpsters <onboarding@resend.dev>',
             to: [RECIPIENT_EMAIL],
-            subject: `🐺 New Lone Wolf Quote Request: ${name} (${phone})`,
+            subject: `🐺 New Quote Request: ${name} (${phone})`,
             html: `
-              <h2>New Lone Wolf Dumpster Quote Request</h2>
-              <p><strong>Customer Name:</strong> ${name}</p>
-              <p><strong>Phone:</strong> ${phone}</p>
-              <p><strong>Email:</strong> ${email || 'Not provided'}</p>
-              <p><strong>Delivery Address:</strong> ${fullAddress}</p>
-              <p><strong>Selected Service:</strong> ${service}</p>
-              <p><strong>Project Type:</strong> ${projectType}</p>
-              <p><strong>Preferred Date:</strong> ${preferredDate}</p>
-              <p><strong>Notes:</strong> ${notes}</p>
+              <div style="font-family: Arial, sans-serif; max-width: 600px; color: #1e293b;">
+                <h2 style="color: #d97706; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                  🐺 New Lone Wolf Dumpster Quote Lead
+                </h2>
+                <p><strong>Lead ID:</strong> <code>${leadId}</code></p>
+                <p><strong>Customer Name:</strong> ${name}</p>
+                <p><strong>Phone Number:</strong> <a href="tel:${phone}">${phone}</a></p>
+                <p><strong>Email:</strong> ${email ? `<a href="mailto:${email}">${email}</a>` : 'Not provided'}</p>
+                <p><strong>Delivery Address:</strong> ${fullAddress}</p>
+                <p><strong>Dumpster Size / Service:</strong> ${service}</p>
+                <p><strong>Project Type:</strong> ${projectType}</p>
+                <p><strong>Preferred Date:</strong> ${preferredDate}</p>
+                <p><strong>Customer Notes:</strong> ${notes || 'None'}</p>
+                <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 20px 0;" />
+                <p style="font-size: 0.85rem; color: #64748b;">
+                  This lead is stored permanently in Upstash Redis and accessible in Admin Studio.
+                </p>
+              </div>
             `,
           }),
         });
-        if (resendRes.ok) {
-          emailStatus.status = 'sent';
-          emailStatus.provider = 'Resend API';
-        }
-      }
 
-      if (emailStatus.status !== 'sent') {
-        const fsRes = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({
-            _subject: `🐺 New Lone Wolf Lead: ${name} (${phone})`,
-            Name: name,
-            Phone: phone,
-            Email: email || 'Not provided',
-            'Delivery Address': fullAddress,
-            Service: service,
-            'Project Type': projectType,
-            'Preferred Date': preferredDate,
-            Notes: notes,
-            Lead_ID: leadId,
-          }),
-        });
+        const resendData = await resendRes.json().catch(() => null);
 
-        const fsData = await fsRes.json().catch(() => null);
-        if (fsRes.ok && fsData?.success !== 'false') {
+        if (resendRes.ok && resendData?.id) {
           emailStatus.status = 'sent';
-          emailStatus.provider = 'FormSubmit.co';
+          emailStatus.error = null;
         } else {
-          emailStatus.error = fsData?.message || 'FormSubmit activation required by recipient email.';
+          emailStatus.status = 'failed';
+          emailStatus.error = resendData?.message || `Resend API returned HTTP ${resendRes.status}`;
         }
+      } catch (err: any) {
+        emailStatus.status = 'failed';
+        emailStatus.error = err.message || 'Resend network error';
       }
-    } catch (err: any) {
-      emailStatus.error = err.message || 'Email dispatch exception';
+    } else {
+      emailStatus.status = 'requires_api_key';
+      emailStatus.error = 'RESEND_API_KEY environment variable not set in Vercel. Lead saved to Redis database.';
     }
 
-    // 3. OPTIONAL $0 INSTANT PHONE PUSH ALERT DISPATCH (Telegram / Discord Webhook)
-    try {
-      if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
-        const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: process.env.TELEGRAM_CHAT_ID,
-            text: `🐺 NEW LONE WOLF LEAD!\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\nService: ${service}\nNotes: ${notes}`,
-          }),
-        });
-        if (tgRes.ok) {
-          pushAlertStatus.status = 'sent';
-          pushAlertStatus.provider = 'Telegram Phone Push Alert ($0)';
-        }
-      } else if (process.env.DISCORD_WEBHOOK_URL) {
-        const discordRes = await fetch(process.env.DISCORD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: `🐺 **NEW LONE WOLF LEAD!**\n**Name:** ${name}\n**Phone:** ${phone}\n**Address:** ${fullAddress}\n**Service:** ${service}`,
-          }),
-        });
-        if (discordRes.ok) {
-          pushAlertStatus.status = 'sent';
-          pushAlertStatus.provider = 'Discord Phone Push Alert ($0)';
-        }
-      }
-    } catch (err: any) {
-      pushAlertStatus.status = 'failed';
-    }
-
-    // 4. RETURN STRUCTURED PIPELINE RESPONSE
+    // 3. RETURN STRUCTURED PIPELINE RESPONSE
     return NextResponse.json({
       success: true,
       leadId,
       message: 'Quote request received and saved to Upstash Redis database.',
       email: emailStatus,
-      pushAlert: pushAlertStatus,
       sms: smsStatus,
       leadSaved: !!savedLead,
     });
