@@ -102,6 +102,20 @@ export default function AdminDashboardPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  const fetchLeads = () => {
+    fetch('/api/leads?t=' + Date.now(), {
+      headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+      cache: 'no-store',
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.leads)) {
+          setLeads(data.leads);
+        }
+      })
+      .catch(() => {});
+  };
+
   // Fetch canonical content on mount from Vercel + Upstash Redis
   useEffect(() => {
     fetch('/api/admin/content?t=' + Date.now(), { cache: 'no-store' })
@@ -120,18 +134,7 @@ export default function AdminDashboardPage() {
         console.warn('Using default content store:', err);
       });
 
-    // Fetch leads from Vercel + Upstash Redis endpoint
-    fetch('/api/leads?t=' + Date.now(), {
-      headers: { 'X-Admin-Password': 'LoneWolf2026!' },
-      cache: 'no-store',
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data && data.success && Array.isArray(data.leads)) {
-          setLeads(data.leads);
-        }
-      })
-      .catch(() => {});
+    fetchLeads();
   }, []);
 
   // Update dirty state whenever siteContent changes relative to savedServerContent
@@ -753,6 +756,13 @@ export default function AdminDashboardPage() {
               </div>
 
               <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={fetchLeads}
+                  style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <RotateCw size={14} />
+                  <span>Refresh Inbox</span>
+                </button>
                 <a
                   href="/admin/index.php?action=export_csv"
                   style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
