@@ -11,9 +11,12 @@
   "dependencies": {
     "@types/leaflet": "^1.9.22",
     "basic-ftp": "^6.2.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.16.0",
     "next": "^15.1.0",
+    "playwright": "^1.62.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

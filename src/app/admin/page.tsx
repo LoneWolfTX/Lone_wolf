@@ -36,7 +36,9 @@ import {
   Check,
   Crosshair,
   LayoutGrid,
+  TrendingUp,
 } from 'lucide-react';
+import { MarketingDashboard } from '@/components/admin/marketing/MarketingDashboard';
 
 import {
   DEFAULT_SITE_CONTENT,
@@ -48,6 +50,8 @@ import {
   ImageAssignment,
 } from '@/lib/contentStore';
 import { EXISTING_IMAGE_LIBRARY, StockImageItem } from '@/lib/imageLibrary';
+import { LoneWolfDocument, DocumentType } from '@/lib/documents';
+import { DocumentModal } from '@/components/admin/DocumentModal';
 
 export interface Lead {
   id: string;
@@ -71,13 +75,22 @@ export interface Lead {
   source?: string;
   notes?: string;
   mail_sent?: boolean;
+  leadMethod?: 'Website Form' | 'Phone' | 'Manual' | 'Other';
+  normalizedSource?: string;
+  reportingAttributionSource?: string;
+  reportingAttributionCampaignId?: string;
+  attributedCampaignId?: string;
+  manuallyOverriddenSource?: string;
+  isRepeatCustomer?: boolean;
+  lostReason?: string;
+  lostReasonNote?: string;
 }
 
 const defaultLeads: Lead[] = [];
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<
-    'leads' | 'homepage' | 'about' | 'images' | 'pricing' | 'dumpsters' | 'cards' | 'faqs' | 'guides'
+    'leads' | 'marketing' | 'homepage' | 'about' | 'images' | 'pricing' | 'dumpsters' | 'cards' | 'faqs' | 'guides'
   >('leads');
   const [siteContent, setSiteContent] = useState<SiteContent>(DEFAULT_SITE_CONTENT);
   const [savedServerContent, setSavedServerContent] = useState<SiteContent>(DEFAULT_SITE_CONTENT);
@@ -87,12 +100,38 @@ export default function AdminDashboardPage() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveErrorMessage, setSaveErrorMessage] = useState('');
 
+  // Navigation State
+  const [adminTab, setAdminTab] = useState<'leads' | 'marketing' | 'content'>('leads');
+
   // Leads State
   const [leads, setLeads] = useState<Lead[]>(defaultLeads);
+  const [isRefreshingLeads, setIsRefreshingLeads] = useState(false);
   const [viewMode, setViewMode] = useState<'active' | 'archived'>('active');
   const [statusNotice, setStatusNotice] = useState<Record<string, 'saving' | 'saved' | 'error'>>({});
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Documents State
+  const [leadDocuments, setLeadDocuments] = useState<Record<string, LoneWolfDocument[]>>({});
+  const [docModalOpen, setDocModalOpen] = useState(false);
+  const [selectedDocLead, setSelectedDocLead] = useState<Lead | null>(null);
+  const [editingDoc, setEditingDoc] = useState<LoneWolfDocument | null>(null);
+  const [docInitialType, setDocInitialType] = useState<DocumentType>('QUOTE');
+  const [globalDocMenuOpen, setGlobalDocMenuOpen] = useState(false);
+  const [leadDocMenuId, setLeadDocMenuId] = useState<string | null>(null);
+
+  const fetchDocumentsForLead = async (leadId: string) => {
+    try {
+      const res = await fetch(`/api/admin/documents?leadId=${leadId}&t=${Date.now()}`, {
+        headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+        cache: 'no-store',
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.success && Array.isArray(data.documents)) {
+        setLeadDocuments((prev) => ({ ...prev, [leadId]: data.documents }));
+      }
+    } catch {}
+  };
 
   // Image Library Picker Modal State
   const [libraryModalOpen, setLibraryModalOpen] = useState(false);
@@ -107,18 +146,29 @@ export default function AdminDashboardPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const fetchLeads = () => {
-    fetch('/api/leads?t=' + Date.now(), {
-      headers: { 'X-Admin-Password': 'LoneWolf2026!' },
-      cache: 'no-store',
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
+  const fetchLeads = async () => {
+    setIsRefreshingLeads(true);
+    try {
+      const res = await fetch('/api/leads?t=' + Date.now(), {
+        headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+        cache: 'no-store',
+      });
+      if (res.ok) {
+        const data = await res.json();
         if (data && data.success && Array.isArray(data.leads)) {
           setLeads(data.leads);
+          data.leads.forEach((l: Lead) => {
+            fetchDocumentsForLead(l.id);
+          });
         }
-      })
-      .catch(() => {});
+      } else {
+        console.error('Failed to refresh leads: HTTP', res.status);
+      }
+    } catch (err) {
+      console.error('Error refreshing leads:', err);
+    } finally {
+      setIsRefreshingLeads(false);
+    }
   };
 
   // Fetch canonical content on mount from Vercel + Upstash Redis
@@ -670,6 +720,28 @@ export default function AdminDashboardPage() {
           </button>
 
           <button
+            type="button"
+            onClick={() => setActiveTab('marketing')}
+            style={{
+              padding: '14px 16px',
+              backgroundColor: activeTab === 'marketing' ? '#1e293b' : 'transparent',
+              border: 'none',
+              borderBottom: activeTab === 'marketing' ? '3px solid var(--accent-red)' : '3px solid transparent',
+              color: activeTab === 'marketing' ? '#ffffff' : '#94a3b8',
+              fontSize: '0.88rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              textTransform: 'uppercase',
+            }}
+          >
+            <TrendingUp size={16} color={activeTab === 'marketing' ? 'var(--accent-red)' : '#94a3b8'} />
+            <span>📊 Marketing Performance</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('homepage')}
             style={{
               padding: '14px 16px',
@@ -843,6 +915,11 @@ export default function AdminDashboardPage() {
       {/* Main Content Body */}
       <main style={{ maxWidth: '1440px', margin: '24px auto', padding: '0 24px' }}>
 
+        {/* TAB: MARKETING PERFORMANCE DASHBOARD */}
+        {activeTab === 'marketing' && (
+          <MarketingDashboard adminPassword="LoneWolf2026!" />
+        )}
+
         {/* TAB 1: LEADS DASHBOARD */}
         {activeTab === 'leads' && (
           <div>
@@ -858,27 +935,155 @@ export default function AdminDashboardPage() {
 
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button
+                  type="button"
                   onClick={fetchLeads}
-                  style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  disabled={isRefreshingLeads}
+                  style={{
+                    backgroundColor: '#1e293b',
+                    color: '#fff',
+                    border: '1px solid #334155',
+                    padding: '8px 14px',
+                    borderRadius: '4px',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: isRefreshingLeads ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    opacity: isRefreshingLeads ? 0.7 : 1,
+                  }}
                 >
-                  <RotateCw size={14} />
-                  <span>Refresh Inbox</span>
+                  <RotateCw size={14} style={{ animation: isRefreshingLeads ? 'spin 1s linear infinite' : 'none' }} />
+                  <span>{isRefreshingLeads ? 'Refreshing...' : 'Refresh Inbox'}</span>
                 </button>
-                <a
-                  href="/admin/index.php?action=export_csv"
-                  style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-                >
-                  <Download size={14} />
-                  <span>Export CSV</span>
-                </a>
-                <a
-                  href="/admin/invoice.php"
-                  target="_blank"
-                  style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 14px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-                >
-                  <Plus size={14} />
-                  <span>Blank Invoice</span>
-                </a>
+                <div style={{ position: 'relative' }}>
+                  <button
+                    type="button"
+                    data-testid="global-new-doc-btn"
+                    onClick={() => setGlobalDocMenuOpen(!globalDocMenuOpen)}
+                    style={{
+                      backgroundColor: 'var(--accent-red)',
+                      color: '#fff',
+                      border: 'none',
+                      padding: '8px 14px',
+                      borderRadius: '4px',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Plus size={14} />
+                    <span>+ New Document</span>
+                  </button>
+
+                  {globalDocMenuOpen && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: '100%',
+                        marginTop: '6px',
+                        backgroundColor: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '6px',
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                        zIndex: 50,
+                        minWidth: '180px',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <button
+                        type="button"
+                        data-testid="global-new-quote-btn"
+                        onClick={() => {
+                          setSelectedDocLead(null);
+                          setEditingDoc(null);
+                          setDocInitialType('QUOTE');
+                          setDocModalOpen(true);
+                          setGlobalDocMenuOpen(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '10px 14px',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          borderBottom: '1px solid #334155',
+                          color: '#ffffff',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        <span>📄</span>
+                        <span>Quote / Estimate</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="global-new-invoice-btn"
+                        onClick={() => {
+                          setSelectedDocLead(null);
+                          setEditingDoc(null);
+                          setDocInitialType('INVOICE');
+                          setDocModalOpen(true);
+                          setGlobalDocMenuOpen(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '10px 14px',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          borderBottom: '1px solid #334155',
+                          color: '#38bdf8',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        <span>🧾</span>
+                        <span>Direct Invoice</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="global-new-receipt-btn"
+                        onClick={() => {
+                          setSelectedDocLead(null);
+                          setEditingDoc(null);
+                          setDocInitialType('RECEIPT');
+                          setDocModalOpen(true);
+                          setGlobalDocMenuOpen(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '10px 14px',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          color: '#4ade80',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        <span>🟢</span>
+                        <span>Direct Receipt</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -969,16 +1174,62 @@ export default function AdminDashboardPage() {
                       const sColor = getStatusColor(curStatus);
                       const notice = statusNotice[lead.id];
 
+                      const leadDocs = leadDocuments[lead.id] || [];
+
                       return (
                         <tr key={lead.id} style={{ borderBottom: '1px solid #1f2937' }}>
                           <td style={{ padding: '14px 16px' }}>
                             <div style={{ fontWeight: 800, color: '#ffffff' }}>{lead.id}</div>
                             <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.date || lead.timestamp}</div>
+                            {leadDocs.length > 0 && (
+                              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                {leadDocs.map((doc) => (
+                                  <button
+                                    key={doc.id}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedDocLead(lead);
+                                      setEditingDoc(doc);
+                                      setDocInitialType(doc.type);
+                                      setDocModalOpen(true);
+                                    }}
+                                    title="View / Edit Document"
+                                    style={{
+                                      backgroundColor: doc.type === 'QUOTE' ? '#1e293b' : doc.type === 'INVOICE' ? '#0369a1' : '#14532d',
+                                      color: '#ffffff',
+                                      border: '1px solid ' + (doc.type === 'QUOTE' ? '#334155' : doc.type === 'INVOICE' ? '#0284c7' : '#16a34a'),
+                                      padding: '2px 6px',
+                                      borderRadius: '4px',
+                                      fontSize: '0.7rem',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    📄 {doc.docNumber} ({doc.status})
+                                  </button>
+                                ))}
+                              </div>
+                            )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
                             <div style={{ fontWeight: 700, color: '#ffffff' }}>{lead.name}</div>
                             <div style={{ color: 'var(--accent-red)', fontWeight: 700 }}>{lead.phone}</div>
                             <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.email}</div>
+                            <div style={{ display: 'flex', gap: '4px', marginTop: '4px', flexWrap: 'wrap' }}>
+                              <span style={{ fontSize: '0.68rem', backgroundColor: '#1e293b', color: '#38bdf8', padding: '1px 5px', borderRadius: '3px', border: '1px solid #334155' }}>
+                                🎯 {lead.manuallyOverriddenSource || lead.reportingAttributionSource || lead.normalizedSource || 'Direct'}
+                              </span>
+                              {lead.leadMethod && (
+                                <span style={{ fontSize: '0.68rem', backgroundColor: '#0f172a', color: '#94a3b8', padding: '1px 5px', borderRadius: '3px' }}>
+                                  {lead.leadMethod}
+                                </span>
+                              )}
+                              {lead.isRepeatCustomer && (
+                                <span style={{ fontSize: '0.68rem', backgroundColor: '#16537e', color: '#38bdf8', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>
+                                  Repeat Customer
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td style={{ padding: '14px 16px' }}>
                             <div style={{ color: '#ffffff' }}>{lead.address || lead.deliveryAddress}</div>
@@ -1030,7 +1281,136 @@ export default function AdminDashboardPage() {
                             </div>
                           </td>
                           <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                            <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+                            <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                              <div style={{ position: 'relative' }}>
+                                <button
+                                  type="button"
+                                  data-testid="lead-create-doc-btn"
+                                  onClick={() => setLeadDocMenuId(leadDocMenuId === lead.id ? null : lead.id)}
+                                  style={{
+                                    backgroundColor: '#dc2626',
+                                    color: '#ffffff',
+                                    border: 'none',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.76rem',
+                                    fontWeight: 800,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <FileText size={13} />
+                                  <span>Create Document</span>
+                                </button>
+
+                                {leadDocMenuId === lead.id && (
+                                  <div
+                                    style={{
+                                      position: 'absolute',
+                                      right: 0,
+                                      top: '100%',
+                                      marginTop: '4px',
+                                      backgroundColor: '#1e293b',
+                                      border: '1px solid #334155',
+                                      borderRadius: '6px',
+                                      boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                                      zIndex: 50,
+                                      minWidth: '170px',
+                                      overflow: 'hidden',
+                                    }}
+                                  >
+                                    <button
+                                      type="button"
+                                      data-testid="lead-quote-btn"
+                                      onClick={() => {
+                                        setSelectedDocLead(lead);
+                                        setEditingDoc(null);
+                                        setDocInitialType('QUOTE');
+                                        setDocModalOpen(true);
+                                        setLeadDocMenuId(null);
+                                      }}
+                                      style={{
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        padding: '8px 12px',
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        borderBottom: '1px solid #334155',
+                                        color: '#ffffff',
+                                        fontSize: '0.78rem',
+                                        fontWeight: 700,
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                      }}
+                                    >
+                                      <span>📄</span>
+                                      <span>Quote / Estimate</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      data-testid="lead-invoice-btn"
+                                      onClick={() => {
+                                        setSelectedDocLead(lead);
+                                        setEditingDoc(null);
+                                        setDocInitialType('INVOICE');
+                                        setDocModalOpen(true);
+                                        setLeadDocMenuId(null);
+                                      }}
+                                      style={{
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        padding: '8px 12px',
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        borderBottom: '1px solid #334155',
+                                        color: '#38bdf8',
+                                        fontSize: '0.78rem',
+                                        fontWeight: 700,
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                      }}
+                                    >
+                                      <span>🧾</span>
+                                      <span>Direct Invoice</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      data-testid="lead-receipt-btn"
+                                      onClick={() => {
+                                        setSelectedDocLead(lead);
+                                        setEditingDoc(null);
+                                        setDocInitialType('RECEIPT');
+                                        setDocModalOpen(true);
+                                        setLeadDocMenuId(null);
+                                      }}
+                                      style={{
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        padding: '8px 12px',
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        color: '#4ade80',
+                                        fontSize: '0.78rem',
+                                        fontWeight: 700,
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                      }}
+                                    >
+                                      <span>🟢</span>
+                                      <span>Direct Receipt</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+
                               <a
                                 href={`tel:${lead.phone.replace(/[^0-9+]/g, '')}`}
                                 style={{ backgroundColor: '#1e293b', color: '#fff', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, textDecoration: 'none', border: '1px solid #334155' }}
@@ -2251,11 +2631,28 @@ export default function AdminDashboardPage() {
                   </div>
                 ))}
             </div>
-
           </div>
         </div>
       )}
 
+      {/* Document Modal (Quote, Invoice, Receipt) */}
+      <DocumentModal
+        isOpen={docModalOpen}
+        onClose={() => {
+          setDocModalOpen(false);
+          setSelectedDocLead(null);
+          setEditingDoc(null);
+        }}
+        lead={selectedDocLead}
+        existingDoc={editingDoc}
+        initialType={docInitialType}
+        siteContent={siteContent}
+        onDocumentSaved={(doc) => {
+          if (selectedDocLead) {
+            fetchDocumentsForLead(selectedDocLead.id);
+          }
+        }}
+      />
     </div>
   );
 }

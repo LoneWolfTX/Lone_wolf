@@ -16,7 +16,7 @@ export const WhoWeServe: React.FC = () => {
     {
       icon: <Wrench size={28} />,
       title: 'CONTRACTORS',
-      desc: 'Construction, roofing, remodeling & more',
+      desc: 'Construction, Remodeling, General Contractors and more',
     },
     {
       icon: <Building size={28} />,

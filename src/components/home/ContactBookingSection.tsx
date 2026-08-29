@@ -6,6 +6,7 @@ import { siteSettings } from '@/data/siteSettings';
 import { trackLeadSubmitted } from '@/lib/tracking';
 import { useSiteContent } from '@/lib/useEditableContent';
 import { formatCurrency, formatPhoneNumber } from '@/lib/formatters';
+import { getAttributionPayload } from '@/lib/attribution';
 
 export const ContactBookingSection: React.FC = () => {
   const { content } = useSiteContent();
@@ -34,6 +35,7 @@ export const ContactBookingSection: React.FC = () => {
     }
 
     setSubmitting(true);
+    const attr = getAttributionPayload();
 
     const payload = {
       name: fullName,
@@ -44,6 +46,29 @@ export const ContactBookingSection: React.FC = () => {
       preferredDate: deliveryDate || 'As soon as possible',
       rentalDuration,
       notes: projectDetails,
+      leadMethod: 'Website Form',
+      firstTouchSource: attr.firstTouch?.source,
+      firstTouchMedium: attr.firstTouch?.medium,
+      firstTouchCampaign: attr.firstTouch?.campaign,
+      firstTouchContent: attr.firstTouch?.content,
+      firstTouchTerm: attr.firstTouch?.term,
+      firstTouchLandingPage: attr.firstTouch?.landingPage,
+      firstTouchReferrer: attr.firstTouch?.referrer,
+      firstTouchGclid: attr.firstTouch?.gclid,
+      firstTouchFbclid: attr.firstTouch?.fbclid,
+      firstTouchAt: attr.firstTouch?.timestamp,
+      lastTouchSource: attr.lastTouch?.source,
+      lastTouchMedium: attr.lastTouch?.medium,
+      lastTouchCampaign: attr.lastTouch?.campaign,
+      lastTouchContent: attr.lastTouch?.content,
+      lastTouchTerm: attr.lastTouch?.term,
+      lastTouchLandingPage: attr.lastTouch?.landingPage,
+      lastTouchReferrer: attr.lastTouch?.referrer,
+      lastTouchGclid: attr.lastTouch?.gclid,
+      lastTouchFbclid: attr.lastTouch?.fbclid,
+      lastTouchAt: attr.lastTouch?.timestamp,
+      normalizedSource: attr.normalizedSource,
+      reportingAttributionSource: attr.reportingAttributionSource,
     };
 
     try {

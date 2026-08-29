@@ -297,7 +297,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     twentyFiveYard: "16' L × 7.5' W × 6' H"
   },
   rentalPeriods: {
-    standardDays: "1 to 7 Days",
+    standardDays: "7 Days",
     extraDayRate: "$20 / Day after 7 days",
     maxRentalDays: 10
   },

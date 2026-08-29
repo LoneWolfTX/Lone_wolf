@@ -8,12 +8,12 @@
 
 import { DEFAULT_SITE_CONTENT, SiteContent } from './contentStore';
 
-const UPSTASH_URL =
+export const UPSTASH_URL =
   process.env.UPSTASH_REDIS_LW_KV_REST_API_URL ||
   process.env.KV_REST_API_URL ||
   'https://glowing-rabbit-227227.upstash.io';
 
-const UPSTASH_TOKEN =
+export const UPSTASH_TOKEN =
   process.env.UPSTASH_REDIS_LW_KV_REST_API_TOKEN ||
   process.env.KV_REST_API_TOKEN ||
   'gQAAAAAAA3ebAAIgcDJlMzRjNDdlZjI1OWQ0NGE2OWYzMjQ3ODQzMzFlZDBmYg';
@@ -42,6 +42,16 @@ export async function getSiteContentFromRedis(): Promise<SiteContent> {
             parsed = JSON.parse(parsed);
           } catch {
             // Raw string
+          }
+        }
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          parsed = parsed[0];
+          if (typeof parsed === 'string') {
+            try {
+              parsed = JSON.parse(parsed);
+            } catch {
+              // Raw string
+            }
           }
         }
         if (parsed && typeof parsed === 'object' && (parsed.homepage || parsed.business)) {
@@ -110,6 +120,41 @@ export interface LeadSubmission {
   createdAt: string;
   emailNotified?: boolean;
   smsNotified?: boolean;
+
+  // Attribution & Acquisition Fields
+  leadMethod?: 'Website Form' | 'Phone' | 'Manual' | 'Other';
+  firstTouchSource?: string;
+  firstTouchMedium?: string;
+  firstTouchCampaign?: string;
+  firstTouchContent?: string;
+  firstTouchTerm?: string;
+  firstTouchLandingPage?: string;
+  firstTouchReferrer?: string;
+  firstTouchGclid?: string;
+  firstTouchFbclid?: string;
+  firstTouchAt?: string;
+
+  lastTouchSource?: string;
+  lastTouchMedium?: string;
+  lastTouchCampaign?: string;
+  lastTouchContent?: string;
+  lastTouchTerm?: string;
+  lastTouchLandingPage?: string;
+  lastTouchReferrer?: string;
+  lastTouchGclid?: string;
+  lastTouchFbclid?: string;
+  lastTouchAt?: string;
+
+  normalizedSource?: string;
+  reportingAttributionSource?: string;
+  reportingAttributionCampaignId?: string;
+  attributedCampaignId?: string;
+  manuallyOverriddenSource?: string;
+  overrideTimestamp?: string;
+  isRepeatCustomer?: boolean;
+  possibleRepeatCustomer?: boolean;
+  lostReason?: string;
+  lostReasonNote?: string;
 }
 
 /**

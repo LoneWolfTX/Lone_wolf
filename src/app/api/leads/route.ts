@@ -66,13 +66,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { action, leadId, status } = body;
+    const {
+      action,
+      leadId,
+      status,
+      lostReason,
+      lostReasonNote,
+      manuallyOverriddenSource,
+      reportingAttributionSource,
+      reportingAttributionCampaignId,
+      attributedCampaignId,
+      isRepeatCustomer,
+      updates,
+    } = body;
 
     if (action === 'update_status') {
       if (!status) {
         return NextResponse.json({ success: false, error: 'Status is required.' }, { status: 400 });
       }
-      const updated = await updateLeadInRedis(leadId, { status });
+      const statusUpdates: Record<string, any> = { status };
+      if (lostReason !== undefined) statusUpdates.lostReason = lostReason;
+      if (lostReasonNote !== undefined) statusUpdates.lostReasonNote = lostReasonNote;
+
+      const updated = await updateLeadInRedis(leadId, statusUpdates);
       if (updated) {
         return NextResponse.json({ success: true, lead: updated });
       }
@@ -93,6 +109,48 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, lead: updated });
       }
       return NextResponse.json({ success: false, error: 'Failed to restore lead in Redis.' }, { status: 500 });
+    }
+
+    if (action === 'update_lost_reason') {
+      const updated = await updateLeadInRedis(leadId, {
+        lostReason: lostReason || '',
+        lostReasonNote: lostReasonNote || '',
+      });
+      if (updated) {
+        return NextResponse.json({ success: true, lead: updated });
+      }
+      return NextResponse.json({ success: false, error: 'Failed to update lost reason in Redis.' }, { status: 500 });
+    }
+
+    if (action === 'update_attribution') {
+      const updated = await updateLeadInRedis(leadId, {
+        manuallyOverriddenSource,
+        reportingAttributionSource,
+        reportingAttributionCampaignId,
+        attributedCampaignId,
+      });
+      if (updated) {
+        return NextResponse.json({ success: true, lead: updated });
+      }
+      return NextResponse.json({ success: false, error: 'Failed to update attribution in Redis.' }, { status: 500 });
+    }
+
+    if (action === 'update_repeat_customer') {
+      const updated = await updateLeadInRedis(leadId, {
+        isRepeatCustomer: Boolean(isRepeatCustomer),
+      });
+      if (updated) {
+        return NextResponse.json({ success: true, lead: updated });
+      }
+      return NextResponse.json({ success: false, error: 'Failed to update repeat customer status in Redis.' }, { status: 500 });
+    }
+
+    if (action === 'update_lead' && updates && typeof updates === 'object') {
+      const updated = await updateLeadInRedis(leadId, updates);
+      if (updated) {
+        return NextResponse.json({ success: true, lead: updated });
+      }
+      return NextResponse.json({ success: false, error: 'Failed to update lead in Redis.' }, { status: 500 });
     }
 
     if (action === 'delete') {
