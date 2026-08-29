@@ -54,21 +54,20 @@ export const ContactBookingSection: React.FC = () => {
     };
 
     try {
-      // 1. Server PHP API Endpoint (/api/quote.php)
+      // 1. Primary: Server API Route (/api/quote) for Upstash Redis Lead Persistence
       try {
         notificationDiagnostics.phpEndpoint.invoked = true;
-        const res = await fetch('/api/quote.php', {
+        const res = await fetch('/api/quote', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify(payload),
         });
         notificationDiagnostics.phpEndpoint.status = res.status;
-        const phpData = await res.json().catch(() => null);
-        if (res.ok && phpData?.success) {
-          notificationDiagnostics.phpEndpoint.emailSent = !!phpData.emailSent;
-          notificationDiagnostics.phpEndpoint.smsSent = !!phpData.smsSent;
-        } else if (phpData?.error) {
-          notificationDiagnostics.phpEndpoint.error = phpData.error;
+        const apiData = await res.json().catch(() => null);
+        if (res.ok && apiData?.success) {
+          notificationDiagnostics.phpEndpoint.emailSent = apiData?.email?.status === 'sent';
+        } else if (apiData?.error) {
+          notificationDiagnostics.phpEndpoint.error = apiData.error;
         }
       } catch (err: any) {
         notificationDiagnostics.phpEndpoint.error = err.message || 'Fetch failed';

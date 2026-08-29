@@ -63,21 +63,22 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
     };
 
     try {
-      // 1. Primary: Server PHP API Endpoint (/api/quote.php)
+      // 1. Primary: Server API Route (/api/quote) for Upstash Redis Lead Persistence & Notifications
+      let quoteApiSuccess = false;
       try {
         notificationDiagnostics.phpEndpoint.invoked = true;
-        const phpRes = await fetch('/api/quote.php', {
+        const apiRes = await fetch('/api/quote', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify(payload),
         });
-        notificationDiagnostics.phpEndpoint.status = phpRes.status;
-        const phpData = await phpRes.json().catch(() => null);
-        if (phpRes.ok && phpData?.success) {
-          notificationDiagnostics.phpEndpoint.emailSent = !!phpData.emailSent;
-          notificationDiagnostics.phpEndpoint.smsSent = !!phpData.smsSent;
-        } else if (phpData?.error) {
-          notificationDiagnostics.phpEndpoint.error = phpData.error;
+        notificationDiagnostics.phpEndpoint.status = apiRes.status;
+        const apiData = await apiRes.json().catch(() => null);
+        if (apiRes.ok && apiData?.success) {
+          quoteApiSuccess = true;
+          notificationDiagnostics.phpEndpoint.emailSent = apiData?.email?.status === 'sent';
+        } else if (apiData?.error) {
+          notificationDiagnostics.phpEndpoint.error = apiData.error;
         }
       } catch (err: any) {
         notificationDiagnostics.phpEndpoint.error = err.message || 'Fetch failed';
