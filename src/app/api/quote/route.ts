@@ -3,8 +3,7 @@ import { saveLeadInRedis } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
-const RECIPIENT_EMAIL = process.env.NOTIFICATION_EMAIL || 'lonewolfdumpsters@gmail.com';
-const RESEND_ACCOUNT_OWNER = process.env.RESEND_OWNER_EMAIL || 'one337459@gmail.com';
+const RECIPIENT_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || process.env.NOTIFICATION_EMAIL || 'one337459@gmail.com';
 
 /**
  * POST /api/quote
@@ -69,9 +68,6 @@ export async function POST(req: NextRequest) {
 
     if (resendApiKey) {
       try {
-        // If using default Resend test sender (onboarding@resend.dev), Resend requires sending to the account owner email (one337459@gmail.com)
-        const targetRecipient = process.env.NOTIFICATION_EMAIL || 'one337459@gmail.com';
-
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
@@ -80,7 +76,7 @@ export async function POST(req: NextRequest) {
           },
           body: JSON.stringify({
             from: 'Lone Wolf Dumpsters <onboarding@resend.dev>',
-            to: [targetRecipient],
+            to: [RECIPIENT_EMAIL],
             subject: `🐺 New Quote Request: ${name} (${phone})`,
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; color: #1e293b;">
@@ -109,7 +105,7 @@ export async function POST(req: NextRequest) {
 
         if (resendRes.ok && resendData?.id) {
           emailStatus.status = 'sent';
-          emailStatus.recipient = targetRecipient;
+          emailStatus.recipient = RECIPIENT_EMAIL;
           emailStatus.error = null;
         } else {
           emailStatus.status = 'failed';
