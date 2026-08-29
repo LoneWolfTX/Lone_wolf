@@ -129,7 +129,7 @@ export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'created
         Authorization: `Bearer ${UPSTASH_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(jsonString),
+      body: jsonString,
     });
 
     // Add lead ID to master list
@@ -187,11 +187,7 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
         if (itemData?.result) {
           try {
             let resObj = itemData.result;
-            if (typeof resObj === 'string' && resObj.startsWith('[')) {
-              const arr = JSON.parse(resObj);
-              resObj = Array.isArray(arr) ? arr[0] : resObj;
-            }
-            if (typeof resObj === 'string') {
+            while (typeof resObj === 'string') {
               resObj = JSON.parse(resObj);
             }
             if (resObj && typeof resObj === 'object' && resObj.name) {
