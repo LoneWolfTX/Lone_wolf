@@ -3,7 +3,7 @@ import { saveLeadInRedis } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
-const RECIPIENT_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || process.env.NOTIFICATION_EMAIL || 'one337459@gmail.com';
+const RECIPIENT_EMAIL = 'lonewolfdumpsters@gmail.com';
 
 /**
  * POST /api/quote
