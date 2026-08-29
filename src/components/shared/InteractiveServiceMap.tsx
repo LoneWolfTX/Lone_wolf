@@ -185,21 +185,11 @@ export const InteractiveServiceMap: React.FC = () => {
         scrollWheelZoom: true,
       });
 
-      // CartoDB Dark Matter real map tiles (Crisp, fast, modern dark theme)
+      // CartoDB Voyager map tiles (Crisp, fast, modern theme)
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 19,
-      }).addTo(map);
-
-      // Subtle Lone Wolf DFW Service Area 50-Mile Dispatch Radius
-      L.circle([32.7767, -96.7970], {
-        radius: 48000, // ~30 miles from Dallas hub
-        color: '#dc2626',
-        fillColor: '#dc2626',
-        fillOpacity: 0.04,
-        weight: 1.5,
-        dashArray: '5, 8',
       }).addTo(map);
 
       leafletMapRef.current = map;

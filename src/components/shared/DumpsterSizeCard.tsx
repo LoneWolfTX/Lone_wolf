@@ -179,7 +179,7 @@ export const DumpsterSizeCard: React.FC<DumpsterSizeCardProps> = ({
           <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <CheckCircle2 size={16} color="var(--accent-red)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <span style={{ color: '#334155' }}>
-              <strong>Rental Period:</strong> {content.rentalPeriods?.standardDays || '1 to 7 Days Included'}
+              <strong>Rental Period:</strong> {product.id === '15-yard-dumpster' ? '1 to 5 Days' : '1 to 7 Days'}
             </span>
           </li>
           <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
@@ -204,10 +204,10 @@ export const DumpsterSizeCard: React.FC<DumpsterSizeCardProps> = ({
         >
           <div>
             <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              3 DAYS INCLUDED
+              3 DAYS
             </div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.1rem', fontWeight: 800, color: '#0f172a', lineHeight: 1 }}>
-              {dynamicPrice}
+              {`3 Days – ${dynamicPrice}`}
             </div>
           </div>
 

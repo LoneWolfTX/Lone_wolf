@@ -43,7 +43,7 @@ export default function ContractorPageClient() {
 
   const contractorBestFors = {
     '15-yard-dumpster': 'Small remodels, bath gut, drywall, tile, and wood framing',
-    '20-yard-dumpster': 'Kitchen remodels, siding, multi-room additions, framing scrap',
+    '20-yard-dumpster': 'Kitchen remodels, general construction, multi-room additions, framing scrap',
     '25-yard-dumpster': 'Commercial tenant build-outs, whole-structure clearouts, heavy framing debris',
   };
 

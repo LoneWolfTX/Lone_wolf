@@ -60,7 +60,7 @@ export default function FifteenYardDumpsterClient() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid #e2e8f0', fontSize: '0.92rem' }}>
                   <span style={{ color: '#64748b', fontWeight: 600 }}>Rental Period:</span>
-                  <strong style={{ color: '#0f172a' }}>3–5 Days Included</strong>
+                  <strong style={{ color: '#0f172a' }}>1 to 5 Days</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid #e2e8f0', fontSize: '0.92rem' }}>
                   <span style={{ color: '#64748b', fontWeight: 600 }}>Extra Day Fee:</span>

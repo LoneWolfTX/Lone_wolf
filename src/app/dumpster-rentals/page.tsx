@@ -18,41 +18,44 @@ export default function DumpsterRentalsPage() {
   const audiences = [
     {
       title: 'Residential Projects',
-      desc: 'Home cleanouts, remodeling, attic cleanup, and yard debris.',
+      desc: 'Home cleanouts, remodeling projects, estate clearouts, and yard debris clearouts.',
       href: '/dumpster-rentals/residential',
       icon: <Home size={28} color="var(--accent-red)" />,
     },
     {
       title: 'Contractors & Job Sites',
-      desc: 'Roofing, remodeling, construction, demo, and reliable swaps.',
+      desc: 'Construction, Remodeling, General Contractors, and Reliable Swaps.',
       href: '/dumpster-rentals/contractor',
       icon: <HardHat size={28} color="var(--accent-red)" />,
     },
     {
       title: 'Commercial Properties',
-      desc: 'Warehouses, offices, retail spaces, and facility waste.',
+      desc: 'Warehouses, Offices, Retail Spaces, Distribution & Logistics Centers, Cardboard & Packaging Waste, Commercial Cleanouts, and Facility Waste.',
       href: '/dumpster-rentals/commercial',
       icon: <Building2 size={28} color="var(--accent-red)" />,
     },
   ];
 
   const allowedMaterials = [
-    'Household Furniture & Mattresses',
-    'Construction Debris & Drywall',
-    'Roofing Shingles & Siding',
-    'Yard Debris, Branches & Brush',
-    'Carpet, Flooring & Cabinets',
-    'Appliances (Non-Freon)',
+    'Construction Debris',
+    'Drywall',
+    'Wood',
+    'Furniture',
+    'Cardboard & Packaging',
+    'General Household Junk',
+    'Yard & Landscaping Debris',
   ];
 
   const prohibitedMaterials = [
     'Concrete, Dirt, Rock, Brick & Asphalt',
-    'Wet Paints, Stains & Chemicals',
-    'Motor Oil, Gasoline & Fuels',
-    'Vehicle Tires & Car Batteries',
-    'Propane Tanks & Explosives',
-    'Asbestos & Medical Bio-Waste',
-    'Freon Refrigerators & AC Units',
+    'Wet Paints, Stains & Solvents',
+    'Gasoline, Oil & Flammable Liquids',
+    'Car & Truck Tires',
+    'Lead-Acid Batteries',
+    'Propane Tanks & Compressed Gas Cylinders',
+    'Asbestos & Hazardous Materials',
+    'AC Units',
+    'Refrigerators containing Freon – Ask First',
   ];
 
   return (
@@ -172,6 +175,9 @@ export default function DumpsterRentalsPage() {
                   </li>
                 ))}
               </ul>
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #dcfce7', fontSize: '0.82rem', color: '#15803d', fontWeight: 700 }}>
+                Maximum allowed weight is 4.5 tons. Additional charges apply for excess weight.
+              </div>
             </div>
 
             {/* Prohibited Items Card */}
@@ -190,6 +196,9 @@ export default function DumpsterRentalsPage() {
                   </li>
                 ))}
               </ul>
+              <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #fee2e2', fontSize: '0.82rem', color: '#b91c1c', fontWeight: 700 }}>
+                Customers should contact us before disposing of Freon-containing refrigerators.
+              </div>
             </div>
 
           </div>

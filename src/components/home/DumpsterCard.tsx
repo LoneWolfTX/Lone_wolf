@@ -95,8 +95,8 @@ export const DumpsterCard: React.FC<DumpsterCardProps> = ({ product }) => {
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block' }}>
               3 DAYS
             </span>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>
-              {product.priceDisplay || `$${product.startingPrice}`}
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.0rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>
+              {`3 Days – ${product.priceDisplay || `$${product.startingPrice}`}`}
             </span>
           </div>
           <div style={{ textAlign: 'right' }}>

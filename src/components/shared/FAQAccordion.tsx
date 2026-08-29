@@ -54,7 +54,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({
     },
     {
       q: 'How long can I keep the dumpster?',
-      a: `Our standard rental includes ${content.rentalPeriods?.standardDays || '1 to 7 Days Included'}. If you finish early, call or text us for prompt pickup. If you need extra days, they are just ${formatExtraDayRate(pr.extraDay)}.`,
+      a: `Rentals are available for 1–7 days. Additional days are ${formatExtraDayRate(pr.extraDay)}. If the customer finishes early, they can call or text to schedule pickup, which ends the rental period.`,
     },
   ];
 
@@ -65,11 +65,11 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({
     },
     {
       q: 'Do I need to be home for delivery?',
-      a: 'No! As long as your driveway or drop-off site is clear of vehicles and low-hanging branches, our drivers will place the dumpster exactly where you designated using protective wood boards under the steel wheels.',
+      a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
     },
     {
       q: 'What if I need more time?',
-      a: `Simply call or text ${phone} before your scheduled pickup date. Extra rental days are just ${formatExtraDayRate(pr.extraDay)}.`,
+      a: `We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are ${formatExtraDayRate(pr.extraDay)} and must be confirmed with us in advance by phone or text. Rental can be extended up to 10 days total. If you need the dumpster for 2, 3 weeks or longer, please contact us to discuss availability and pricing.`,
     },
   ];
 

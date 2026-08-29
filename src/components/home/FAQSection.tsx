@@ -15,7 +15,7 @@ export const FAQSection: React.FC = () => {
     },
     {
       q: 'What items are prohibited from dumpsters?',
-      a: 'Hazardous chemicals, wet paints, motor fluids, vehicle tires, propane tanks, batteries, asbestos, and un-evacuated Freon units are prohibited. Household trash, construction debris, roofing shingles, and furniture are 100% permitted.',
+      a: 'Concrete, dirt, rock, brick, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, tires, lead-acid batteries, propane tanks, asbestos, and AC units are prohibited. Refrigerators containing Freon require prior approval. Household trash, construction debris, drywall, wood, and furniture are permitted.',
     },
     {
       q: 'What if I need the dumpster longer than planned?',

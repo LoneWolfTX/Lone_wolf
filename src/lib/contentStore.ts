@@ -292,14 +292,14 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     junkStarting: 150
   },
   dimensions: {
-    fifteenYard: "14' x 7.5' x 4'",
-    twentyYard: "16' x 7.5' x 4.5'",
-    twentyFiveYard: "16' x 7.5' x 6'"
+    fifteenYard: "16' L × 7.5' W × 4' H",
+    twentyYard: "16' L × 7.5' W × 4.5' H",
+    twentyFiveYard: "16' L × 7.5' W × 6' H"
   },
   rentalPeriods: {
-    standardDays: "1 to 7 Days Included",
+    standardDays: "1 to 7 Days",
     extraDayRate: "$20 / Day after 7 days",
-    maxRentalDays: 14
+    maxRentalDays: 10
   },
   contractorRates: {
     multiLoadDiscount: "Contractor Rates & Multi-Load Discounts",
@@ -371,7 +371,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "ac_units",
-      name: "Air Conditioning Units",
+      name: "AC Units",
       category: "prohibited",
       status: "Prohibited",
       shortDescription: "Air conditioning units are strictly prohibited.",
@@ -380,10 +380,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "freon_refrigerators",
-      name: "Refrigerators Containing Freon",
+      name: "Refrigerators containing Freon – Ask First",
       category: "restricted",
       status: "Prior Approval Required",
-      shortDescription: "Refrigerators containing Freon require prior approval before loading.",
+      shortDescription: "Customers should contact us before disposing of Freon-containing refrigerators.",
       fullDescription: "Customers must contact Lone Wolf Dumpsters before loading a Freon-containing refrigerator.",
       fee: 0,
       active: true
@@ -397,7 +397,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     "Lead-Acid Batteries",
     "Propane Tanks & Compressed Gas Cylinders",
     "Asbestos / Asbestos-Containing Materials",
-    "Air Conditioning Units"
+    "AC Units",
+    "Refrigerators containing Freon – Ask First"
   ],
   promotions: [
     {
@@ -446,14 +447,14 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     }
   ],
   serviceAreasList: [
-    { id: "sa-1", city: "Dallas", state: "TX", county: "Dallas", slug: "dallas", zipCodes: ["75201", "75212", "75219", "75208"], active: true, serviceStatus: "Active", localIntro: "Direct dispatch from our Singleton Blvd facility across all Dallas neighborhoods.", headline: "Dumpster Rental in Dallas, TX", keyProjects: ["Home cleanouts in Oak Cliff", "Commercial remodels in Downtown", "Roofing tear-offs in East Dallas"], neighborhoods: ["Downtown", "Oak Cliff", "Uptown", "Kiest Park"] },
-    { id: "sa-2", city: "Fort Worth", state: "TX", county: "Tarrant", slug: "fort-worth", zipCodes: ["76102", "76104", "76107", "76116", "76132"], active: true, serviceStatus: "Active", localIntro: "Priority scheduling and roll-off dumpster rentals delivered directly to Fort Worth homeowners and contractors.", headline: "Dumpster Rental in Fort Worth, TX", keyProjects: ["Cleanouts near TCU", "Demolition in Downtown Fort Worth", "Roofing jobs in Cultural District"], neighborhoods: ["Downtown", "TCU", "Cultural District", "Tanglewood"] },
-    { id: "sa-3", city: "Arlington", state: "TX", county: "Tarrant", slug: "arlington", zipCodes: ["76010", "76011", "76012", "76013"], active: true, serviceStatus: "Active", localIntro: "Serving Arlington residential neighborhoods and commercial entertainment district sites.", headline: "Dumpster Rental in Arlington, TX", keyProjects: ["Remodels near AT&T Stadium", "Estate clearouts in North Arlington", "Roof replacements"], neighborhoods: ["Entertainment District", "North Arlington", "Pantego", "Dalworthington Gardens"] },
+    { id: "sa-1", city: "Dallas", state: "TX", county: "Dallas", slug: "dallas", zipCodes: ["75201", "75212", "75219", "75208"], active: true, serviceStatus: "Active", localIntro: "Direct dispatch from our Singleton Blvd facility across all Dallas neighborhoods.", headline: "Dumpster Rental in Dallas, TX", keyProjects: ["Home cleanouts in Oak Cliff", "Commercial remodels in Downtown", "Property clearouts in East Dallas"], neighborhoods: ["Downtown", "Oak Cliff", "Uptown", "Kiest Park"] },
+    { id: "sa-2", city: "Fort Worth", state: "TX", county: "Tarrant", slug: "fort-worth", zipCodes: ["76102", "76104", "76107", "76116", "76132"], active: true, serviceStatus: "Active", localIntro: "Priority scheduling and roll-off dumpster rentals delivered directly to Fort Worth homeowners and contractors.", headline: "Dumpster Rental in Fort Worth, TX", keyProjects: ["Cleanouts near TCU", "Demolition in Downtown Fort Worth", "Remodeling jobs in Cultural District"], neighborhoods: ["Downtown", "TCU", "Cultural District", "Tanglewood"] },
+    { id: "sa-3", city: "Arlington", state: "TX", county: "Tarrant", slug: "arlington", zipCodes: ["76010", "76011", "76012", "76013"], active: true, serviceStatus: "Active", localIntro: "Serving Arlington residential neighborhoods and commercial entertainment district sites.", headline: "Dumpster Rental in Arlington, TX", keyProjects: ["Remodels near AT&T Stadium", "Estate clearouts in North Arlington", "General construction"], neighborhoods: ["Entertainment District", "North Arlington", "Pantego", "Dalworthington Gardens"] },
     { id: "sa-4", city: "Keller", state: "TX", county: "Tarrant", slug: "keller", zipCodes: ["76248", "76244"], active: true, serviceStatus: "Active", localIntro: "Residential driveway-safe roll-off container delivery across Keller and North Tarrant County.", headline: "Dumpster Rental in Keller, TX", keyProjects: ["Garage decluttering", "Kitchen renovations", "Yard debris removal"], neighborhoods: ["Town Center", "Hidden Lakes", "Marshall Ridge"] }
   ],
   termsContent: {
     legalEntityName: "American Wolf Rent LLC DBA Lone Wolf Dumpsters",
-    generalTerms: "Standard rental period includes up to 7 calendar days. Weight allowances: 15yd (1.5 tons), 20yd (2.0 tons), 25yd (2.2 tons). Overages billed at $80/ton.",
+    generalTerms: "Standard rental period includes 1 to 7 days. Weight allowances: 15yd (1.5 tons), 20yd (2.0 tons), 25yd (2.2 tons). Overages billed at $80/ton.",
     paymentTerms: "Payment due upon container delivery. Major credit cards, debit cards, and corporate checks accepted.",
     weightTerms: "Scale weight tickets provided by local landfills determine final billable tonnage according to written terms."
   },
@@ -534,18 +535,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 1.5,
       includedLbs: 3000,
       overageRate: 80,
-      rentalPeriod: "3–5 days",
+      rentalPeriod: "1 to 5 Days",
       additionalDayFee: 20,
-      dimensions: "14' L × 7.5' W × 4' H",
+      dimensions: "16' L × 7.5' W × 4' H",
       image: "/images/lone-wolf/dumpster-15.jpeg",
       imageAlt: "Lone Wolf 15-yard roll-off dumpster rental on residential driveway in Dallas-Fort Worth",
-      badgeText: "3 DAYS — $385 • 1.5 TONS INCLUDED",
+      badgeText: "3 DAYS — $385 • 1.5 TONS",
       description: "Ideal for small home cleanouts, single-room remodels, yard debris, and light renovation projects.",
       bestFor: [
         "Garage & attic cleanouts",
         "Single bathroom remodels",
         "Flooring removal & yard debris",
-        "4.5 Tons Max Safe Road Load"
+        "Max Safe Load Capacity: 4.5 tons.",
+        "And other similar projects."
       ],
       importantNotice: "",
       active: true,
@@ -562,18 +564,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 2.0,
       includedLbs: 4000,
       overageRate: 80,
-      rentalPeriod: "1 to 7 Days Included",
+      rentalPeriod: "1 to 7 Days",
       additionalDayFee: 20,
       dimensions: "16' L × 7.5' W × 4.5' H",
       image: "/images/lone-wolf/dumpster-20.jpeg",
       imageAlt: "Lone Wolf 20-yard roll-off dumpster container for residential and contractor projects",
-      badgeText: "3 DAYS — $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
+      badgeText: "3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
       description: "Our most versatile container. Perfect for kitchen remodels, home cleanouts, and medium renovation projects. Driveway-safe placement.",
       bestFor: [
         "Kitchen & Multiple Room Remodels",
         "Moving & Decluttering",
         "Garage & Home Cleanouts",
-        "Property Cleanouts"
+        "Property Cleanouts",
+        "And other similar projects."
       ],
       importantNotice: "",
       active: true,
@@ -590,12 +593,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 2.2,
       includedLbs: 4400,
       overageRate: 80,
-      rentalPeriod: "1 to 7 Days Included",
+      rentalPeriod: "1 to 7 Days",
       additionalDayFee: 20,
       dimensions: "16' L × 7.5' W × 6' H",
       image: "/images/lone-wolf/dumpster-25.jpeg",
       imageAlt: "Lone Wolf 25-yard heavy-duty roll-off dumpster on commercial contractor job site",
-      badgeText: "3 DAYS — $475 • 2.2 TONS INCLUDED",
+      badgeText: "3 DAYS — $475 • 2.2 TONS",
       description: "Maximum capacity for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bestFor: [
         "Major Home Renovations",
@@ -603,7 +606,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Moving & Decluttering",
         "Commercial Cleanouts",
         "Warehouses & Packaging Cleanouts",
-        "Property Cleanouts"
+        "Property Cleanouts",
+        "And other similar projects."
       ],
       importantNotice: "",
       active: true,
@@ -613,17 +617,18 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   dumpsterPages: [
     {
       id: "15-yard-dumpster",
-      badgeText: "3 DAYS — $385 • 1.5 TONS INCLUDED",
+      badgeText: "3 DAYS — $385 • 1.5 TONS",
       heroDescription: "Compact, driveway-friendly, and perfect for small home cleanouts, garage organizing, yard debris, and light bathroom or kitchen remodeling.",
       bodyDescription: "The 15-yard roll-off container holds approximately 6 pickup truck loads of debris. It is low enough for easy over-the-side loading and includes a swinging rear door for walk-in ground access.",
       priceDisplay: "$385",
-      weightIncludedText: "1.5 Tons (3,000 lbs) Included",
+      weightIncludedText: "1.5 Tons (3,000 lbs)",
       overagePrice: "$80 / ton",
       bestFor: [
         "Garage & attic cleanouts",
         "Single bathroom remodels",
         "Flooring removal & yard debris",
-        "4.5 Tons Max Safe Road Load"
+        "Max Safe Load Capacity: 4.5 tons.",
+        "And other similar projects."
       ],
       importantNotice: "",
       ctaText: "Book 15 Yard Now →",
@@ -635,17 +640,18 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "20-yard-dumpster",
-      badgeText: "3 DAYS — $425 • 2 TONS INCLUDED • DRIVEWAY SAFE",
+      badgeText: "3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
       heroDescription: "Our versatile container size across DFW. Handles medium-to-large home renovations, garage cleanouts, and flooring swaps.",
       bodyDescription: "The 20-yard roll-off container holds approximately 8 pickup truck loads of waste. Feature low 4.5-ft sidewalls for effortless loading and wood board driveway protection included.",
       priceDisplay: "$425",
-      weightIncludedText: "2.0 Tons (4,000 lbs) Included",
+      weightIncludedText: "2.0 Tons (4,000 lbs)",
       overagePrice: "$80 / ton",
       bestFor: [
         "Kitchen & Multiple Room Remodels",
         "Moving & Decluttering",
         "Garage & Home Cleanouts",
-        "Property Cleanouts"
+        "Property Cleanouts",
+        "And other similar projects."
       ],
       importantNotice: "",
       ctaText: "Book 20 Yard Now →",
@@ -657,11 +663,11 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "25-yard-dumpster",
-      badgeText: "3 DAYS — $475 • 2.2 TONS INCLUDED",
+      badgeText: "3 DAYS — $475 • 2.2 TONS",
       heroDescription: "Our maximum volume container for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bodyDescription: "The 25-yard container holds approximately 10 pickup truck loads of debris. Built with reinforced steel walls and heavy-duty rear doors for efficient loading on major jobsites.",
       priceDisplay: "$475",
-      weightIncludedText: "2.2 Tons (4,400 lbs) Included",
+      weightIncludedText: "2.2 Tons (4,400 lbs)",
       overagePrice: "$80 / ton",
       bestFor: [
         "Major Home Renovations",
@@ -669,7 +675,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Moving & Decluttering",
         "Commercial Cleanouts",
         "Warehouses & Packaging Cleanouts",
-        "Property Cleanouts"
+        "Property Cleanouts",
+        "And other similar projects."
       ],
       importantNotice: "",
       ctaText: "Book 25 Yard Now →",
@@ -684,7 +691,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "res-1",
       title: "Garage & Attic Cleanouts",
-      description: "Clear out years of accumulated boxes, old furniture, broken appliances, and general clutter in a single convenient weekend rental.",
+      description: "Clear out years of accumulated boxes, old furniture, broken appliances, and general clutter in a single convenient rental.",
       tag: "Home Clearout"
     },
     {
@@ -727,9 +734,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "con-2",
-      title: "Flooring & Tile Contractors",
-      description: "Low-profile sidewalls make loading old tile, carpet rolls, hardwood planks, and underlayment easy.",
-      tag: "Flooring & Tile"
+      title: "Property Cleanouts",
+      description: "Ideal container capacity for rental property clearouts, estate sales, foreclosure cleanups, and tenant move-out debris.",
+      tag: "Property Cleanouts"
     },
     {
       id: "con-3",
@@ -739,9 +746,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "con-4",
-      title: "Flooring & Tile Tear-Outs",
-      description: "Low sidewalls allow easy loading of carpet rolls, hardwood planks, tile, and underlayment materials.",
-      tag: "Flooring Subcontractors"
+      title: "Yard & Landscape Clean-Up",
+      description: "Haul away outdoor debris, brush, fallen limbs, fencing timber, landscaping mulch, and yard clearout materials.",
+      tag: "Yard Clean-Up"
     },
     {
       id: "con-5",
@@ -804,7 +811,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-2",
       question: "What is included in the flat-rate pricing?",
-      answer: "Our simple upfront price covers 3 days included, delivery to your site, heavy-duty wooden driveway protection boards, pick-up, and the included weight allowance (1.5, 2.0, or 2.2 tons depending on size). There are no hidden fees.",
+      answer: "Our simple upfront price covers 3 days, delivery to your site, heavy-duty wooden driveway protection boards, pick-up, and the included weight allowance (1.5, 2.0, or 2.2 tons depending on size). There are no hidden fees.",
       category: "pricing"
     },
     {
@@ -828,7 +835,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-6",
       question: "What happens if I exceed the included weight allowance?",
-      answer: "If your load exceeds the included weight allowance (1.5t for 15yd, 2.0t for 20yd, 2.2t for 25yd), additional weight is billed at $80 per ton based on certified landfill weight tickets. Maximum allowed weight is 4.5 tons.",
+      answer: "If your load exceeds the included weight allowance (1.5t for 15yd, 2.0t for 20yd, 2.2t for 25yd), additional weight is billed at $80 per ton based on certified landfill weight tickets. Maximum allowed weight is 4.5 tons. Additional charges apply for excess weight.",
       category: "pricing"
     },
     {
@@ -840,7 +847,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-8",
       question: "What if I need more time?",
-      answer: "We’re flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20/day and must be confirmed with us in advance by phone. Rentals can be extended up to 10 days total. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.",
+      answer: "We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Rental can be extended up to 10 days total. If you need the dumpster for 2, 3 weeks or longer, please contact us to discuss availability and pricing.",
       category: "booking"
     }
   ],

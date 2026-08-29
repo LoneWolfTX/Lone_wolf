@@ -53,22 +53,39 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
       notes: projectDetails,
     };
 
+    const notificationDiagnostics = {
+      timestamp: new Date().toISOString(),
+      recipientEmailPresent: true,
+      recipientPhonePresent: true,
+      phpEndpoint: { invoked: false, status: 0, emailSent: false, smsSent: false, error: null as string | null },
+      emailProvider: { name: 'FormSubmit.co', invoked: false, status: 0, success: false, message: null as string | null },
+      smsProvider: { name: 'Email-to-SMS Gateway / Webhook', invoked: false, status: 0, success: false, gatewayResults: [] as any[] }
+    };
+
     try {
-      // 1. Dual submission: try PHP backend endpoint first
-      let success = false;
+      // 1. Primary: Server PHP API Endpoint (/api/quote.php)
       try {
+        notificationDiagnostics.phpEndpoint.invoked = true;
         const phpRes = await fetch('/api/quote.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (phpRes.ok) success = true;
-      } catch {
-        // PHP endpoint not available on static hosts like Netlify
+        notificationDiagnostics.phpEndpoint.status = phpRes.status;
+        const phpData = await phpRes.json().catch(() => null);
+        if (phpRes.ok && phpData?.success) {
+          notificationDiagnostics.phpEndpoint.emailSent = !!phpData.emailSent;
+          notificationDiagnostics.phpEndpoint.smsSent = !!phpData.smsSent;
+        } else if (phpData?.error) {
+          notificationDiagnostics.phpEndpoint.error = phpData.error;
+        }
+      } catch (err: any) {
+        notificationDiagnostics.phpEndpoint.error = err.message || 'Fetch failed';
       }
 
-      // 2. FormSubmit.co email delivery to lonewolfdumpsters@gmail.com
+      // 2. Secondary Email: FormSubmit.co
       try {
+        notificationDiagnostics.emailProvider.invoked = true;
         const formSubmitRes = await fetch('https://formsubmit.co/ajax/lonewolfdumpsters@gmail.com', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -83,27 +100,43 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
             Notes: projectDetails || 'None',
           }),
         });
-        if (formSubmitRes.ok) success = true;
-      } catch {
-        // FormSubmit fallback
+        notificationDiagnostics.emailProvider.status = formSubmitRes.status;
+        const fsData = await formSubmitRes.json().catch(() => null);
+        notificationDiagnostics.emailProvider.success = formSubmitRes.ok && fsData?.success !== 'false';
+        notificationDiagnostics.emailProvider.message = fsData?.message || (formSubmitRes.ok ? 'Accepted' : 'HTTP Error');
+      } catch (err: any) {
+        notificationDiagnostics.emailProvider.message = err.message || 'Network error';
       }
 
-      // 3. Automatic SMS notification to Wayne via Email-to-SMS gateways
-      const smsGateways = [
-        '2148760321@vtext.com',
-        '2148760321@txt.att.net',
-        '2148760321@tmomail.net',
-      ];
-      smsGateways.forEach((gateway) => {
-        fetch(`https://formsubmit.co/ajax/${gateway}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            _subject: `New Dumpster Quote`,
-            Quote: `${fullName} - ${phoneNumber} - ${dumpsterSize} at ${deliveryAddress}`,
-          }),
-        }).catch(() => null);
-      });
+      // 3. SMS Gateway dispatch
+      notificationDiagnostics.smsProvider.invoked = true;
+      const smsGateways = ['2148760321@vtext.com', '2148760321@txt.att.net', '2148760321@tmomail.net'];
+      for (const gateway of smsGateways) {
+        try {
+          const res = await fetch(`https://formsubmit.co/ajax/${gateway}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              _subject: `New Dumpster Quote`,
+              Quote: `${fullName} - ${phoneNumber} - ${dumpsterSize} at ${deliveryAddress}`,
+            }),
+          });
+          const gwData = await res.json().catch(() => null);
+          notificationDiagnostics.smsProvider.gatewayResults.push({
+            gateway,
+            status: res.status,
+            success: res.ok && gwData?.success !== 'false',
+          });
+        } catch (gwErr: any) {
+          notificationDiagnostics.smsProvider.gatewayResults.push({
+            gateway,
+            status: 0,
+            error: gwErr.message,
+          });
+        }
+      }
+
+      console.log('🐺 Lone Wolf Quote Notification Diagnostics:', notificationDiagnostics);
 
       setFormSubmitted(true);
       trackLeadSubmitted({ service: dumpsterSize, projectType: cleaningType, location: deliveryAddress });

@@ -18,7 +18,7 @@ export function formatTonnage(tons: number, includeLbs: boolean = true): string 
 }
 
 export function formatRentalPeriod(standardDays: string): string {
-  return standardDays || '1 to 7 Days Included';
+  return standardDays || '1 to 7 Days';
 }
 
 export function formatPhoneNumber(phone: string): string {

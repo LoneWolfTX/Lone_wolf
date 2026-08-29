@@ -32,7 +32,7 @@ export const RentalGuidelinesAccordion: React.FC = () => {
             <li>Wood Framing &amp; Plywood</li>
             <li>Kitchen &amp; Bath Cabinetry</li>
             <li>Flooring (Tile, Carpet, Wood)</li>
-            <li>Asphalt Roofing Shingles</li>
+            <li>Cardboard &amp; Packaging</li>
             <li>Furniture &amp; Mattresses</li>
             <li>Yard Debris &amp; Brush</li>
             <li>General Household Clutter</li>
@@ -55,7 +55,8 @@ export const RentalGuidelinesAccordion: React.FC = () => {
             <li>Vehicle Tires</li>
             <li>Lead-Acid Batteries</li>
             <li>Asbestos Containing Materials</li>
-            <li>Appliances with Freon (unless certified)</li>
+            <li>AC Units</li>
+            <li>Refrigerators containing Freon – Ask First</li>
           </ul>
         </div>
       ),

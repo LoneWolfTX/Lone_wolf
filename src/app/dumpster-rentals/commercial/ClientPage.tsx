@@ -65,7 +65,7 @@ export default function CommercialPageClient() {
 
   const commercialBestFors = {
     '15-yard-dumpster': 'Small renovations, office cleanouts, retail spaces, light construction debris',
-    '20-yard-dumpster': 'Medium projects, renovations, roofing jobs, commercial cleanouts',
+    '20-yard-dumpster': 'Medium projects, renovations, general construction, commercial cleanouts',
     '25-yard-dumpster': 'Large construction projects, demolition, warehouses, commercial use',
   };
 

@@ -102,15 +102,15 @@ export default function AdminDashboardPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // Fetch canonical content on mount
+  // Fetch canonical content on mount from Vercel + Upstash Redis
   useEffect(() => {
-    fetch('/api/content.php?t=' + Date.now(), { cache: 'no-store' })
+    fetch('/api/admin/content?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => {
         if (res.ok) return res.json();
-        throw new Error('Could not load site content from server.');
+        return fetch('/api/content.php?t=' + Date.now(), { cache: 'no-store' }).then((r) => r.json());
       })
       .then((data) => {
-        if (data && typeof data === 'object' && data.homepage) {
+        if (data && typeof data === 'object' && (data.homepage || data.business)) {
           const merged = { ...DEFAULT_SITE_CONTENT, ...data };
           setSiteContent(merged);
           setSavedServerContent(merged);
@@ -120,9 +120,12 @@ export default function AdminDashboardPage() {
         console.warn('Using default content store:', err);
       });
 
-    // Fetch leads from PHP endpoint if available
-    fetch('/api/leads.php')
-      .then((res) => res.ok ? res.json() : null)
+    // Fetch leads from Vercel + Upstash Redis endpoint
+    fetch('/api/leads', {
+      headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+      cache: 'no-store',
+    })
+      .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && data.success && Array.isArray(data.leads)) {
           setLeads(data.leads);
@@ -140,29 +143,45 @@ export default function AdminDashboardPage() {
     }
   }, [siteContent, savedServerContent]);
 
-  // Save Content to Server Endpoint /api/content.php
+  // Save Content to Vercel + Upstash Redis Endpoint /api/admin/content
   const handleSaveAllContent = async () => {
     setSaveStatus('saving');
     setSaveErrorMessage('');
 
     try {
-      const res = await fetch('/api/content.php', {
+      let res = await fetch('/api/admin/content', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': 'LoneWolf2026!',
+        },
         body: JSON.stringify(siteContent),
-        credentials: 'same-origin',
       });
 
-      const data = await res.json();
+      let data = await res.json().catch(() => null);
 
-      if (res.ok && data.success) {
+      if (!res.ok || !data?.success) {
+        // Fallback to PHP endpoint if Redis API is unavailable
+        const phpRes = await fetch('/api/content.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(siteContent),
+          credentials: 'same-origin',
+        });
+        if (phpRes.ok) {
+          data = await phpRes.json().catch(() => null);
+          res = phpRes;
+        }
+      }
+
+      if (res.ok && data?.success) {
         setSavedServerContent(siteContent);
         setIsDirty(false);
         setSaveStatus('saved');
         setTimeout(() => setSaveStatus('idle'), 4000);
       } else {
         setSaveStatus('error');
-        setSaveErrorMessage(data.error || 'Server error occurred while saving.');
+        setSaveErrorMessage(data?.error || 'Server error occurred while publishing content.');
       }
     } catch (err: any) {
       setSaveStatus('error');
