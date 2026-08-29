@@ -121,7 +121,7 @@ export default function AdminDashboardPage() {
       });
 
     // Fetch leads from Vercel + Upstash Redis endpoint
-    fetch('/api/leads', {
+    fetch('/api/leads?t=' + Date.now(), {
       headers: { 'X-Admin-Password': 'LoneWolf2026!' },
       cache: 'no-store',
     })
