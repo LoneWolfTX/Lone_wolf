@@ -102,6 +102,10 @@ export interface LeadSubmission {
   service: string;
   projectType: string;
   preferredDate?: string;
+  rentalDuration?: string;
+  status?: string;
+  archived?: boolean;
+  updatedAt?: string;
   notes?: string;
   createdAt: string;
   emailNotified?: boolean;
@@ -191,7 +195,11 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
               resObj = JSON.parse(resObj);
             }
             if (resObj && typeof resObj === 'object' && resObj.name) {
-              leads.push(resObj as LeadSubmission);
+              leads.push({
+                status: 'New',
+                archived: false,
+                ...resObj,
+              } as LeadSubmission);
             }
           } catch {
             // Skip invalid JSON
@@ -203,5 +211,87 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
   } catch (err) {
     console.error('Failed to fetch leads from Upstash Redis:', err);
     return [];
+  }
+}
+
+/**
+ * Update an existing lead in Upstash Redis (status, archived, etc.)
+ */
+export async function updateLeadInRedis(
+  id: string,
+  updates: Partial<LeadSubmission>
+): Promise<LeadSubmission | null> {
+  try {
+    const cleanId = id.trim();
+    const itemRes = await fetch(`${UPSTASH_URL}/get/${LEADS_KEY_PREFIX}${cleanId}`, {
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+      cache: 'no-store',
+    });
+
+    if (!itemRes.ok) return null;
+    const itemData = await itemRes.json();
+    if (!itemData?.result) return null;
+
+    let existingLead: any = itemData.result;
+    while (typeof existingLead === 'string') {
+      existingLead = JSON.parse(existingLead);
+    }
+
+    const updatedLead: LeadSubmission = {
+      status: 'New',
+      archived: false,
+      ...existingLead,
+      ...updates,
+      id: cleanId,
+      updatedAt: new Date().toISOString(),
+    };
+
+    const jsonString = JSON.stringify(updatedLead);
+
+    await fetch(`${UPSTASH_URL}/set/${LEADS_KEY_PREFIX}${cleanId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${UPSTASH_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: jsonString,
+    });
+
+    return updatedLead;
+  } catch (err) {
+    console.error('Failed to update lead in Upstash Redis:', err);
+    return null;
+  }
+}
+
+/**
+ * Permanently delete a lead from Upstash Redis (Key + Master List).
+ */
+export async function deleteLeadFromRedis(id: string): Promise<boolean> {
+  try {
+    const cleanId = id.trim();
+
+    // 1. Delete key lonewolf:lead:<id>
+    await fetch(`${UPSTASH_URL}/del/${LEADS_KEY_PREFIX}${cleanId}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    });
+
+    // 2. Remove id from master list lonewolf:leads
+    await fetch(`${UPSTASH_URL}/lrem/${LEADS_LIST_KEY}/0/${cleanId}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    });
+
+    // 3. Remove nested array string ["id"] if present in legacy list
+    await fetch(`${UPSTASH_URL}/lrem/${LEADS_LIST_KEY}/0/["${cleanId}"]`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    });
+
+    return true;
+  } catch (err) {
+    console.error('Failed to delete lead from Upstash Redis:', err);
+    return false;
   }
 }

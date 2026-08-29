@@ -26,6 +26,7 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [dumpsterSize, setDumpsterSize] = useState(defaultService);
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [rentalDuration, setRentalDuration] = useState('7 Days');
   const [cleaningType, setCleaningType] = useState('Household Cleanout');
   const [projectDetails, setProjectDetails] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -50,6 +51,7 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
       service: dumpsterSize,
       projectType: cleaningType,
       preferredDate: deliveryDate || 'As soon as possible',
+      rentalDuration,
       notes: projectDetails,
     };
 
@@ -504,25 +506,24 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
                         boxSizing: 'border-box',
                       }}
                     >
-                      <option value="15-yard-dumpster">15 Yard Dumpster ({formatCurrency(pr.fifteenYard)})</option>
-                      <option value="20-yard-dumpster">20 Yard Dumpster ({formatCurrency(pr.twentyYard)})</option>
-                      <option value="25-yard-dumpster">25 Yard Dumpster ({formatCurrency(pr.twentyFiveYard)})</option>
+                      <option value="15-yard-dumpster">15 Yard Dumpster</option>
+                      <option value="20-yard-dumpster">20 Yard Dumpster (Most Popular)</option>
+                      <option value="25-yard-dumpster">25 Yard Dumpster</option>
                       <option value="junk">Full-Service Junk Removal</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="quote-date" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>
-                      Preferred Delivery Date
+                    <label htmlFor="quote-duration" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>
+                      Rental Duration Needed *
                     </label>
-                    <input
-                      id="quote-date"
-                      type="date"
-                      value={deliveryDate}
-                      onChange={(e) => setDeliveryDate(e.target.value)}
+                    <select
+                      id="quote-duration"
+                      value={rentalDuration}
+                      onChange={(e) => setRentalDuration(e.target.value)}
                       style={{
                         width: '100%',
-                        padding: '9px 12px',
+                        padding: '10px 12px',
                         backgroundColor: '#ffffff',
                         border: '1px solid #cbd5e1',
                         borderRadius: '4px',
@@ -530,8 +531,36 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
                         fontSize: '0.9rem',
                         boxSizing: 'border-box',
                       }}
-                    />
+                    >
+                      <option value="3 Days">3 Days</option>
+                      <option value="5 Days">5 Days</option>
+                      <option value="7 Days">7 Days (Standard)</option>
+                      <option value="7+ Days / Custom">7+ Days / Custom</option>
+                    </select>
                   </div>
+                </div>
+
+                {/* Delivery Date */}
+                <div>
+                  <label htmlFor="quote-date" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>
+                    Preferred Delivery Date
+                  </label>
+                  <input
+                    id="quote-date"
+                    type="date"
+                    value={deliveryDate}
+                    onChange={(e) => setDeliveryDate(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '9px 12px',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '4px',
+                      color: '#0f172a',
+                      fontSize: '0.9rem',
+                      boxSizing: 'border-box',
+                    }}
+                  />
                 </div>
 
                 {/* What are you cleaning out? */}

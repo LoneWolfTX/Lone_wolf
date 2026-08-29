@@ -17,6 +17,7 @@ export const ContactBookingSection: React.FC = () => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [dumpsterSize, setDumpsterSize] = useState('20-yard-dumpster');
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [rentalDuration, setRentalDuration] = useState('7 Days');
   const [cleaningType, setCleaningType] = useState('Household Cleanout');
   const [projectDetails, setProjectDetails] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -41,6 +42,7 @@ export const ContactBookingSection: React.FC = () => {
       service: dumpsterSize,
       projectType: cleaningType,
       preferredDate: deliveryDate || 'As soon as possible',
+      rentalDuration,
       notes: projectDetails,
     };
 
@@ -294,25 +296,24 @@ export const ContactBookingSection: React.FC = () => {
                         boxSizing: 'border-box',
                       }}
                     >
-                      <option value="15-yard-dumpster">15 Yard ({formatCurrency(pr.fifteenYard)})</option>
-                      <option value="20-yard-dumpster">20 Yard ({formatCurrency(pr.twentyYard)} - Most Popular)</option>
-                      <option value="25-yard-dumpster">25 Yard ({formatCurrency(pr.twentyFiveYard)})</option>
+                      <option value="15-yard-dumpster">15 Yard Dumpster</option>
+                      <option value="20-yard-dumpster">20 Yard Dumpster (Most Popular)</option>
+                      <option value="25-yard-dumpster">25 Yard Dumpster</option>
                       <option value="junk">Full-Service Junk Removal</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="intake-date" style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px', color: '#cbd5e1' }}>
-                      Preferred Delivery Date
+                    <label htmlFor="intake-duration" style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px', color: '#cbd5e1' }}>
+                      Rental Duration Needed
                     </label>
-                    <input
-                      id="intake-date"
-                      type="date"
-                      value={deliveryDate}
-                      onChange={(e) => setDeliveryDate(e.target.value)}
+                    <select
+                      id="intake-duration"
+                      value={rentalDuration}
+                      onChange={(e) => setRentalDuration(e.target.value)}
                       style={{
                         width: '100%',
-                        padding: '8px 10px',
+                        padding: '9px 10px',
                         backgroundColor: '#111622',
                         border: '1px solid #334155',
                         borderRadius: '4px',
@@ -320,8 +321,36 @@ export const ContactBookingSection: React.FC = () => {
                         fontSize: '0.88rem',
                         boxSizing: 'border-box',
                       }}
-                    />
+                    >
+                      <option value="3 Days">3 Days</option>
+                      <option value="5 Days">5 Days</option>
+                      <option value="7 Days">7 Days (Standard)</option>
+                      <option value="7+ Days / Custom">7+ Days / Custom</option>
+                    </select>
                   </div>
+                </div>
+
+                {/* Delivery Date */}
+                <div>
+                  <label htmlFor="intake-date" style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px', color: '#cbd5e1' }}>
+                    Preferred Delivery Date
+                  </label>
+                  <input
+                    id="intake-date"
+                    type="date"
+                    value={deliveryDate}
+                    onChange={(e) => setDeliveryDate(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 10px',
+                      backgroundColor: '#111622',
+                      border: '1px solid #334155',
+                      borderRadius: '4px',
+                      color: '#ffffff',
+                      fontSize: '0.88rem',
+                      boxSizing: 'border-box',
+                    }}
+                  />
                 </div>
 
                 {/* Project Notes (Optional) */}

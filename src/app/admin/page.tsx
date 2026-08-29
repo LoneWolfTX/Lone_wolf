@@ -58,13 +58,16 @@ export interface Lead {
   email: string;
   address?: string;
   deliveryAddress?: string;
-  city: string;
+  city?: string;
   service?: string;
   size?: string;
   price?: string;
   projectType: string;
   preferredDate?: string;
-  status: 'New' | 'Contacted' | 'Scheduled' | 'Delivered' | 'Completed' | 'Cancelled';
+  rentalDuration?: string;
+  status: 'New' | 'Contacted' | 'Quoted' | 'Booked' | 'Completed' | 'Lost / Not Moving Forward';
+  archived?: boolean;
+  updatedAt?: string;
   source?: string;
   notes?: string;
   mail_sent?: boolean;
@@ -86,6 +89,8 @@ export default function AdminDashboardPage() {
 
   // Leads State
   const [leads, setLeads] = useState<Lead[]>(defaultLeads);
+  const [viewMode, setViewMode] = useState<'active' | 'archived'>('active');
+  const [statusNotice, setStatusNotice] = useState<Record<string, 'saving' | 'saved' | 'error'>>({});
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -363,41 +368,137 @@ export default function AdminDashboardPage() {
     setLibraryModalOpen(true);
   };
 
-  // Handle lead status updates
+  // Handle lead status updates with immediate persistence to Upstash Redis
   const handleStatusChange = async (leadId: string, newStatus: Lead['status']) => {
-    const updated = leads.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l));
-    setLeads(updated);
+    const prevLeads = [...leads];
+    const targetLead = leads.find((l) => l.id === leadId);
+    if (!targetLead) return;
+
+    setStatusNotice((prev) => ({ ...prev, [leadId]: 'saving' }));
+    setLeads(leads.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)));
 
     try {
-      await fetch('/api/leads.php', {
+      const res = await fetch('/api/leads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': 'LoneWolf2026!',
+        },
         body: JSON.stringify({ action: 'update_status', leadId, status: newStatus }),
-        credentials: 'same-origin',
       });
-    } catch (e) {}
+      const data = await res.json().catch(() => null);
+
+      if (res.ok && data?.success) {
+        setStatusNotice((prev) => ({ ...prev, [leadId]: 'saved' }));
+        setTimeout(() => {
+          setStatusNotice((prev) => {
+            const copy = { ...prev };
+            delete copy[leadId];
+            return copy;
+          });
+        }, 2500);
+      } else {
+        setLeads(prevLeads);
+        setStatusNotice((prev) => ({ ...prev, [leadId]: 'error' }));
+      }
+    } catch {
+      setLeads(prevLeads);
+      setStatusNotice((prev) => ({ ...prev, [leadId]: 'error' }));
+    }
   };
 
-  // Filtered Leads
+  // Handle lead archive / restore
+  const handleArchive = async (leadId: string, archiveState: boolean = true) => {
+    const prevLeads = [...leads];
+    setLeads(leads.map((l) => (l.id === leadId ? { ...l, archived: archiveState } : l)));
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': 'LoneWolf2026!',
+        },
+        body: JSON.stringify({ action: archiveState ? 'archive' : 'restore', leadId }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success) {
+        setLeads(prevLeads);
+        alert('Failed to update archive status on server.');
+      }
+    } catch {
+      setLeads(prevLeads);
+      alert('Network error while archiving lead.');
+    }
+  };
+
+  // Handle permanent lead deletion
+  const handleDelete = async (leadId: string, leadName: string) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to PERMANENTLY delete lead "${leadName}" (${leadId})?\n\nThis action will remove it permanently from Upstash Redis.`
+      )
+    ) {
+      return;
+    }
+
+    const prevLeads = [...leads];
+    setLeads(leads.filter((l) => l.id !== leadId));
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': 'LoneWolf2026!',
+        },
+        body: JSON.stringify({ action: 'delete', leadId }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success) {
+        alert('Failed to delete lead from server. Restoring list.');
+        setLeads(prevLeads);
+      }
+    } catch {
+      alert('Network error while deleting lead. Restoring list.');
+      setLeads(prevLeads);
+    }
+  };
+
+  // Filtered Leads & Active / Archive counts
+  const activeLeadsCount = leads.filter((l) => !l.archived).length;
+  const archivedLeadsCount = leads.filter((l) => !!l.archived).length;
+
   const filteredLeads = leads.filter((lead) => {
+    const isArchived = !!lead.archived;
+    if (viewMode === 'active' && isArchived) return false;
+    if (viewMode === 'archived' && !isArchived) return false;
+
     const matchesSearch =
       (lead.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (lead.phone || '').includes(searchQuery) ||
       (lead.city || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (lead.projectType || '').toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = selectedStatusFilter === 'All' || lead.status === selectedStatusFilter;
+    const matchesStatus = selectedStatusFilter === 'All' || (lead.status || 'New') === selectedStatusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
-      case 'New': return { bg: 'rgba(239, 68, 68, 0.2)', text: '#fca5a5', border: '#ef4444' };
-      case 'Contacted': return { bg: 'rgba(168, 85, 247, 0.2)', text: '#d8b4fe', border: '#a855f7' };
-      case 'Scheduled': return { bg: 'rgba(59, 130, 246, 0.2)', text: '#93c5fd', border: '#3b82f6' };
-      case 'Delivered': return { bg: 'rgba(234, 179, 8, 0.2)', text: '#fde047', border: '#eab308' };
-      case 'Completed': return { bg: 'rgba(34, 197, 94, 0.2)', text: '#86efac', border: '#22c55e' };
-      case 'Cancelled': return { bg: 'rgba(107, 114, 128, 0.2)', text: '#d1d5db', border: '#6b7280' };
-      default: return { bg: '#1f2937', text: '#fff', border: '#374151' };
+      case 'New':
+        return { bg: 'rgba(239, 68, 68, 0.2)', text: '#fca5a5', border: '#ef4444' };
+      case 'Contacted':
+        return { bg: 'rgba(168, 85, 247, 0.2)', text: '#d8b4fe', border: '#a855f7' };
+      case 'Quoted':
+        return { bg: 'rgba(245, 158, 11, 0.2)', text: '#fcd34d', border: '#f59e0b' };
+      case 'Booked':
+        return { bg: 'rgba(59, 130, 246, 0.2)', text: '#93c5fd', border: '#3b82f6' };
+      case 'Completed':
+        return { bg: 'rgba(34, 197, 94, 0.2)', text: '#86efac', border: '#22c55e' };
+      case 'Lost / Not Moving Forward':
+        return { bg: 'rgba(107, 114, 128, 0.2)', text: '#d1d5db', border: '#6b7280' };
+      default:
+        return { bg: 'rgba(239, 68, 68, 0.2)', text: '#fca5a5', border: '#ef4444' };
     }
   };
 
@@ -781,28 +882,65 @@ export default function AdminDashboardPage() {
               </div>
             </div>
 
-            {/* Filter Bar */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
-              <input
-                type="text"
-                placeholder="Search leads by name, phone, city..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ flex: '1 1 240px', padding: '8px 12px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '4px', color: '#fff', fontSize: '0.86rem' }}
-              />
-              <select
-                value={selectedStatusFilter}
-                onChange={(e) => setSelectedStatusFilter(e.target.value)}
-                style={{ padding: '8px 12px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '4px', color: '#fff', fontSize: '0.86rem' }}
-              >
-                <option value="All">All Statuses</option>
-                <option value="New">Red: New</option>
-                <option value="Contacted">Purple: Contacted</option>
-                <option value="Scheduled">Blue: Scheduled</option>
-                <option value="Delivered">Yellow: Delivered</option>
-                <option value="Completed">Green: Completed</option>
-                <option value="Cancelled">Gray: Cancelled</option>
-              </select>
+            {/* Active / Archive View Filter Tabs & Search Bar */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('active')}
+                  style={{
+                    backgroundColor: viewMode === 'active' ? '#0284c7' : '#1e293b',
+                    color: '#ffffff',
+                    border: '1px solid ' + (viewMode === 'active' ? '#0369a1' : '#334155'),
+                    padding: '7px 16px',
+                    borderRadius: '4px',
+                    fontSize: '0.84rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Active Leads ({activeLeadsCount})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('archived')}
+                  style={{
+                    backgroundColor: viewMode === 'archived' ? '#475569' : '#1e293b',
+                    color: '#ffffff',
+                    border: '1px solid ' + (viewMode === 'archived' ? '#64748b' : '#334155'),
+                    padding: '7px 16px',
+                    borderRadius: '4px',
+                    fontSize: '0.84rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Archived ({archivedLeadsCount})
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', flex: '1 1 300px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                <input
+                  type="text"
+                  placeholder="Search leads by name, phone, city..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ flex: '1 1 200px', maxWidth: '320px', padding: '8px 12px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '4px', color: '#fff', fontSize: '0.86rem' }}
+                />
+                <select
+                  value={selectedStatusFilter}
+                  onChange={(e) => setSelectedStatusFilter(e.target.value)}
+                  style={{ padding: '8px 12px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '4px', color: '#fff', fontSize: '0.86rem' }}
+                >
+                  <option value="All">All Statuses</option>
+                  <option value="New">🔴 New</option>
+                  <option value="Contacted">🟣 Contacted</option>
+                  <option value="Quoted">🟠 Quoted</option>
+                  <option value="Booked">🔵 Booked</option>
+                  <option value="Completed">🟢 Completed</option>
+                  <option value="Lost / Not Moving Forward">⚫ Lost / Not Moving Forward</option>
+                </select>
+              </div>
             </div>
 
             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', overflowX: 'auto' }}>
@@ -813,82 +951,131 @@ export default function AdminDashboardPage() {
                     <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Customer &amp; Contact</th>
                     <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Delivery Location</th>
                     <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Size Requested</th>
-                    <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Project &amp; Notes</th>
+                    <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Project &amp; Duration</th>
                     <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem' }}>Status</th>
                     <th style={{ padding: '12px 16px', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.74rem', textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredLeads.map((lead) => {
-                    const sColor = getStatusColor(lead.status);
-                    return (
-                      <tr key={lead.id} style={{ borderBottom: '1px solid #1f2937' }}>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: 800, color: '#ffffff' }}>{lead.id}</div>
-                          <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.date || lead.timestamp}</div>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: 700, color: '#ffffff' }}>{lead.name}</div>
-                          <div style={{ color: 'var(--accent-red)', fontWeight: 700 }}>{lead.phone}</div>
-                          <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.email}</div>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ color: '#ffffff' }}>{lead.address || lead.deliveryAddress}</div>
-                          <div style={{ color: '#38bdf8', fontWeight: 700, fontSize: '0.8rem' }}>{lead.city}</div>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{ backgroundColor: 'rgba(220, 38, 38, 0.2)', color: '#f87171', padding: '3px 8px', borderRadius: '4px', fontWeight: 800, fontSize: '0.76rem' }}>
-                            {lead.size || lead.service}
-                          </span>
-                        </td>
-                        <td style={{ padding: '14px 16px', maxWidth: '240px' }}>
-                          <div style={{ color: '#e2e8f0' }}>{lead.projectType}</div>
-                          {lead.notes && (
-                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic', marginTop: '4px' }}>📝 {lead.notes}</div>
-                          )}
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <select
-                            value={lead.status}
-                            onChange={(e) => handleStatusChange(lead.id, e.target.value as Lead['status'])}
-                            style={{
-                              backgroundColor: sColor.bg,
-                              color: sColor.text,
-                              border: `1px solid ${sColor.border}`,
-                              borderRadius: '12px',
-                              padding: '3px 8px',
-                              fontSize: '0.75rem',
-                              fontWeight: 800,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <option value="New">🔴 New</option>
-                            <option value="Contacted">🟣 Contacted</option>
-                            <option value="Scheduled">🔵 Scheduled</option>
-                            <option value="Delivered">🟡 Delivered</option>
-                            <option value="Completed">🟢 Completed</option>
-                            <option value="Cancelled">⚫ Cancelled</option>
-                          </select>
-                        </td>
-                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: '6px' }}>
-                            <a
-                              href={`tel:${lead.phone.replace(/[^0-9+]/g, '')}`}
-                              style={{ backgroundColor: '#1e293b', color: '#fff', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, textDecoration: 'none', border: '1px solid #334155' }}
-                            >
-                              Call
-                            </a>
-                            <a
-                              href={`sms:${lead.phone.replace(/[^0-9+]/g, '')}?&body=Hi%20${encodeURIComponent(lead.name)}%2C%20this%20is%20Wayne%20from%20Lone%20Wolf%20Dumpsters.`}
-                              style={{ backgroundColor: 'rgba(220,38,38,0.2)', color: '#fca5a5', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 800, textDecoration: 'none', border: '1px solid rgba(220,38,38,0.4)' }}
-                            >
-                              Text
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filteredLeads.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} style={{ padding: '32px 16px', textAlign: 'center', color: '#94a3b8' }}>
+                        No {viewMode} leads found matching your filter criteria.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredLeads.map((lead) => {
+                      const curStatus = lead.status || 'New';
+                      const sColor = getStatusColor(curStatus);
+                      const notice = statusNotice[lead.id];
+
+                      return (
+                        <tr key={lead.id} style={{ borderBottom: '1px solid #1f2937' }}>
+                          <td style={{ padding: '14px 16px' }}>
+                            <div style={{ fontWeight: 800, color: '#ffffff' }}>{lead.id}</div>
+                            <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.date || lead.timestamp}</div>
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <div style={{ fontWeight: 700, color: '#ffffff' }}>{lead.name}</div>
+                            <div style={{ color: 'var(--accent-red)', fontWeight: 700 }}>{lead.phone}</div>
+                            <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.email}</div>
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <div style={{ color: '#ffffff' }}>{lead.address || lead.deliveryAddress}</div>
+                            {lead.city && <div style={{ color: '#38bdf8', fontWeight: 700, fontSize: '0.8rem' }}>{lead.city}</div>}
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <span style={{ backgroundColor: 'rgba(220, 38, 38, 0.2)', color: '#f87171', padding: '3px 8px', borderRadius: '4px', fontWeight: 800, fontSize: '0.76rem' }}>
+                              {lead.size || lead.service}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px', maxWidth: '240px' }}>
+                            <div style={{ color: '#e2e8f0', fontWeight: 700 }}>{lead.projectType}</div>
+                            {lead.rentalDuration && (
+                              <div style={{ fontSize: '0.76rem', color: '#cbd5e1', fontWeight: 600, marginTop: '2px' }}>
+                                ⏱️ {lead.rentalDuration}
+                              </div>
+                            )}
+                            {lead.notes && (
+                              <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic', marginTop: '4px' }}>📝 {lead.notes}</div>
+                            )}
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                              <select
+                                value={curStatus}
+                                onChange={(e) => handleStatusChange(lead.id, e.target.value as Lead['status'])}
+                                style={{
+                                  backgroundColor: sColor.bg,
+                                  color: sColor.text,
+                                  border: `1px solid ${sColor.border}`,
+                                  borderRadius: '12px',
+                                  padding: '4px 10px',
+                                  fontSize: '0.78rem',
+                                  fontWeight: 800,
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <option value="New">🔴 New</option>
+                                <option value="Contacted">🟣 Contacted</option>
+                                <option value="Quoted">🟠 Quoted</option>
+                                <option value="Booked">🔵 Booked</option>
+                                <option value="Completed">🟢 Completed</option>
+                                <option value="Lost / Not Moving Forward">⚫ Lost / Not Moving Forward</option>
+                              </select>
+
+                              {notice === 'saving' && <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 700 }}>Saving...</span>}
+                              {notice === 'saved' && <span style={{ fontSize: '0.7rem', color: '#4ade80', fontWeight: 700 }}>✓ Saved</span>}
+                              {notice === 'error' && <span style={{ fontSize: '0.7rem', color: '#f87171', fontWeight: 700 }}>Save Failed</span>}
+                            </div>
+                          </td>
+                          <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                            <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+                              <a
+                                href={`tel:${lead.phone.replace(/[^0-9+]/g, '')}`}
+                                style={{ backgroundColor: '#1e293b', color: '#fff', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, textDecoration: 'none', border: '1px solid #334155' }}
+                              >
+                                Call
+                              </a>
+                              <a
+                                href={`sms:${lead.phone.replace(/[^0-9+]/g, '')}?&body=Hi%20${encodeURIComponent(lead.name)}%2C%20this%20is%20Wayne%20from%20Lone%20Wolf%20Dumpsters.`}
+                                style={{ backgroundColor: 'rgba(220,38,38,0.2)', color: '#fca5a5', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 800, textDecoration: 'none', border: '1px solid rgba(220,38,38,0.4)' }}
+                              >
+                                Text
+                              </a>
+
+                              {viewMode === 'active' ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleArchive(lead.id, true)}
+                                  style={{ backgroundColor: '#334155', color: '#e2e8f0', border: '1px solid #475569', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' }}
+                                >
+                                  Archive
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => handleArchive(lead.id, false)}
+                                  style={{ backgroundColor: '#0369a1', color: '#ffffff', border: '1px solid #0284c7', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' }}
+                                >
+                                  Restore
+                                </button>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(lead.id, lead.name)}
+                                title="Delete Lead Permanently"
+                                style={{ backgroundColor: '#451a1a', color: '#f87171', border: '1px solid #7f1d1d', padding: '5px 8px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>

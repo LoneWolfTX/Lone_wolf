@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       service = '20-yard-dumpster',
       projectType = 'Home Cleanout',
       preferredDate = 'As soon as possible',
+      rentalDuration = '7 Days',
       notes = 'None provided',
     } = body;
 
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
       service,
       projectType,
       preferredDate,
+      rentalDuration,
       notes,
     });
 
@@ -89,6 +91,7 @@ export async function POST(req: NextRequest) {
                 <p><strong>Email:</strong> ${email ? `<a href="mailto:${email}">${email}</a>` : 'Not provided'}</p>
                 <p><strong>Delivery Address:</strong> ${fullAddress}</p>
                 <p><strong>Dumpster Size / Service:</strong> ${service}</p>
+                <p><strong>Rental Duration Needed:</strong> ${rentalDuration}</p>
                 <p><strong>Project Type:</strong> ${projectType}</p>
                 <p><strong>Preferred Date:</strong> ${preferredDate}</p>
                 <p><strong>Customer Notes:</strong> ${notes || 'None'}</p>
