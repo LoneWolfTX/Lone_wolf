@@ -241,6 +241,15 @@ export async function getDocumentsForLeadFromRedis(leadId: string): Promise<Lone
 export async function deleteDocumentFromRedis(docId: string, leadId?: string): Promise<boolean> {
   try {
     const cleanId = docId.trim();
+    let effectiveLeadId = leadId;
+
+    if (!effectiveLeadId) {
+      const existing = await getDocumentByIdFromRedis(cleanId);
+      if (existing?.leadId) {
+        effectiveLeadId = existing.leadId;
+      }
+    }
+
     // 1. Delete key lonewolf:doc:<id>
     await fetch(`${UPSTASH_URL}/del/${DOC_KEY_PREFIX}${cleanId}`, {
       method: 'POST',
@@ -253,9 +262,9 @@ export async function deleteDocumentFromRedis(docId: string, leadId?: string): P
       headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
     });
 
-    // 3. Remove from lead index if leadId is supplied
-    if (leadId) {
-      await fetch(`${UPSTASH_URL}/lrem/${LEAD_DOCS_KEY_PREFIX}${leadId.trim()}/0/${cleanId}`, {
+    // 3. Remove from lead index if leadId is supplied or found
+    if (effectiveLeadId) {
+      await fetch(`${UPSTASH_URL}/lrem/${LEAD_DOCS_KEY_PREFIX}${effectiveLeadId.trim()}/0/${cleanId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
       });

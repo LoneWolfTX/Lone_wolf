@@ -11,7 +11,7 @@ import { Lead } from '@/app/admin/page';
 import { QuoteProposalView } from './documents/QuoteProposalView';
 import { InvoiceView } from './documents/InvoiceView';
 import { ReceiptView } from './documents/ReceiptView';
-import { X, Plus, Trash2, Mail, Download, CheckCircle, ArrowRight, DollarSign, FileText } from 'lucide-react';
+import { X, Plus, Trash2, Mail, Download, CheckCircle, ArrowRight, ArrowLeft, Save, DollarSign, FileText } from 'lucide-react';
 
 interface DocumentModalProps {
   isOpen: boolean;
@@ -453,6 +453,51 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     }
   };
 
+  // Delete / Discard Document Handler
+  const handleDeleteDocument = async () => {
+    if (!currentDoc || !currentDoc.id || currentDoc.id.startsWith('temp_')) {
+      onClose();
+      return;
+    }
+
+    const docTypeLabel = docType === 'QUOTE' ? 'Quote' : docType === 'INVOICE' ? 'Invoice' : 'Receipt';
+    const confirmMsg = `Are you sure you want to permanently delete ${docTypeLabel} ${currentDoc.docNumber}? This cannot be undone.`;
+    if (!window.confirm(confirmMsg)) {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/documents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': 'LoneWolf2026!',
+        },
+        body: JSON.stringify({
+          action: 'delete',
+          docId: currentDoc.id,
+          leadId: lead?.id,
+          force: true,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`${docTypeLabel} ${currentDoc.docNumber} has been permanently deleted.`);
+        if (onDocumentSaved) {
+          onDocumentSaved(null as any);
+        }
+        onClose();
+      } else {
+        alert(`Failed to delete document: ${data.error || 'Unknown error'}`);
+      }
+    } catch (err: any) {
+      alert(`Error deleting document: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const previewDocObj: LoneWolfDocument = currentDoc || {
     id: 'temp_preview',
     docNumber: docType === 'QUOTE' ? 'Q-2026-DRAFT' : docType === 'INVOICE' ? 'INV-2026-DRAFT' : 'REC-2026-DRAFT',
@@ -500,13 +545,13 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 9999,
+        backgroundColor: 'rgba(5, 8, 16, 0.88)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 100000,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: '16px',
+        alignItems: 'flex-start',
+        padding: '30px 16px 40px 16px',
         overflowY: 'auto',
       }}
     >
@@ -515,20 +560,21 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
           backgroundColor: '#0f172a',
           color: '#f8fafc',
           width: '100%',
-          maxWidth: '1000px',
-          maxHeight: '92vh',
+          maxWidth: '1020px',
+          margin: '30px auto',
+          maxHeight: 'calc(100vh - 70px)',
           borderRadius: '12px',
-          border: '1px solid #1e293b',
+          border: '1px solid #334155',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
           overflow: 'hidden',
         }}
       >
         {/* Modal Top Bar */}
         <div
           style={{
-            padding: '16px 24px',
+            padding: '14px 20px',
             backgroundColor: '#1e293b',
             borderBottom: '1px solid #334155',
             display: 'flex',
@@ -539,7 +585,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
           }}
         >
           <div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <FileText size={18} color="#dc2626" />
               {!currentDoc ? (
                 <select
@@ -551,7 +597,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                     border: '1px solid #dc2626',
                     borderRadius: '6px',
                     padding: '4px 10px',
-                    fontSize: '0.88rem',
+                    fontSize: '0.85rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                   }}
@@ -565,11 +611,11 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   {docType === 'QUOTE' ? 'QUOTE / ESTIMATE PROPOSAL' : docType === 'INVOICE' ? 'TRANSACTIONAL INVOICE' : 'PAID RECEIPT'}
                 </span>
               )}
-              <span style={{ fontSize: '0.8rem', backgroundColor: '#334155', color: '#94a3b8', padding: '2px 8px', borderRadius: '4px' }}>
+              <span style={{ fontSize: '0.78rem', backgroundColor: '#334155', color: '#94a3b8', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
                 {currentDoc?.docNumber || 'NEW DRAFT'}
               </span>
             </div>
-            <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
+            <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '2px' }}>
               Customer: <strong>{customerName || 'Direct / Manual Customer'}</strong> {lead ? `| Lead ID: ${lead.id}` : '| Manual Entry'}
             </div>
           </div>
@@ -583,9 +629,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   backgroundColor: mode === 'edit' ? '#dc2626' : 'transparent',
                   color: '#ffffff',
                   border: 'none',
-                  padding: '6px 14px',
+                  padding: '6px 12px',
                   borderRadius: '4px',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -599,9 +645,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   backgroundColor: mode === 'preview' ? '#0284c7' : 'transparent',
                   color: '#ffffff',
                   border: 'none',
-                  padding: '6px 14px',
+                  padding: '6px 12px',
                   borderRadius: '4px',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
@@ -612,12 +658,35 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
 
             <button
               type="button"
+              onClick={handleDeleteDocument}
+              data-testid="doc-modal-delete-btn"
+              title={currentDoc ? "Delete Document Permanently" : "Discard Draft"}
+              style={{
+                backgroundColor: '#451a1a',
+                color: '#f87171',
+                border: '1px solid #7f1d1d',
+                padding: '6px 10px',
+                borderRadius: '4px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <Trash2 size={14} />
+              <span>{currentDoc ? 'Delete' : 'Discard'}</span>
+            </button>
+
+            <button
+              type="button"
               onClick={onClose}
               aria-label="Close modal"
               data-testid="doc-modal-close"
-              style={{ backgroundColor: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+              style={{ backgroundColor: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
             >
-              <X size={24} />
+              <X size={22} />
             </button>
           </div>
         </div>
@@ -812,15 +881,27 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 </div>
 
                 {/* Line Items List */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto', overflowX: 'hidden' }}>
                   {lineItems.map((item) => (
-                    <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr auto', gap: '8px', alignItems: 'center', backgroundColor: '#0f172a', padding: '8px', borderRadius: '4px', border: '1px solid #334155' }}>
+                    <div
+                      key={item.id}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'minmax(0, 1fr) 55px 75px 28px',
+                        gap: '6px',
+                        alignItems: 'center',
+                        backgroundColor: '#0f172a',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #334155',
+                      }}
+                    >
                       <input
                         type="text"
                         value={item.description}
                         onChange={(e) => handleUpdateItem(item.id, 'description', e.target.value)}
                         placeholder="Description"
-                        style={{ padding: '6px 8px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem' }}
+                        style={{ minWidth: 0, width: '100%', boxSizing: 'border-box', padding: '6px 8px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem' }}
                       />
                       <input
                         type="number"
@@ -828,21 +909,22 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                         value={item.qty}
                         onChange={(e) => handleUpdateItem(item.id, 'qty', e.target.value)}
                         placeholder="Qty"
-                        style={{ padding: '6px 8px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem' }}
+                        style={{ minWidth: 0, width: '100%', boxSizing: 'border-box', padding: '6px 4px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem', textAlign: 'center' }}
                       />
                       <input
                         type="number"
                         value={item.rate}
                         onChange={(e) => handleUpdateItem(item.id, 'rate', e.target.value)}
                         placeholder="Rate"
-                        style={{ padding: '6px 8px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem' }}
+                        style={{ minWidth: 0, width: '100%', boxSizing: 'border-box', padding: '6px 6px', backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.82rem' }}
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveItem(item.id)}
-                        style={{ backgroundColor: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', padding: '4px' }}
+                        title="Remove Item"
+                        style={{ backgroundColor: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   ))}
@@ -874,12 +956,24 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                     <span>Subtotal:</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', marginTop: '4px' }}>
+                  {discountAmount > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#f87171', marginTop: '4px' }}>
+                      <span>Discount:</span>
+                      <span>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {taxRate > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: '#94a3b8', marginTop: '4px' }}>
+                      <span>Tax ({taxRate}%):</span>
+                      <span>+${taxAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 800, color: '#4ade80', marginTop: '8px', borderTop: '1px solid #334155', paddingTop: '8px' }}>
                     <span>TOTAL:</span>
-                    <span style={{ color: '#4ade80' }}>${total.toFixed(2)}</span>
+                    <span>${total.toFixed(2)}</span>
                   </div>
                   {docType === 'INVOICE' && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.92rem', fontWeight: 800, color: '#f87171', marginTop: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 800, color: balanceDue > 0 ? '#f87171' : '#4ade80', marginTop: '4px' }}>
                       <span>Balance Due:</span>
                       <span>${balanceDue.toFixed(2)}</span>
                     </div>
@@ -890,20 +984,42 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
           )}
         </div>
 
-        {/* Modal Action Footer */}
+        {/* Modal Footer Actions */}
         <div
           style={{
-            padding: '16px 24px',
+            padding: '14px 20px',
             backgroundColor: '#1e293b',
             borderTop: '1px solid #334155',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '12px',
+            gap: '10px',
           }}
         >
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={handleDeleteDocument}
+              disabled={saving}
+              style={{
+                backgroundColor: '#451a1a',
+                color: '#f87171',
+                border: '1px solid #7f1d1d',
+                padding: '8px 14px',
+                borderRadius: '6px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <Trash2 size={15} />
+              <span>{currentDoc ? 'Delete Document' : 'Discard Draft'}</span>
+            </button>
+
             {mode === 'preview' ? (
               <button
                 type="button"
@@ -912,9 +1028,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   backgroundColor: '#334155',
                   color: '#ffffff',
                   border: '1px solid #475569',
-                  padding: '9px 16px',
+                  padding: '8px 14px',
                   borderRadius: '6px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                   display: 'flex',
@@ -922,6 +1038,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   gap: '6px',
                 }}
               >
+                <ArrowLeft size={15} />
                 <span>← Back to Edit Form</span>
               </button>
             ) : (
@@ -931,12 +1048,12 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   onClick={handleSaveDocument}
                   disabled={saving}
                   style={{
-                    backgroundColor: docType === 'INVOICE' ? '#0284c7' : '#16a34a',
+                    backgroundColor: docType === 'QUOTE' ? '#16a34a' : docType === 'INVOICE' ? '#0284c7' : '#16a34a',
                     color: '#ffffff',
                     border: 'none',
-                    padding: '9px 18px',
+                    padding: '8px 16px',
                     borderRadius: '6px',
-                    fontSize: '0.85rem',
+                    fontSize: '0.82rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     display: 'flex',
@@ -944,28 +1061,20 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                     gap: '6px',
                   }}
                 >
-                  <CheckCircle size={16} />
-                  <span>
-                    {saving
-                      ? 'Saving...'
-                      : docType === 'QUOTE'
-                      ? 'Save Draft'
-                      : docType === 'INVOICE'
-                      ? 'Save Invoice'
-                      : 'Save Receipt'}
-                  </span>
+                  <Save size={15} />
+                  <span>{saving ? 'Saving...' : docType === 'QUOTE' ? 'Save Draft' : docType === 'INVOICE' ? 'Save Invoice' : 'Save Receipt'}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setMode('preview')}
                   style={{
-                    backgroundColor: '#1e293b',
+                    backgroundColor: '#0f172a',
                     color: '#38bdf8',
-                    border: '1px solid #0284c7',
-                    padding: '9px 16px',
+                    border: '1px solid #334155',
+                    padding: '8px 14px',
                     borderRadius: '6px',
-                    fontSize: '0.85rem',
+                    fontSize: '0.82rem',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',
@@ -973,7 +1082,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                     gap: '6px',
                   }}
                 >
-                  <FileText size={16} />
+                  <FileText size={15} />
                   <span>Preview</span>
                 </button>
               </>
@@ -986,9 +1095,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 backgroundColor: '#0369a1',
                 color: '#ffffff',
                 border: 'none',
-                padding: '9px 18px',
+                padding: '8px 14px',
                 borderRadius: '6px',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
@@ -996,7 +1105,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 gap: '6px',
               }}
             >
-              <Mail size={16} />
+              <Mail size={15} />
               <span>Email {docType === 'QUOTE' ? 'Quote' : docType === 'INVOICE' ? 'Invoice' : 'Receipt'}</span>
             </button>
 
@@ -1007,9 +1116,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 backgroundColor: '#1e293b',
                 color: '#ffffff',
                 border: '1px solid #475569',
-                padding: '9px 16px',
+                padding: '8px 14px',
                 borderRadius: '6px',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
@@ -1017,7 +1126,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 gap: '6px',
               }}
             >
-              <Download size={16} />
+              <Download size={15} />
               <span>Download PDF</span>
             </button>
           </div>
@@ -1032,9 +1141,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   backgroundColor: '#dc2626',
                   color: '#ffffff',
                   border: 'none',
-                  padding: '9px 16px',
+                  padding: '8px 16px',
                   borderRadius: '6px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
@@ -1043,7 +1152,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 }}
               >
                 <span>Convert to Invoice</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </button>
             )}
 
@@ -1055,9 +1164,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   backgroundColor: '#16a34a',
                   color: '#ffffff',
                   border: 'none',
-                  padding: '9px 16px',
+                  padding: '8px 16px',
                   borderRadius: '6px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
@@ -1065,7 +1174,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   gap: '6px',
                 }}
               >
-                <DollarSign size={16} />
+                <DollarSign size={15} />
                 <span>Record Payment</span>
               </button>
             )}

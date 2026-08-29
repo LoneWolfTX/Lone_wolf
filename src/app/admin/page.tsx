@@ -1182,33 +1182,77 @@ export default function AdminDashboardPage() {
                             <div style={{ fontWeight: 800, color: '#ffffff' }}>{lead.id}</div>
                             <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.date || lead.timestamp}</div>
                             {leadDocs.length > 0 && (
-                              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '6px' }}>
-                                {leadDocs.map((doc) => (
-                                  <button
-                                    key={doc.id}
-                                    type="button"
-                                    onClick={() => {
-                                      setSelectedDocLead(lead);
-                                      setEditingDoc(doc);
-                                      setDocInitialType(doc.type);
-                                      setDocModalOpen(true);
-                                    }}
-                                    title="View / Edit Document"
-                                    style={{
-                                      backgroundColor: doc.type === 'QUOTE' ? '#1e293b' : doc.type === 'INVOICE' ? '#0369a1' : '#14532d',
-                                      color: '#ffffff',
-                                      border: '1px solid ' + (doc.type === 'QUOTE' ? '#334155' : doc.type === 'INVOICE' ? '#0284c7' : '#16a34a'),
-                                      padding: '2px 6px',
-                                      borderRadius: '4px',
-                                      fontSize: '0.7rem',
-                                      fontWeight: 700,
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    📄 {doc.docNumber} ({doc.status})
-                                  </button>
-                                ))}
-                              </div>
+                                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                  {leadDocs.map((doc) => (
+                                    <div
+                                      key={doc.id}
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        backgroundColor: doc.type === 'QUOTE' ? '#1e293b' : doc.type === 'INVOICE' ? '#0369a1' : '#14532d',
+                                        border: '1px solid ' + (doc.type === 'QUOTE' ? '#334155' : doc.type === 'INVOICE' ? '#0284c7' : '#16a34a'),
+                                        borderRadius: '4px',
+                                        overflow: 'hidden',
+                                      }}
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedDocLead(lead);
+                                          setEditingDoc(doc);
+                                          setDocInitialType(doc.type);
+                                          setDocModalOpen(true);
+                                        }}
+                                        title="View / Edit Document"
+                                        style={{
+                                          backgroundColor: 'transparent',
+                                          color: '#ffffff',
+                                          border: 'none',
+                                          padding: '3px 6px',
+                                          fontSize: '0.7rem',
+                                          fontWeight: 700,
+                                          cursor: 'pointer',
+                                        }}
+                                      >
+                                        📄 {doc.docNumber} ({doc.status})
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={async (e) => {
+                                          e.stopPropagation();
+                                          if (!window.confirm(`Permanently delete ${doc.type} ${doc.docNumber}?`)) return;
+                                          try {
+                                            const res = await fetch(`/api/admin/documents?docId=${encodeURIComponent(doc.id)}&leadId=${encodeURIComponent(lead.id)}&force=true`, {
+                                              method: 'DELETE',
+                                              headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+                                            });
+                                            const data = await res.json();
+                                            if (data.success) {
+                                              fetchDocumentsForLead(lead.id);
+                                            } else {
+                                              alert(`Failed to delete: ${data.error || 'Unknown error'}`);
+                                            }
+                                          } catch (err: any) {
+                                            alert(`Error: ${err.message}`);
+                                          }
+                                        }}
+                                        title="Delete Document Permanently"
+                                        style={{
+                                          backgroundColor: 'rgba(0,0,0,0.35)',
+                                          color: '#fca5a5',
+                                          border: 'none',
+                                          borderLeft: '1px solid rgba(255,255,255,0.15)',
+                                          padding: '3px 5px',
+                                          cursor: 'pointer',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                        }}
+                                      >
+                                        <Trash2 size={11} />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>

@@ -347,3 +347,46 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/admin/documents
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    if (!isAuthorized(req)) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized. Valid Admin password required.' },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(req.url);
+    const docId = searchParams.get('docId');
+    const leadId = searchParams.get('leadId') || undefined;
+    const force = searchParams.get('force') === 'true';
+
+    if (!docId) {
+      return NextResponse.json({ success: false, error: 'docId parameter required' }, { status: 400 });
+    }
+
+    const doc = await getDocumentByIdFromRedis(docId);
+    if (doc && doc.type === 'INVOICE' && doc.payments && doc.payments.length > 0 && !force) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Invoice ${doc.docNumber} has ${doc.payments.length} payment record(s). Confirm deletion with force=true to proceed.`,
+          requiresForce: true,
+        },
+        { status: 400 }
+      );
+    }
+
+    const deleted = await deleteDocumentFromRedis(docId, leadId);
+    if (deleted) {
+      return NextResponse.json({ success: true, message: `Document ${docId} permanently deleted.` });
+    }
+    return NextResponse.json({ success: false, error: 'Failed to delete document from Redis' }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
+  }
+}
