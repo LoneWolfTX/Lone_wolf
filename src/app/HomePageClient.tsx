@@ -41,7 +41,7 @@ export default function HomePageClient() {
     {
       icon: <CircleDollarSign size={20} />,
       title: 'TRANSPARENT PRICING',
-      subtitle: 'No hidden fees. Ever.',
+      subtitle: 'No hidden fees.',
     },
     {
       icon: <MapPin size={20} />,
