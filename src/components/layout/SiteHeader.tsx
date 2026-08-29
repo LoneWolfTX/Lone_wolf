@@ -24,6 +24,9 @@ export const SiteHeader: React.FC = () => {
   const [mobileAreasExpanded, setMobileAreasExpanded] = useState(false);
 
   const pathname = usePathname();
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const dumpsterLinks = [
     { label: 'Residential Dumpsters', href: '/dumpster-rentals/residential' },

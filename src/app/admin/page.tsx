@@ -119,6 +119,7 @@ export default function AdminDashboardPage() {
   const [docInitialType, setDocInitialType] = useState<DocumentType>('QUOTE');
   const [globalDocMenuOpen, setGlobalDocMenuOpen] = useState(false);
   const [leadDocMenuId, setLeadDocMenuId] = useState<string | null>(null);
+  const [historyModalLead, setHistoryModalLead] = useState<Lead | null>(null);
 
   const fetchDocumentsForLead = async (leadId: string) => {
     try {
@@ -1182,77 +1183,50 @@ export default function AdminDashboardPage() {
                             <div style={{ fontWeight: 800, color: '#ffffff' }}>{lead.id}</div>
                             <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{lead.date || lead.timestamp}</div>
                             {leadDocs.length > 0 && (
-                                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '6px' }}>
-                                  {leadDocs.map((doc) => (
-                                    <div
-                                      key={doc.id}
-                                      style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        backgroundColor: doc.type === 'QUOTE' ? '#1e293b' : doc.type === 'INVOICE' ? '#0369a1' : '#14532d',
-                                        border: '1px solid ' + (doc.type === 'QUOTE' ? '#334155' : doc.type === 'INVOICE' ? '#0284c7' : '#16a34a'),
-                                        borderRadius: '4px',
-                                        overflow: 'hidden',
-                                      }}
-                                    >
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          setSelectedDocLead(lead);
-                                          setEditingDoc(doc);
-                                          setDocInitialType(doc.type);
-                                          setDocModalOpen(true);
-                                        }}
-                                        title="View / Edit Document"
-                                        style={{
-                                          backgroundColor: 'transparent',
-                                          color: '#ffffff',
-                                          border: 'none',
-                                          padding: '3px 6px',
-                                          fontSize: '0.7rem',
-                                          fontWeight: 700,
-                                          cursor: 'pointer',
-                                        }}
-                                      >
-                                        📄 {doc.docNumber} ({doc.status})
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={async (e) => {
-                                          e.stopPropagation();
-                                          if (!window.confirm(`Permanently delete ${doc.type} ${doc.docNumber}?`)) return;
-                                          try {
-                                            const res = await fetch(`/api/admin/documents?docId=${encodeURIComponent(doc.id)}&leadId=${encodeURIComponent(lead.id)}&force=true`, {
-                                              method: 'DELETE',
-                                              headers: { 'X-Admin-Password': 'LoneWolf2026!' },
-                                            });
-                                            const data = await res.json();
-                                            if (data.success) {
-                                              fetchDocumentsForLead(lead.id);
-                                            } else {
-                                              alert(`Failed to delete: ${data.error || 'Unknown error'}`);
-                                            }
-                                          } catch (err: any) {
-                                            alert(`Error: ${err.message}`);
-                                          }
-                                        }}
-                                        title="Delete Document Permanently"
-                                        style={{
-                                          backgroundColor: 'rgba(0,0,0,0.35)',
-                                          color: '#fca5a5',
-                                          border: 'none',
-                                          borderLeft: '1px solid rgba(255,255,255,0.15)',
-                                          padding: '3px 5px',
-                                          cursor: 'pointer',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                        }}
-                                      >
-                                        <Trash2 size={11} />
-                                      </button>
-                                    </div>
-                                  ))}
-                                </div>
+                              <div style={{ marginTop: '6px' }}>
+                                <button
+                                  type="button"
+                                  data-testid={`lead-docs-btn-${lead.id}`}
+                                  onClick={() => setHistoryModalLead(lead)}
+                                  title="Click to view full document history & actions"
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    backgroundColor:
+                                      leadDocs.length === 1 && leadDocs[0].type === 'QUOTE'
+                                        ? '#1e293b'
+                                        : leadDocs.length === 1 && leadDocs[0].type === 'INVOICE'
+                                        ? '#0369a1'
+                                        : leadDocs.length === 1 && leadDocs[0].type === 'RECEIPT'
+                                        ? '#14532d'
+                                        : '#1e293b',
+                                    color: leadDocs.length === 1 ? '#ffffff' : '#38bdf8',
+                                    border:
+                                      '1px solid ' +
+                                      (leadDocs.length === 1 && leadDocs[0].type === 'QUOTE'
+                                        ? '#334155'
+                                        : leadDocs.length === 1 && leadDocs[0].type === 'INVOICE'
+                                        ? '#0284c7'
+                                        : leadDocs.length === 1 && leadDocs[0].type === 'RECEIPT'
+                                        ? '#16a34a'
+                                        : '#0284c7'),
+                                    padding: '3px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.71rem',
+                                    fontWeight: 800,
+                                    cursor: 'pointer',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  <span>📄</span>
+                                  <span>
+                                    {leadDocs.length === 1
+                                      ? `${leadDocs[0].docNumber} (${leadDocs[0].status})`
+                                      : `Documents (${leadDocs.length})`}
+                                  </span>
+                                </button>
+                              </div>
                             )}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
@@ -2674,6 +2648,314 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                 ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lead Document History Modal */}
+      {historyModalLead && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(5, 8, 16, 0.88)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            padding: '40px 16px',
+            overflowY: 'auto',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#0f172a',
+              color: '#f8fafc',
+              width: '100%',
+              maxWidth: '840px',
+              margin: '30px auto',
+              maxHeight: 'calc(100vh - 80px)',
+              borderRadius: '12px',
+              border: '1px solid #334155',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                padding: '16px 22px',
+                backgroundColor: '#1e293b',
+                borderBottom: '1px solid #334155',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '12px',
+              }}
+            >
+              <div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <FileText size={20} color="#38bdf8" />
+                  <span>Document History — {historyModalLead.name}</span>
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '3px' }}>
+                  Lead ID: <strong style={{ color: '#fff' }}>{historyModalLead.id}</strong> • {historyModalLead.phone || 'No phone'} • {historyModalLead.size || historyModalLead.service || 'Dumpster'}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedDocLead(historyModalLead);
+                    setEditingDoc(null);
+                    setDocInitialType('QUOTE');
+                    setDocModalOpen(true);
+                  }}
+                  style={{
+                    backgroundColor: '#dc2626',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  <Plus size={14} />
+                  <span>New Document</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHistoryModalLead(null)}
+                  aria-label="Close document history"
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body / Document List */}
+            <div style={{ padding: '20px 22px', overflowY: 'auto', flex: 1 }}>
+              {(!leadDocuments[historyModalLead.id] || leadDocuments[historyModalLead.id].length === 0) ? (
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8' }}>
+                  <p style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600 }}>No documents created for this lead yet.</p>
+                  <p style={{ margin: '8px 0 16px 0', fontSize: '0.8rem' }}>Create a Quote, Direct Invoice, or Paid Receipt.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDocLead(historyModalLead);
+                      setEditingDoc(null);
+                      setDocInitialType('QUOTE');
+                      setDocModalOpen(true);
+                    }}
+                    style={{
+                      backgroundColor: '#dc2626',
+                      color: '#ffffff',
+                      border: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '4px',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    + Create Quote / Estimate
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                    Attached Documents ({leadDocuments[historyModalLead.id].length})
+                  </div>
+                  {leadDocuments[historyModalLead.id].map((doc) => {
+                    const typeColor =
+                      doc.type === 'QUOTE'
+                        ? { bg: '#1e293b', border: '#334155', text: '#cbd5e1' }
+                        : doc.type === 'INVOICE'
+                        ? { bg: '#082f49', border: '#0284c7', text: '#38bdf8' }
+                        : { bg: '#052e16', border: '#16a34a', text: '#4ade80' };
+
+                    const statusColor =
+                      doc.status === 'Paid'
+                        ? { bg: '#14532d', text: '#4ade80' }
+                        : doc.status === 'Due' || doc.status === 'Overdue'
+                        ? { bg: '#7f1d1d', text: '#fca5a5' }
+                        : doc.status === 'Accepted'
+                        ? { bg: '#16537e', text: '#38bdf8' }
+                        : { bg: '#334155', text: '#cbd5e1' };
+
+                    return (
+                      <div
+                        key={doc.id}
+                        style={{
+                          backgroundColor: '#111827',
+                          border: `1px solid #1f2937`,
+                          borderRadius: '8px',
+                          padding: '12px 16px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          gap: '12px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                          <span
+                            style={{
+                              backgroundColor: typeColor.bg,
+                              border: `1px solid ${typeColor.border}`,
+                              color: typeColor.text,
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              fontSize: '0.72rem',
+                              fontWeight: 800,
+                              textTransform: 'uppercase',
+                            }}
+                          >
+                            {doc.type}
+                          </span>
+                          <div>
+                            <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.92rem' }}>
+                              {doc.docNumber}
+                            </div>
+                            <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '2px' }}>
+                              {doc.date || doc.createdAt?.slice(0, 10)} {doc.total ? `• Total: $${Number(doc.total).toFixed(2)}` : ''}
+                            </div>
+                          </div>
+                          <span
+                            style={{
+                              backgroundColor: statusColor.bg,
+                              color: statusColor.text,
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                            }}
+                          >
+                            {doc.status}
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedDocLead(historyModalLead);
+                              setEditingDoc(doc);
+                              setDocInitialType(doc.type);
+                              setDocModalOpen(true);
+                            }}
+                            style={{
+                              backgroundColor: '#0284c7',
+                              color: '#ffffff',
+                              border: 'none',
+                              padding: '6px 12px',
+                              borderRadius: '4px',
+                              fontSize: '0.78rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <FileText size={13} />
+                            <span>Open / Edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (!window.confirm(`Are you sure you want to permanently delete ${doc.type} ${doc.docNumber}?`)) return;
+                              try {
+                                const res = await fetch(`/api/admin/documents?docId=${encodeURIComponent(doc.id)}&leadId=${encodeURIComponent(historyModalLead.id)}&force=true`, {
+                                  method: 'DELETE',
+                                  headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+                                });
+                                const data = await res.json();
+                                if (data.success) {
+                                  fetchDocumentsForLead(historyModalLead.id);
+                                } else {
+                                  alert(`Failed to delete document: ${data.error || 'Unknown error'}`);
+                                }
+                              } catch (err: any) {
+                                alert(`Error deleting document: ${err.message}`);
+                              }
+                            }}
+                            title="Delete Document"
+                            style={{
+                              backgroundColor: '#451a1a',
+                              color: '#f87171',
+                              border: '1px solid #7f1d1d',
+                              padding: '6px 10px',
+                              borderRadius: '4px',
+                              fontSize: '0.78rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <Trash2 size={13} />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div
+              style={{
+                padding: '12px 22px',
+                backgroundColor: '#1e293b',
+                borderTop: '1px solid #334155',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                Total: <strong>{leadDocuments[historyModalLead.id]?.length || 0} document(s)</strong>
+              </span>
+              <button
+                type="button"
+                onClick={() => setHistoryModalLead(null)}
+                style={{
+                  backgroundColor: '#334155',
+                  color: '#ffffff',
+                  border: '1px solid #475569',
+                  padding: '6px 16px',
+                  borderRadius: '4px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                Done
+              </button>
             </div>
           </div>
         </div>

@@ -28,6 +28,7 @@ export const MobileStickyBar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (pathname?.startsWith('/admin')) return null;
   if (!visible) return null;
 
   return (

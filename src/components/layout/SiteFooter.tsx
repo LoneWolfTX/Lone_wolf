@@ -3,11 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Phone, Mail, MapPin, Calendar } from 'lucide-react';
 import { useSiteContent } from '@/lib/useEditableContent';
 import { formatCurrency, formatPhoneNumber } from '@/lib/formatters';
 
 export const SiteFooter: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const { content } = useSiteContent();
   const pr = content.pricing;
   const b = content.business || content.contact;
