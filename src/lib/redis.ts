@@ -129,17 +129,15 @@ export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'created
         Authorization: `Bearer ${UPSTASH_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify([jsonString]),
+      body: JSON.stringify(jsonString),
     });
 
     // Add lead ID to master list
-    await fetch(`${UPSTASH_URL}/lpush/${LEADS_LIST_KEY}`, {
+    await fetch(`${UPSTASH_URL}/lpush/${LEADS_LIST_KEY}/${id}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify([id]),
     });
 
     return fullLead;
@@ -161,11 +159,26 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
 
     if (!listRes.ok) return [];
     const listData = await listRes.json();
-    const leadIds: string[] = listData?.result || [];
+    let leadIds: string[] = listData?.result || [];
+
+    // Parse array strings if nested
+    leadIds = leadIds.map((item) => {
+      if (typeof item === 'string' && item.startsWith('[')) {
+        try {
+          const arr = JSON.parse(item);
+          return Array.isArray(arr) ? arr[0] : item;
+        } catch {
+          return item;
+        }
+      }
+      return item;
+    });
 
     const leads: LeadSubmission[] = [];
     for (const id of leadIds) {
-      const itemRes = await fetch(`${UPSTASH_URL}/get/${LEADS_KEY_PREFIX}${id}`, {
+      if (!id || typeof id !== 'string') continue;
+      const cleanId = id.trim();
+      const itemRes = await fetch(`${UPSTASH_URL}/get/${LEADS_KEY_PREFIX}${cleanId}`, {
         headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
         cache: 'no-store',
       });
@@ -173,8 +186,17 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
         const itemData = await itemRes.json();
         if (itemData?.result) {
           try {
-            const parsed = typeof itemData.result === 'string' ? JSON.parse(itemData.result) : itemData.result;
-            leads.push(parsed);
+            let resObj = itemData.result;
+            if (typeof resObj === 'string' && resObj.startsWith('[')) {
+              const arr = JSON.parse(resObj);
+              resObj = Array.isArray(arr) ? arr[0] : resObj;
+            }
+            if (typeof resObj === 'string') {
+              resObj = JSON.parse(resObj);
+            }
+            if (resObj && typeof resObj === 'object' && resObj.name) {
+              leads.push(resObj as LeadSubmission);
+            }
           } catch {
             // Skip invalid JSON
           }
