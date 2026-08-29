@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
     const leadId = savedLead ? savedLead.id : `lead_${Date.now()}`;
 
     const emailStatus = { status: 'failed', provider: 'FormSubmit.co', error: null as string | null };
-    const smsStatus = { status: 'omitted_no_recurring_cost', provider: 'None', note: 'Omitted due to 0-recurring-cost constraint' };
+    const pushAlertStatus = { status: 'not_configured', provider: 'None', note: 'Optional $0 Telegram/Discord webhook env vars' };
+    const smsStatus = { status: 'NOT_IMPLEMENTED', provider: 'Paid Provider Required', note: 'Native SMS omitted due to 0-recurring-cost constraint' };
 
     // 2. SERVER-SIDE EMAIL NOTIFICATION DISPATCH
     try {
-      // Check if Resend API key is present
       if (process.env.RESEND_API_KEY) {
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -86,7 +86,6 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // FormSubmit Server-Side fallback if Resend API is not configured
       if (emailStatus.status !== 'sent') {
         const fsRes = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
           method: 'POST',
@@ -120,12 +119,45 @@ export async function POST(req: NextRequest) {
       emailStatus.error = err.message || 'Email dispatch exception';
     }
 
-    // 3. RETURN STRUCTURED PIPELINE RESPONSE
+    // 3. OPTIONAL $0 INSTANT PHONE PUSH ALERT DISPATCH (Telegram / Discord Webhook)
+    try {
+      if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
+        const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: process.env.TELEGRAM_CHAT_ID,
+            text: `🐺 NEW LONE WOLF LEAD!\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\nService: ${service}\nNotes: ${notes}`,
+          }),
+        });
+        if (tgRes.ok) {
+          pushAlertStatus.status = 'sent';
+          pushAlertStatus.provider = 'Telegram Phone Push Alert ($0)';
+        }
+      } else if (process.env.DISCORD_WEBHOOK_URL) {
+        const discordRes = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `🐺 **NEW LONE WOLF LEAD!**\n**Name:** ${name}\n**Phone:** ${phone}\n**Address:** ${fullAddress}\n**Service:** ${service}`,
+          }),
+        });
+        if (discordRes.ok) {
+          pushAlertStatus.status = 'sent';
+          pushAlertStatus.provider = 'Discord Phone Push Alert ($0)';
+        }
+      }
+    } catch (err: any) {
+      pushAlertStatus.status = 'failed';
+    }
+
+    // 4. RETURN STRUCTURED PIPELINE RESPONSE
     return NextResponse.json({
       success: true,
       leadId,
-      message: 'Quote request received and saved to database.',
+      message: 'Quote request received and saved to Upstash Redis database.',
       email: emailStatus,
+      pushAlert: pushAlertStatus,
       sms: smsStatus,
       leadSaved: !!savedLead,
     });
