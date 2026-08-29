@@ -514,7 +514,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   },
   about: {
     titleWhite: "ABOUT LONE WOLF",
-    titleRed: "DUMPSTERS LLC",
+    titleRed: "DUMPSTERS",
     heroDescription: "Locally owned and dedicated to transparent, stress-free roll-off dumpster rentals and junk removal across Dallas–Fort Worth.",
     ownerBadgeTitle: "LONE WOLF DUMPSTERS",
     ownerBadgeSub: "Direct Local Accountability",

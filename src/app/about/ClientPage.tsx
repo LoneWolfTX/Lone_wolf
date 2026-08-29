@@ -13,7 +13,7 @@ export default function AboutPageClient() {
   const hp = content.homepage;
   const ab = content.about || {
     titleWhite: 'ABOUT LONE WOLF',
-    titleRed: 'DUMPSTERS LLC',
+    titleRed: 'DUMPSTERS',
     heroDescription: 'Locally owned and dedicated to transparent, stress-free roll-off dumpster rentals and junk removal across Dallas–Fort Worth.',
     ownerBadgeTitle: 'LONE WOLF DUMPSTERS',
     ownerBadgeSub: 'Direct Local Accountability',

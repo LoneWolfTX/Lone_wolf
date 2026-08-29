@@ -2010,7 +2010,7 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      value={siteContent.dimensions?.fifteenYard || "14' x 7.5' x 4'"}
+                      value={siteContent.dimensions?.fifteenYard || "16' L × 7.5' W × 4' H"}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         dimensions: { ...siteContent.dimensions, fifteenYard: e.target.value }
