@@ -69,56 +69,47 @@ export async function POST(req: NextRequest) {
 
     if (resendApiKey) {
       try {
-        const sendEmail = async (targetEmail: string) => {
-          return fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${resendApiKey}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              from: 'Lone Wolf Dumpsters <onboarding@resend.dev>',
-              to: [targetEmail],
-              subject: `🐺 New Quote Request: ${name} (${phone})`,
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; color: #1e293b;">
-                  <h2 style="color: #d97706; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-                    🐺 New Lone Wolf Dumpster Quote Lead
-                  </h2>
-                  <p><strong>Lead ID:</strong> <code>${leadId}</code></p>
-                  <p><strong>Customer Name:</strong> ${name}</p>
-                  <p><strong>Phone Number:</strong> <a href="tel:${phone}">${phone}</a></p>
-                  <p><strong>Email:</strong> ${email ? `<a href="mailto:${email}">${email}</a>` : 'Not provided'}</p>
-                  <p><strong>Delivery Address:</strong> ${fullAddress}</p>
-                  <p><strong>Dumpster Size / Service:</strong> ${service}</p>
-                  <p><strong>Project Type:</strong> ${projectType}</p>
-                  <p><strong>Preferred Date:</strong> ${preferredDate}</p>
-                  <p><strong>Customer Notes:</strong> ${notes || 'None'}</p>
-                  <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 20px 0;" />
-                  <p style="font-size: 0.85rem; color: #64748b;">
-                    This lead is stored permanently in Upstash Redis and accessible in Admin Studio.
-                  </p>
-                </div>
-              `,
-            }),
-          });
-        };
+        // If using default Resend test sender (onboarding@resend.dev), Resend requires sending to the account owner email (one337459@gmail.com)
+        const targetRecipient = process.env.NOTIFICATION_EMAIL || 'one337459@gmail.com';
 
-        let resendRes = await sendEmail(RECIPIENT_EMAIL);
-        let resendData = await resendRes.json().catch(() => null);
+        const resendRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Lone Wolf Dumpsters <onboarding@resend.dev>',
+            to: [targetRecipient],
+            subject: `🐺 New Quote Request: ${name} (${phone})`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; color: #1e293b;">
+                <h2 style="color: #d97706; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                  🐺 New Lone Wolf Dumpster Quote Lead
+                </h2>
+                <p><strong>Lead ID:</strong> <code>${leadId}</code></p>
+                <p><strong>Customer Name:</strong> ${name}</p>
+                <p><strong>Phone Number:</strong> <a href="tel:${phone}">${phone}</a></p>
+                <p><strong>Email:</strong> ${email ? `<a href="mailto:${email}">${email}</a>` : 'Not provided'}</p>
+                <p><strong>Delivery Address:</strong> ${fullAddress}</p>
+                <p><strong>Dumpster Size / Service:</strong> ${service}</p>
+                <p><strong>Project Type:</strong> ${projectType}</p>
+                <p><strong>Preferred Date:</strong> ${preferredDate}</p>
+                <p><strong>Customer Notes:</strong> ${notes || 'None'}</p>
+                <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 20px 0;" />
+                <p style="font-size: 0.85rem; color: #64748b;">
+                  This lead is stored permanently in Upstash Redis and accessible in Admin Studio.
+                </p>
+              </div>
+            `,
+          }),
+        });
 
-        // Fallback for Resend sandbox mode (which only allows sending to the account owner email)
-        if (!resendRes.ok && resendData?.message?.includes('testing emails to your own email address')) {
-          console.warn(`Resend sandbox mode active. Redirecting email dispatch to account owner (${RESEND_ACCOUNT_OWNER})...`);
-          resendRes = await sendEmail(RESEND_ACCOUNT_OWNER);
-          resendData = await resendRes.json().catch(() => null);
-          if (resendRes.ok && resendData?.id) {
-            emailStatus.recipient = RESEND_ACCOUNT_OWNER;
-          }
-        }
+        const resendData = await resendRes.json().catch(() => null);
 
         if (resendRes.ok && resendData?.id) {
           emailStatus.status = 'sent';
+          emailStatus.recipient = targetRecipient;
           emailStatus.error = null;
         } else {
           emailStatus.status = 'failed';
