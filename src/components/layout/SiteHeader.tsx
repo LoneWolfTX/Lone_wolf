@@ -78,7 +78,7 @@ export const SiteHeader: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            height: '88px',
+            height: '96px',
             gap: '16px',
           }}
         >
@@ -95,13 +95,22 @@ export const SiteHeader: React.FC = () => {
               flexShrink: 0,
             }}
           >
-            <div className="header-logo-icon" style={{ position: 'relative', width: '68px', height: '68px', flexShrink: 0 }}>
+            <div
+              className="header-logo-icon"
+              style={{
+                position: 'relative',
+                width: '84px',
+                height: '84px',
+                flexShrink: 0,
+                filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
+              }}
+            >
               <Image
                 src="/images/lone-wolf/logo.png"
                 alt="Lone Wolf Dumpsters Logo"
                 fill
                 priority
-                sizes="68px"
+                sizes="84px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
@@ -110,9 +119,9 @@ export const SiteHeader: React.FC = () => {
                 className="header-logo-text"
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.4rem, 4.2vw, 1.8rem)',
+                  fontSize: 'clamp(1.5rem, 4.5vw, 2.05rem)',
                   fontWeight: 900,
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.6px',
                   color: '#ffffff',
                   lineHeight: 1.05,
                   display: 'block',
@@ -124,11 +133,11 @@ export const SiteHeader: React.FC = () => {
                 className="header-logo-tagline"
                 style={{
                   display: 'block',
-                  fontSize: '0.72rem',
+                  fontSize: '0.78rem',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  marginTop: '3px',
+                  letterSpacing: '1.2px',
+                  marginTop: '4px',
                   fontWeight: 700,
                 }}
               >
