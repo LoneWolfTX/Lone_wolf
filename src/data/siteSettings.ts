@@ -22,7 +22,7 @@ export function getSiteSettings(content: SiteContent = DEFAULT_SITE_CONTENT): Si
     },
     yard: {
       name: 'Lone Wolf Dumpsters — Service Area',
-      address: b.yardStreet || 'DFW Metroplex',
+      address: b.yardStreet || '',
       city: b.yardCity || 'Colleyville',
       state: b.yardState || 'TX',
       zip: b.yardZip || '76034',

@@ -67,3 +67,55 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Server error: ' + err.message }, { status: 500 });
   }
 }
+
+/**
+ * PATCH /api/leads
+ * Authenticated Admin-only mutation for lead status or fields.
+ */
+export async function PATCH(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!verifyCsrfOrigin(req)) {
+    return NextResponse.json({ success: false, error: 'Invalid origin header' }, { status: 403 });
+  }
+
+  try {
+    const body = await req.json().catch(() => null);
+    if (!body || !body.leadId) {
+      return NextResponse.json({ success: false, error: 'leadId is required' }, { status: 400 });
+    }
+
+    const { leadId, ...updates } = body;
+    const updated = await updateLeadInRedis(leadId, updates);
+    return NextResponse.json({ success: !!updated, lead: updated });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: 'Server error: ' + err.message }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/leads
+ * Authenticated Admin-only deletion.
+ */
+export async function DELETE(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!verifyCsrfOrigin(req)) {
+    return NextResponse.json({ success: false, error: 'Invalid origin header' }, { status: 403 });
+  }
+
+  try {
+    const url = new URL(req.url);
+    const leadId = url.searchParams.get('leadId') || (await req.json().catch(() => null))?.leadId;
+    if (!leadId) {
+      return NextResponse.json({ success: false, error: 'leadId is required' }, { status: 400 });
+    }
+
+    const deleted = await deleteLeadFromRedis(leadId);
+    return NextResponse.json({ success: deleted, leadId });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: 'Server error: ' + err.message }, { status: 500 });
+  }
+}

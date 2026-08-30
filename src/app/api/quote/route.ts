@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Honeypot check: reject bot submissions
-    if (body._hp_website || body.hp_website_company) {
+    if (body._hp_field || body.website_confirm_field || body._hp_website || body.hp_website_company) {
       // Silently accept bots without persisting
       return NextResponse.json({ success: true, leadId: 'lead_bot_filtered' });
     }

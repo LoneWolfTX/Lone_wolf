@@ -5,23 +5,17 @@ export const ADMIN_COOKIE_NAME = 'lonewolf_admin_session';
 export const SESSION_DURATION_SECONDS = 12 * 60 * 60; // 12 hours
 
 function getSessionSecret(): string {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.SESSION_SECRET;
+  const secret = process.env.ADMIN_SESSION_SECRET;
   if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('ADMIN_SESSION_SECRET is required in production');
-    }
-    return 'dev-local-lonewolf-session-secret-2026-dfw';
+    throw new Error('ADMIN_SESSION_SECRET environment variable is missing');
   }
   return secret;
 }
 
 function getAdminPassword(): string {
-  const pwd = process.env.ADMIN_PASSWORD || process.env.LONEWOLFDUMPSTER_ADMIN_PASSWORD;
+  const pwd = process.env.ADMIN_PASSWORD;
   if (!pwd) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('ADMIN_PASSWORD is required in production');
-    }
-    return 'LoneWolfAdmin2026!';
+    throw new Error('ADMIN_PASSWORD environment variable is missing');
   }
   return pwd;
 }

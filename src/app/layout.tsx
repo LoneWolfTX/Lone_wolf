@@ -53,12 +53,16 @@ export default function RootLayout({
     email: siteSettings.contact.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: siteSettings.yard.address,
-      addressLocality: siteSettings.yard.city,
-      addressRegion: siteSettings.yard.state,
-      postalCode: siteSettings.yard.zip,
+      addressLocality: siteSettings.yard.city || 'Colleyville',
+      addressRegion: siteSettings.yard.state || 'TX',
+      postalCode: siteSettings.yard.zip || '76034',
       addressCountry: 'US',
     },
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: 'Tarrant County' },
+      { '@type': 'AdministrativeArea', name: 'Dallas County' },
+      { '@type': 'AdministrativeArea', name: 'Denton County' },
+    ],
     geo: {
       '@type': 'GeoCoordinates',
       latitude: '32.8854',
