@@ -10,31 +10,31 @@ export const FAQSection: React.FC = () => {
 
   const leftFaqs = [
     {
-      q: 'How much does dumpster rental cost in DFW?',
-      a: 'Our flat rates are: 15-Yard ($385, 1.5t included), 20-Yard ($425, 2.0t included), and 25-Yard ($475, 2.2t included). Prices include delivery, pickup, driveway wood protection, and 3, 5, or 7 days rental time.',
+      q: 'How does dumpster rental work with Lone Wolf Dumpsters?',
+      a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
     },
     {
-      q: 'What items are prohibited from dumpsters?',
-      a: 'Concrete, dirt, rock, brick, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, tires, lead-acid batteries, propane tanks, asbestos, and AC units are prohibited. Refrigerators containing Freon require prior approval. Household trash, construction debris, drywall, wood, and furniture are permitted.',
+      q: 'How long can I rent a dumpster?',
+      a: 'We offer flexible dumpster rental periods. Our standard rental periods are up to 3, 5, or 7 days, and additional days are available for $20 per day. If you finish your project early, simply call or text us to schedule pickup, which will end your rental period.',
     },
     {
-      q: 'What if I need the dumpster longer than planned?',
-      a: 'Additional rental days are just $20/day. Simply call or text (214) 876-0321 before your scheduled pickup date to extend.',
+      q: 'Do I need to be home for delivery?',
+      a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone to meet the driver, or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
     },
   ];
 
   const rightFaqs = [
     {
-      q: 'How are weight overages handled?',
-      a: 'Each container includes generous weight allowances (1.5 to 2.2 tons). Disposal weight exceeding your allowance is billed at a transparent $40 per 1,000 lbs ($80/ton) based on verified landfill weight tickets.',
+      q: 'What if I need more time?',
+      a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
     },
     {
-      q: 'Do I need to be home for container delivery?',
-      a: 'No. As long as the driveway has at least 10ft width and 14ft overhead clearance free of low branches, our driver will place the container on protective wood boards exactly where designated.',
+      q: 'What areas does Lone Wolf Dumpsters serve?',
+      a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
     },
     {
-      q: 'How quickly can you deliver in Dallas–Fort Worth?',
-      a: 'Same-day and next-day delivery is available throughout most of DFW. Reserve online or call/text (214) 876-0321 for immediate dispatch confirmation.',
+      q: 'How fast can I get a dumpster delivered?',
+      a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
     },
   ];
 

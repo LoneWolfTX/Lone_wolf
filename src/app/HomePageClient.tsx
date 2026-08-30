@@ -180,10 +180,38 @@ export default function HomePageClient() {
         backgroundColor="#f8fafc"
       />
 
-      {/* 8. FAQ Preview (2-Column Accordion) */}
+      {/* 8. FAQ Preview (2-Column Accordion with Questions 1 through 6) */}
       <FAQAccordion
         tagline="FREQUENTLY ASKED"
         titleBlack="QUESTIONS"
+        leftFaqs={[
+          {
+            q: 'How does dumpster rental work with Lone Wolf Dumpsters?',
+            a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
+          },
+          {
+            q: 'How long can I rent a dumpster?',
+            a: 'We offer flexible dumpster rental periods. Our standard rental periods are up to 3, 5, or 7 days, and additional days are available for $20 per day. If you finish your project early, simply call or text us to schedule pickup, which will end your rental period.',
+          },
+          {
+            q: 'Do I need to be home for delivery?',
+            a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone to meet the driver, or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
+          },
+        ]}
+        rightFaqs={[
+          {
+            q: 'What if I need more time?',
+            a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
+          },
+          {
+            q: 'What areas does Lone Wolf Dumpsters serve?',
+            a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+          },
+          {
+            q: 'How fast can I get a dumpster delivered?',
+            a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
+          },
+        ]}
         showViewAllLink={true}
         viewAllHref="/faq"
       />

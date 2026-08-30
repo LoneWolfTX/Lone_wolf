@@ -45,31 +45,31 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({
 
   const defaultLeft: FAQItem[] = [
     {
-      q: 'How much does it cost to rent a dumpster?',
-      a: `Our flat rates start at ${formatCurrency(pr.fifteenYard)} for a 15-yard, ${formatCurrency(pr.twentyYard)} for a 20-yard (most popular), and ${formatCurrency(pr.twentyFiveYard)} for a 25-yard. All prices include delivery, pickup, generous weight allowance, and wood driveway protection with no hidden fees.`,
+      q: 'How does dumpster rental work with Lone Wolf Dumpsters?',
+      a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
     },
     {
-      q: 'What items are not allowed in the dumpster?',
-      a: `Prohibited items include hazardous waste, wet paints, motor chemicals, vehicle oils, batteries, propane tanks, tires, medical waste, asbestos, concrete, dirt, rock, brick, and asphalt. All containers are capped at our ${pr.maxCapacityTons}-ton (${pr.maxCapacityLbs.toLocaleString()} lbs) maximum safe highway load limit.`,
+      q: 'How long can I rent a dumpster?',
+      a: 'We offer flexible dumpster rental periods. Our standard rental periods are up to 3, 5, or 7 days, and additional days are available for $20 per day. If you finish your project early, simply call or text us to schedule pickup, which will end your rental period.',
     },
     {
-      q: 'How long can I keep the dumpster?',
-      a: `Rentals are available for 1–7 days. Additional days are ${formatExtraDayRate(pr.extraDay)}. If the customer finishes early, they can call or text to schedule pickup, which ends the rental period.`,
+      q: 'Do I need to be home for delivery?',
+      a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone to meet the driver, or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
     },
   ];
 
   const defaultRight: FAQItem[] = [
     {
-      q: 'How much weight is included?',
-      a: `The 15-yard includes ${formatTonnage(1.5)}, the 20-yard includes ${formatTonnage(2.0)}, and the 25-yard includes ${formatTonnage(2.2)}. Additional weight is billed at ${formatOverageRate(pr.extraTonnage)} based on verified landfill scale tickets and rental terms. Maximum total safe load is ${pr.maxCapacityTons} tons (${pr.maxCapacityLbs.toLocaleString()} lbs).`,
-    },
-    {
-      q: 'Do I need to be home for delivery?',
-      a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
-    },
-    {
       q: 'What if I need more time?',
-      a: `We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are ${formatExtraDayRate(pr.extraDay)} and must be confirmed with us in advance by phone or text. Rental can be extended up to 10 days total. If you need the dumpster for 2, 3 weeks or longer, please contact us to discuss availability and pricing.`,
+      a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
+    },
+    {
+      q: 'What areas does Lone Wolf Dumpsters serve?',
+      a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+    },
+    {
+      q: 'How fast can I get a dumpster delivered?',
+      a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
     },
   ];
 

@@ -14,41 +14,65 @@ export const metadata: Metadata = {
 };
 
 export default function FAQPage() {
-  const pricingFaqs: FAQItem[] = [
+  const rentalAndDeliveryFaqs: FAQItem[] = [
     {
-      q: 'How much does dumpster rental cost in DFW?',
-      a: 'Our flat rates are: 15-Yard ($385, 1.5 tons included), 20-Yard ($425, 2.0 tons included - most popular), and 25-Yard ($475, 2.2 tons included). Prices include delivery, pickup, wood driveway protection, and 3, 5, or 7 days rental time.',
+      q: '1. How does dumpster rental work with Lone Wolf Dumpsters?',
+      a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
     },
     {
-      q: 'Are there any hidden fees?',
-      a: 'Never. Our pricing is 100% transparent. Fuel, delivery, pickup, and municipal disposal up to your included weight limit are completely included.',
+      q: '2. How long can I rent a dumpster?',
+      a: 'We offer flexible dumpster rental periods. Our standard rental periods are up to 3, 5, or 7 days, and additional days are available for $20 per day. If you finish your project early, simply call or text us to schedule pickup, which will end your rental period.',
     },
     {
-      q: 'How are weight overages billed?',
-      a: 'Weight exceeding your included allowance is billed at $80/ton based on verified landfill scale tickets and rental terms.',
+      q: '3. Do I need to be home for delivery?',
+      a: 'It is recommended that someone be present for delivery. If you cannot be there, please designate someone to meet the driver, or send us a photo with clear instructions showing exactly where you want the dumpster placed.',
     },
     {
-      q: 'What if I need the dumpster longer than planned?',
-      a: 'Extra rental days are just $20/day. Simply call or text (214) 876-0321 before your scheduled pickup date to extend.',
+      q: '4. What if I need more time?',
+      a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
+    },
+    {
+      q: '5. What areas does Lone Wolf Dumpsters serve?',
+      a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+    },
+    {
+      q: '6. How fast can I get a dumpster delivered?',
+      a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
+    },
+    {
+      q: '10. Can a dumpster be placed on a sidewalk or street?',
+      a: 'Dumpsters are typically placed on private property, such as a driveway or other suitable area. Placement on a public street or sidewalk may require a city permit, depending on local regulations.',
+    },
+    {
+      q: '12. Do you offer same-day dumpster service?',
+      a: 'Yes. We offer same-day dumpster service for certain projects and locations, depending on availability. Our driver can deliver the dumpster, wait while you load it, and pick it up once you’re finished. Please contact us in advance to confirm availability and pricing.',
     },
   ];
 
-  const deliveryFaqs: FAQItem[] = [
+  const pricingAndMaterialsFaqs: FAQItem[] = [
     {
-      q: 'Do I need to be home for container delivery?',
-      a: 'No. As long as your driveway or placement area is clear of parked cars and low overhead tree branches, our driver will set the container exactly where designated using protective wooden boards under the steel wheels.',
+      q: '7. How much does it cost to rent a dumpster?',
+      a: 'Our dumpster rental pricing is based on a flat rate, depending on the dumpster size and rental period. Our flat-rate pricing includes delivery, pickup, disposal up to the included weight allowance, and wood driveway protection. Sales tax is added to the rental price. We provide straightforward dumpster rental pricing with no hidden fees for homeowners, contractors, and businesses throughout the DFW area.',
     },
     {
-      q: 'How much space do I need for a roll-off dumpster?',
-      a: 'Our containers fit comfortably on standard single and double residential driveways. We require approximately 10 feet of width and 14 feet of overhead clearance for delivery trucks.',
+      q: '8. Are there any hidden fees?',
+      a: 'No. Our pricing is 100% transparent, with no hidden fees. Your quoted price includes delivery, pickup, disposal up to the included weight allowance, and wood driveway protection. Any additional charges, such as extra days or excess weight, will be clearly explained before they apply.',
     },
     {
-      q: 'How fast can I get a dumpster delivered?',
-      a: 'Same-day and next-day delivery is available throughout most of Dallas, Tarrant, Denton, and Collin counties. Call or text (214) 876-0321 for immediate dispatch confirmation.',
+      q: '9. How much weight is included with my dumpster rental?',
+      a: 'Our included weight allowances are: 15-yard dumpster: up to 1.5 tons (3,000 lbs); 20-yard dumpster: up to 2 tons (4,000 lbs); 25-yard dumpster: up to 2.2 tons (4,400 lbs). Additional weight is billed at $80 per ton based on the verified landfill scale ticket and rental terms. The maximum total safe load is 4.5 tons (9,000 lbs).',
     },
     {
-      q: 'What items are strictly prohibited from dumpsters?',
-      a: 'Hazardous chemicals, wet paint, motor oil, car batteries, propane tanks, tires, asbestos, and un-evacuated Freon appliances cannot go into municipal landfills.',
+      q: '11. What can I put in a dumpster?',
+      a: 'Lone Wolf Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.',
+    },
+    {
+      q: '13. What size dumpster do I need for my project?',
+      a: 'The right dumpster size depends on the type and amount of debris from your project. Lone Wolf Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.',
+    },
+    {
+      q: '14. What materials are not allowed in a dumpster?',
+      a: 'The following materials are not accepted in our dumpsters: concrete, dirt, rock, brick, asphalt, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, car and truck tires, lead-acid batteries, propane tanks, compressed gas cylinders, asbestos and asbestos-containing materials, and AC units. If you are unsure whether a material is accepted, please contact us before placing it in the dumpster.',
     },
   ];
 
@@ -70,20 +94,20 @@ export default function FAQPage() {
       {/* 2. Full FAQ Accordion Sections */}
       <div style={{ backgroundColor: '#ffffff', padding: '24px 0' }}>
         <FAQAccordion
-          tagline="PRICING &amp; WEIGHT ALLOWANCES"
-          titleBlack="COSTS &amp; RENTAL"
-          titleRed="TERMS"
-          leftFaqs={pricingFaqs.slice(0, 2)}
-          rightFaqs={pricingFaqs.slice(2)}
+          tagline="RENTAL PROCESS &amp; DELIVERY"
+          titleBlack="HOW IT WORKS &amp;"
+          titleRed="AREAS SERVED"
+          leftFaqs={rentalAndDeliveryFaqs.slice(0, Math.ceil(rentalAndDeliveryFaqs.length / 2))}
+          rightFaqs={rentalAndDeliveryFaqs.slice(Math.ceil(rentalAndDeliveryFaqs.length / 2))}
           showViewAllLink={false}
         />
 
         <FAQAccordion
-          tagline="DELIVERY &amp; GUIDELINES"
-          titleBlack="DROP-OFF &amp;"
-          titleRed="MATERIALS"
-          leftFaqs={deliveryFaqs.slice(0, 2)}
-          rightFaqs={deliveryFaqs.slice(2)}
+          tagline="PRICING, WEIGHT &amp; MATERIALS"
+          titleBlack="FLAT RATES &amp;"
+          titleRed="GUIDELINES"
+          leftFaqs={pricingAndMaterialsFaqs.slice(0, Math.ceil(pricingAndMaterialsFaqs.length / 2))}
+          rightFaqs={pricingAndMaterialsFaqs.slice(Math.ceil(pricingAndMaterialsFaqs.length / 2))}
           showViewAllLink={false}
         />
       </div>

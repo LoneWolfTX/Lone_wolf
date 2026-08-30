@@ -804,51 +804,87 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   faqs: [
     {
       id: "faq-1",
-      question: "What dumpster sizes do you offer and how much do they cost?",
-      answer: "We offer 3 versatile sizes across Dallas-Fort Worth: 15-Yard ($385, includes 1.5 tons), 20-Yard ($425, includes 2.0 tons), and 25-Yard ($475, includes 2.2 tons). All pricing is simple and upfront with 3 days included, delivery, driveway protection boards, pick-up, and municipal disposal.",
-      category: "pricing"
+      question: "How does dumpster rental work with Lone Wolf Dumpsters?",
+      answer: "Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.",
+      category: "booking"
     },
     {
       id: "faq-2",
-      question: "What is included in the flat-rate pricing?",
-      answer: "Our simple upfront price covers 3 days, delivery to your site, heavy-duty wooden driveway protection boards, pick-up, and the included weight allowance (1.5, 2.0, or 2.2 tons depending on size). There are no hidden fees.",
-      category: "pricing"
+      question: "How long can I rent a dumpster?",
+      answer: "We offer flexible dumpster rental periods. Our standard rental periods are up to 3, 5, or 7 days, and additional days are available for $20 per day. If you finish your project early, simply call or text us to schedule pickup, which will end your rental period.",
+      category: "booking"
     },
     {
       id: "faq-3",
-      question: "How long can I keep the dumpster?",
-      answer: "Rentals are available for 1–7 days. Additional days are $20/day. If the customer finishes early, they can call or text to schedule pickup, which ends the rental period.",
-      category: "booking"
-    },
-    {
-      id: "faq-4",
-      question: "Will the roll-off dumpster damage my driveway?",
-      answer: "No! We care about your property. On every residential delivery, our drivers lay down heavy wooden protective boards under the steel rollers so the dumpster never touches your concrete or asphalt directly.",
+      question: "Do I need to be home for delivery?",
+      answer: "It is recommended that someone be present for delivery. If you cannot be there, please designate someone to meet the driver, or send us a photo with clear instructions showing exactly where you want the dumpster placed.",
       category: "placement"
     },
     {
+      id: "faq-4",
+      question: "What if I need more time?",
+      answer: "We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.",
+      category: "booking"
+    },
+    {
       id: "faq-5",
-      question: "What items and materials are prohibited?",
-      answer: "Concrete, dirt, rock, brick, asphalt, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, car/truck tires, lead-acid batteries, propane tanks, compressed gas cylinders, asbestos, and AC units are prohibited. Refrigerators containing Freon require prior approval. Contact Lone Wolf before loading restricted or unusually heavy materials.",
-      category: "materials"
+      question: "What areas does Lone Wolf Dumpsters serve?",
+      answer: "Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.",
+      category: "placement"
     },
     {
       id: "faq-6",
-      question: "What happens if I exceed the included weight allowance?",
-      answer: "If your load exceeds the included weight allowance (1.5t for 15yd, 2.0t for 20yd, 2.2t for 25yd), additional weight is billed at $80 per ton based on certified landfill weight tickets. Maximum allowed weight is 4.5 tons. Additional charges apply for excess weight.",
-      category: "pricing"
+      question: "How fast can I get a dumpster delivered?",
+      answer: "Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.",
+      category: "placement"
     },
     {
       id: "faq-7",
-      question: "Do I need to be home for delivery?",
-      answer: "It is recommended that someone be present for delivery. If you cannot be there, please designate someone or send us a photo with clear instructions showing exactly where you want the dumpster placed.",
-      category: "booking"
+      question: "How much does it cost to rent a dumpster?",
+      answer: "Our dumpster rental pricing is based on a flat rate, depending on the dumpster size and rental period. Our flat-rate pricing includes delivery, pickup, disposal up to the included weight allowance, and wood driveway protection. Sales tax is added to the rental price. We provide straightforward dumpster rental pricing with no hidden fees for homeowners, contractors, and businesses throughout the DFW area.",
+      category: "pricing"
     },
     {
       id: "faq-8",
-      question: "What if I need more time?",
-      answer: "We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Rental can be extended up to 10 days total. If you need the dumpster for 2, 3 weeks or longer, please contact us to discuss availability and pricing.",
+      question: "Are there any hidden fees?",
+      answer: "No. Our pricing is 100% transparent, with no hidden fees. Your quoted price includes delivery, pickup, disposal up to the included weight allowance, and wood driveway protection. Any additional charges, such as extra days or excess weight, will be clearly explained before they apply.",
+      category: "pricing"
+    },
+    {
+      id: "faq-9",
+      question: "How much weight is included with my dumpster rental?",
+      answer: "Our included weight allowances are: 15-yard dumpster: up to 1.5 tons (3,000 lbs); 20-yard dumpster: up to 2 tons (4,000 lbs); 25-yard dumpster: up to 2.2 tons (4,400 lbs). Additional weight is billed at $80 per ton based on the verified landfill scale ticket and rental terms. The maximum total safe load is 4.5 tons (9,000 lbs).",
+      category: "pricing"
+    },
+    {
+      id: "faq-10",
+      question: "Can a dumpster be placed on a sidewalk or street?",
+      answer: "Dumpsters are typically placed on private property, such as a driveway or other suitable area. Placement on a public street or sidewalk may require a city permit, depending on local regulations.",
+      category: "placement"
+    },
+    {
+      id: "faq-11",
+      question: "What can I put in a dumpster?",
+      answer: "Lone Wolf Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.",
+      category: "materials"
+    },
+    {
+      id: "faq-12",
+      question: "Do you offer same-day dumpster service?",
+      answer: "Yes. We offer same-day dumpster service for certain projects and locations, depending on availability. Our driver can deliver the dumpster, wait while you load it, and pick it up once you’re finished. Please contact us in advance to confirm availability and pricing.",
       category: "booking"
+    },
+    {
+      id: "faq-13",
+      question: "What size dumpster do I need for my project?",
+      answer: "The right dumpster size depends on the type and amount of debris from your project. Lone Wolf Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.",
+      category: "booking"
+    },
+    {
+      id: "faq-14",
+      question: "What materials are not allowed in a dumpster?",
+      answer: "The following materials are not accepted in our dumpsters: concrete, dirt, rock, brick, asphalt, wet paint, stains, solvents, gasoline, oil, flammable liquids, chemicals, hazardous materials, car and truck tires, lead-acid batteries, propane tanks, compressed gas cylinders, asbestos and asbestos-containing materials, and AC units. If you are unsure whether a material is accepted, please contact us before placing it in the dumpster.",
+      category: "materials"
     }
   ],
   guides: [
