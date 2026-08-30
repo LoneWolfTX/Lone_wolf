@@ -3129,30 +3129,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* Header Corner Logo Responsive Dimensions */
 .header-logo-icon {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   flex-shrink: 0;
   filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
   transition: transform 0.2s ease;
 }
 
+@media (max-width: 1200px) {
+  .header-logo-icon {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 @media (max-width: 1024px) {
   .header-logo-icon {
-    width: 100px;
-    height: 100px;
+    width: 105px;
+    height: 105px;
   }
 }
 
 @media (max-width: 768px) {
   .header-logo-icon {
-    width: 88px;
-    height: 88px;
+    width: 92px;
+    height: 92px;
   }
 }
 
 @media (max-width: 480px) {
   .header-logo-icon {
-    width: 76px;
-    height: 76px;
+    width: 80px;
+    height: 80px;
   }
 }
