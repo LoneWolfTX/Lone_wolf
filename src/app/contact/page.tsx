@@ -23,8 +23,9 @@ export default function ContactPage() {
         headlineWhite="CONTACT US &amp;"
         headlineRed="GET A QUOTE"
         description="Ready to schedule your dumpster rental? Request a free quote below or call Wayne directly for instant dispatch confirmation across Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/real/real_dumpster_6082.jpg"
-        imageAlt="Real Lone Wolf Dumpster Delivery on Texas Driveway"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Full 2-Column Contact & Quote Form Section */}

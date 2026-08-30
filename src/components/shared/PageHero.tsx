@@ -1,10 +1,10 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Phone, Calendar, Star } from 'lucide-react';
+import { Phone, Calendar, Star, ShieldCheck, MapPin } from 'lucide-react';
 import { siteSettings } from '@/data/siteSettings';
 import { trackBookOnlineClick, trackPhoneClick } from '@/lib/tracking';
 import { getQuoteUrl } from '@/lib/ctaHelper';
@@ -32,6 +32,7 @@ interface PageHeroProps {
   badgeText?: string;
   imageObjectPosition?: string;
   overlayGradient?: string;
+  isHomepage?: boolean;
 }
 
 export const PageHero: React.FC<PageHeroProps> = ({
@@ -39,15 +40,17 @@ export const PageHero: React.FC<PageHeroProps> = ({
   headlineWhite,
   headlineRed,
   description,
-  imageSrc = '/images/lone-wolf/hero_homepage_cinematic.jpg',
-  imageAlt = 'Lone Wolf Roll-Off Dumpster Rental in DFW',
+  imageSrc = '/images/lone-wolf/lone_wolf_hero_top.png',
+  imageAlt = 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
   showRating = false,
   trustItems,
   badgeText,
-  imageObjectPosition = 'right center',
+  imageObjectPosition = 'center right',
   overlayGradient,
+  isHomepage,
 }) => {
   const pathname = usePathname();
+  const isHome = isHomepage || pathname === '/';
   const quoteUrl = getQuoteUrl(pathname);
   const hasImage = imageSrc && imageSrc !== 'none';
   const [imageLoaded, setImageLoaded] = React.useState(false);
@@ -58,44 +61,47 @@ export const PageHero: React.FC<PageHeroProps> = ({
 
   return (
     <section
-      className="page-hero-container"
+      className={`page-hero-container ${isHome ? 'homepage-hero-root' : 'secondary-hero-root'}`}
       style={{
-        backgroundColor: '#070a0f',
-        backgroundImage: 'radial-gradient(ellipse at 70% 30%, rgba(30, 41, 59, 0.45) 0%, rgba(7, 10, 15, 1) 75%)',
+        backgroundColor: '#0a0d12',
+        backgroundImage: isHome
+          ? 'radial-gradient(ellipse at 80% 30%, rgba(220, 38, 38, 0.08) 0%, rgba(15, 23, 42, 0.4) 40%, rgba(10, 13, 18, 1) 85%)'
+          : 'radial-gradient(ellipse at 70% 30%, rgba(30, 41, 59, 0.45) 0%, rgba(10, 13, 18, 1) 75%)',
         color: '#ffffff',
         position: 'relative',
         overflow: 'hidden',
         borderBottom: '1px solid #1e293b',
-        padding: '36px 0 48px 0',
+        padding: isHome ? '32px 0 44px 0' : '32px 0 40px 0',
       }}
       aria-label="Hero Section"
     >
-      {/* Background Soft Glow / Ambient Backdrop (Homepage Only) */}
-      {hasImage && pathname === '/' && (
+      {/* Subtle Background Glow on Homepage */}
+      {hasImage && isHome && (
         <div
           style={{
             position: 'absolute',
             inset: 0,
             zIndex: 1,
             pointerEvents: 'none',
-            opacity: 0.12,
-            filter: 'blur(30px) scale(1.1)',
+            opacity: 0.08,
+            filter: 'blur(40px) scale(1.15)',
           }}
         >
           <Image
             src={imageSrc}
-            alt={imageAlt}
+            alt=""
             fill
+            priority
             sizes="100vw"
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', objectPosition: 'center right' }}
           />
         </div>
       )}
 
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
         
-        {/* 1. Breadcrumbs Trail */}
-        {breadcrumbs && breadcrumbs.length > 0 && (
+        {/* 1. Breadcrumbs Trail (Secondary Pages) */}
+        {!isHome && breadcrumbs && breadcrumbs.length > 0 && (
           <nav
             aria-label="Breadcrumb"
             style={{
@@ -129,33 +135,42 @@ export const PageHero: React.FC<PageHeroProps> = ({
 
         {/* 2. Main Hero Content Layout */}
         <div
+          className="hero-grid-wrapper"
           style={{
             display: 'grid',
-            gridTemplateColumns: hasImage ? 'repeat(auto-fit, minmax(320px, 1fr))' : '1fr',
-            gap: '32px',
+            gridTemplateColumns: hasImage
+              ? isHome
+                ? 'minmax(320px, 1fr) minmax(320px, 1.15fr)'
+                : 'repeat(auto-fit, minmax(320px, 1fr))'
+              : '1fr',
+            gap: isHome ? '36px' : '32px',
             alignItems: 'center',
           }}
         >
           {/* Left Column: Headlines & CTAs */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', zIndex: 3 }}>
             
             {/* Optional Badge */}
             {badgeText && (
               <div
                 style={{
                   alignSelf: 'flex-start',
-                  backgroundColor: 'rgba(220, 38, 38, 0.15)',
-                  border: '1px solid rgba(220, 38, 38, 0.4)',
+                  backgroundColor: 'rgba(220, 38, 38, 0.14)',
+                  border: '1px solid rgba(220, 38, 38, 0.45)',
                   color: 'var(--accent-red)',
                   fontSize: '0.78rem',
                   fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
-                  padding: '4px 12px',
+                  padding: '5px 14px',
                   borderRadius: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
                 }}
               >
-                {badgeText}
+                <ShieldCheck size={14} />
+                <span>{badgeText}</span>
               </div>
             )}
 
@@ -163,9 +178,11 @@ export const PageHero: React.FC<PageHeroProps> = ({
             <h1
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.1rem, 4vw, 3.4rem)',
+                fontSize: isHome
+                  ? 'clamp(2.3rem, 4.4vw, 3.8rem)'
+                  : 'clamp(2.1rem, 4vw, 3.4rem)',
                 fontWeight: 800,
-                lineHeight: 1.08,
+                lineHeight: 1.06,
                 textTransform: 'uppercase',
                 margin: 0,
                 letterSpacing: '0.02em',
@@ -182,20 +199,20 @@ export const PageHero: React.FC<PageHeroProps> = ({
                 color: '#cbd5e1',
                 lineHeight: 1.6,
                 margin: 0,
-                maxWidth: '640px',
+                maxWidth: '620px',
               }}
             >
               {description}
             </p>
 
-            {/* Optional Rating Badge */}
+            {/* Optional Google Rating Chip */}
             {showRating && (
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: 'rgba(30, 41, 59, 0.6)',
+                  gap: '10px',
+                  backgroundColor: 'rgba(30, 41, 59, 0.65)',
                   border: '1px solid #334155',
                   padding: '6px 14px',
                   borderRadius: '4px',
@@ -204,23 +221,29 @@ export const PageHero: React.FC<PageHeroProps> = ({
               >
                 <span
                   style={{
-                    backgroundColor: '#4285f4',
-                    color: '#ffffff',
+                    backgroundColor: '#ffffff',
+                    color: '#4285f4',
                     fontWeight: 900,
-                    fontSize: '0.75rem',
-                    padding: '2px 6px',
-                    borderRadius: '2px',
+                    fontSize: '0.85rem',
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
                   G
                 </span>
-                <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>5.0</span>
+                <span style={{ fontWeight: 800, fontSize: '0.95rem', color: '#ffffff' }}>5.0</span>
                 <div style={{ display: 'flex', gap: '2px', color: '#eab308' }}>
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={14} fill="#eab308" color="#eab308" />
                   ))}
                 </div>
-                <span style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>5.0 Rated DFW Dumpster Service</span>
+                <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>
+                  5.0 Rated DFW Dumpster Service
+                </span>
               </div>
             )}
 
@@ -231,12 +254,12 @@ export const PageHero: React.FC<PageHeroProps> = ({
                 display: 'flex',
                 gap: '12px',
                 flexWrap: 'wrap',
-                marginTop: '8px',
+                marginTop: '6px',
               }}
             >
               <Link
                 href={quoteUrl}
-                onClick={() => trackBookOnlineClick('hero_primary')}
+                onClick={() => trackBookOnlineClick(isHome ? 'hero_home_primary' : 'hero_primary')}
                 className="btn-glow"
                 style={{
                   display: 'inline-flex',
@@ -251,7 +274,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   borderRadius: '4px',
                   textDecoration: 'none',
                   letterSpacing: '0.5px',
-                  boxShadow: '0 4px 14px rgba(220, 38, 38, 0.45)',
+                  boxShadow: '0 4px 16px rgba(220, 38, 38, 0.45)',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -266,12 +289,12 @@ export const PageHero: React.FC<PageHeroProps> = ({
 
               <a
                 href={`tel:${siteSettings.contact.phoneRaw}`}
-                onClick={() => trackPhoneClick('hero_secondary')}
+                onClick={() => trackPhoneClick(isHome ? 'hero_home_phone' : 'hero_secondary')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '10px',
-                  backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                  backgroundColor: 'rgba(15, 23, 42, 0.85)',
                   color: '#ffffff',
                   border: '1px solid #334155',
                   fontWeight: 800,
@@ -298,41 +321,58 @@ export const PageHero: React.FC<PageHeroProps> = ({
           {/* Right Column: Full Environmental Showcase Image Card */}
           {hasImage && (
             <div
+              className="hero-image-frame"
               style={{
                 position: 'relative',
                 borderRadius: '8px',
                 overflow: 'hidden',
                 border: '1px solid #334155',
-                boxShadow: '0 20px 40px -15px rgba(0,0,0,0.7)',
-                aspectRatio: '16/10',
-                maxHeight: '440px',
+                boxShadow: isHome
+                  ? '0 24px 48px -12px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)'
+                  : '0 20px 40px -15px rgba(0,0,0,0.7)',
+                aspectRatio: isHome ? '16 / 9' : '16 / 10',
+                maxHeight: isHome ? '480px' : '420px',
                 width: '100%',
-                backgroundColor: '#0f172a',
+                backgroundColor: '#0a0d14',
               }}
             >
               <Image
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                priority
-                sizes="(max-width: 768px) 100vw, 650px"
+                priority={isHome}
+                loading={isHome ? 'eager' : 'lazy'}
+                sizes={isHome ? '(max-width: 768px) 100vw, (max-width: 1440px) 55vw, 750px' : '(max-width: 768px) 100vw, 650px'}
                 onLoad={() => setImageLoaded(true)}
                 style={{
                   objectFit: 'cover',
                   objectPosition: imageObjectPosition,
                   opacity: imageLoaded ? 1 : 0.05,
-                  transition: 'opacity 0.18s ease-in-out',
+                  transition: 'opacity 0.2s ease-in-out',
                 }}
               />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '8px',
-                  pointerEvents: 'none',
-                }}
-              />
+              
+              {/* Subtle directional vignette overlay on homepage to keep text ultra-readable while preserving truck details */}
+              {isHome ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to right, rgba(10, 13, 18, 0.4) 0%, rgba(10, 13, 18, 0) 40%)',
+                    pointerEvents: 'none',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '8px',
+                    pointerEvents: 'none',
+                  }}
+                />
+              )}
             </div>
           )}
         </div>
@@ -341,12 +381,12 @@ export const PageHero: React.FC<PageHeroProps> = ({
         {trustItems && trustItems.length > 0 && (
           <div
             style={{
-              marginTop: '40px',
-              paddingTop: '24px',
+              marginTop: isHome ? '36px' : '32px',
+              paddingTop: '20px',
               borderTop: '1px solid rgba(51, 65, 85, 0.6)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '20px',
+              gap: '16px',
             }}
           >
             {trustItems.map((item, idx) => (
@@ -360,6 +400,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    flexShrink: 0,
                   }}
                 >
                   {item.icon}

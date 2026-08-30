@@ -81,8 +81,8 @@ export default function CommercialPageClient() {
         headlineWhite="COMMERCIAL"
         headlineRed="DUMPSTER RENTALS"
         description="Reliable waste solutions for your business, job site or facility. Whether it's ongoing service or a one-time cleanout, we've got you covered."
-        imageSrc="/images/lone-wolf/real/commercial_environment_showcase.jpg"
-        imageAlt="Lone Wolf Commercial Roll-Off Container at Industrial Warehouse Loading Dock Facility"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_debris.png"
+        imageAlt="Black roll-off dumpster loaded with renovation and cleanup debris"
         imageObjectPosition="center center"
       />
 

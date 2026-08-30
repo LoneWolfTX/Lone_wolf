@@ -40,8 +40,9 @@ export default function AboutPageClient() {
         headlineWhite={ab.titleWhite}
         headlineRed={ab.titleRed}
         description={ab.heroDescription}
-        imageSrc="/images/lone-wolf/real/hero_fleet_environment.jpg"
-        imageAlt="Lone Wolf Dumpsters Roll-Off Container Fleet in DFW"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Owner Story & Values Section */}

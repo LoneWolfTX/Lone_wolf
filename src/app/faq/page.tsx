@@ -87,8 +87,9 @@ export default function FAQPage() {
         headlineWhite="FREQUENTLY ASKED"
         headlineRed="QUESTIONS &amp; POLICIES"
         description="Everything you need to know about roll-off dumpster sizes, upfront pricing, driveway protection, permitted materials, and scheduling in Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/hero_dumpster_front.jpg"
-        imageAlt="Lone Wolf Roll-Off Dumpster Ready for Delivery in DFW"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Full FAQ Accordion Sections */}

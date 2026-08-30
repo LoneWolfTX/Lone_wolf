@@ -71,8 +71,9 @@ export default function JunkRemovalPage() {
         headlineWhite="DFW JUNK &amp; TRASH"
         headlineRed="REMOVAL SERVICES"
         description="Don't want to lift a finger? Our full-service crew loads, hauls away, and sweeps up. Starting at just $150 with upfront volume pricing."
-        imageSrc="/images/lone-wolf/real/junk_removal_environment.jpg"
-        imageAlt="Lone Wolf Full-Service Junk and Debris Removal Hauling Trailer"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_debris.png"
+        imageAlt="Black roll-off dumpster loaded with renovation and cleanup debris"
+        imageObjectPosition="center center"
         badgeText="FULL-SERVICE ADD-ON • STARTING AT $150"
       />
 

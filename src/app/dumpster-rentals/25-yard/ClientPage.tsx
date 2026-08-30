@@ -14,8 +14,8 @@ export default function TwentyFiveYardDumpsterClient() {
   const content = useDumpsterPageContent('25-yard-dumpster');
 
   const heroImg = content.image || {
-    src: '/images/lone-wolf/real/commercial_environment_showcase.jpg',
-    alt: '25 Yard Lone Wolf Dumpster at Commercial Facility',
+    src: '/images/lone-wolf/lone_wolf_hero_debris.png',
+    alt: 'Black roll-off dumpster loaded with renovation and cleanup debris',
     position: 'center center'
   };
 

@@ -5,6 +5,12 @@ export interface StockImageItem {
 }
 
 export const EXISTING_IMAGE_LIBRARY: StockImageItem[] = [
+  // Approved Hero & Core Identity Set
+  { src: '/images/lone-wolf/lone_wolf_hero_top.png', name: 'Approved Main Hero - Truck & Dumpster', category: 'real' },
+  { src: '/images/lone-wolf/lone_wolf_hero_residential.png', name: 'Approved Residential Hero - Driveway Container', category: 'real' },
+  { src: '/images/lone-wolf/lone_wolf_hero_construction.png', name: 'Approved Contractor Hero - Construction Job Site', category: 'real' },
+  { src: '/images/lone-wolf/lone_wolf_hero_debris.png', name: 'Approved Cleanout & Junk Hero - Debris Container', category: 'real' },
+
   // Real Photography
   { src: '/images/lone-wolf/real/hero_main.jpg', name: 'Hero Main - Roll-Off Fleet', category: 'real' },
   { src: '/images/lone-wolf/real/hero_fleet_environment.jpg', name: 'Fleet Environment Showcase', category: 'real' },

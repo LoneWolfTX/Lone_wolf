@@ -69,8 +69,9 @@ export default function DumpsterRentalsPage() {
         headlineWhite="ROLL-OFF DUMPSTER RENTALS"
         headlineRed="ACROSS DALLAS–FORT WORTH"
         description="Choose from our 15, 20, and 25-yard heavy-duty roll-off containers. Flat-rate pricing, generous weight allowances, and driveway protection included."
-        imageSrc="/images/lone-wolf/real/hero_fleet_environment.jpg"
-        imageAlt="Lone Wolf Roll-Off Dumpster Fleet Ready for Delivery"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Three-Size Pricing Section */}

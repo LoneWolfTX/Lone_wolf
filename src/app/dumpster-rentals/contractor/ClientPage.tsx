@@ -59,8 +59,8 @@ export default function ContractorPageClient() {
         headlineWhite="DUMPSTER RENTALS"
         headlineRed="CONTRACTOR & COMMERCIAL DUMPSTERS"
         description="Keep your job site clean, safe, and efficient. Direct dispatch, reliable scheduled delivery windows, and same-day swaps across Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/real/contractor_environment_showcase.jpg"
-        imageAlt="Lone Wolf Heavy-Duty Roll-Off Dumpster on Job Site with Construction Debris"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_construction.png"
+        imageAlt="Black roll-off dumpster at a residential construction job site"
         imageObjectPosition="center center"
       />
 

@@ -27,8 +27,9 @@ export default function BlogIndexPage() {
         headlineWhite="DFW DUMPSTER RENTAL"
         headlineRed="RESOURCE CENTER"
         description="Straight answers about dumpster sizes, pricing, prohibited materials, project planning, and roll-off rentals across Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/real/real_dumpster_6594.jpg"
-        imageAlt="Lone Wolf Dumpster Fleet Resource Guides in DFW"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Blog Posts Grid on White */}

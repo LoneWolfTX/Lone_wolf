@@ -3260,3 +3260,54 @@ svg.leaflet-image-layer.leaflet-interactive path {
     display: none;
   }
 }
+
+/* ==========================================================================
+   HERO CONSISTENCY & RESPONSIVE COMPOSITION SYSTEM
+   ========================================================================== */
+.hero-grid-wrapper {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .hero-grid-wrapper {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .homepage-hero-root .hero-image-frame {
+    aspect-ratio: 16 / 9 !important;
+    max-height: 360px !important;
+    margin-top: 4px;
+  }
+
+  .secondary-hero-root .hero-image-frame {
+    aspect-ratio: 16 / 10 !important;
+    max-height: 320px !important;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-hero-container {
+    padding: 24px 0 32px 0 !important;
+  }
+
+  .hero-actions-row {
+    flex-direction: column !important;
+    width: 100%;
+  }
+
+  .hero-actions-row a,
+  .hero-actions-row button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .homepage-hero-root .hero-image-frame {
+    aspect-ratio: 16 / 9 !important;
+    max-height: 240px !important;
+  }
+}

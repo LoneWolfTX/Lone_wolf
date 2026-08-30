@@ -14,8 +14,8 @@ export default function TwentyYardDumpsterClient() {
   const content = useDumpsterPageContent('20-yard-dumpster');
 
   const heroImg = content.image || {
-    src: '/images/lone-wolf/real/contractor_environment_showcase.jpg',
-    alt: '20 Yard Lone Wolf Dumpster Container on Active Job Site',
+    src: '/images/lone-wolf/lone_wolf_hero_construction.png',
+    alt: 'Black roll-off dumpster at a residential construction job site',
     position: 'center center'
   };
 

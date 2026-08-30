@@ -122,13 +122,15 @@ export default function HomePageClient() {
     <>
       {/* 1. Large Photographic Hero + Rating + Dual CTAs + 5-Item Trust Strip */}
       <PageHero
+        isHomepage={true}
+        badgeText="DFW'S TRUSTED DUMPSTER RENTAL SERVICE"
         headlineWhite={hp.heroHeadlineWhite || 'FAST & RELIABLE'}
         headlineRed={hp.heroHeadlineRed || 'DUMPSTER RENTALS ACROSS DFW'}
-        description={hp.heroDescription || 'Perfect for home cleanouts, remodeling projects, construction jobs and everything in between.'}
+        description={hp.heroDescription || 'Driveway-safe roll-off dumpsters for cleanouts, remodeling, roofing, and contractor job sites across Dallas–Fort Worth.'}
         showRating={true}
-        imageSrc={hp.heroImage?.src || '/images/lone-wolf/real/hero_main.jpg'}
-        imageAlt={hp.heroImage?.alt || 'Lone Wolf Roll-Off Dumpster Fleet Ready for Delivery Across Dallas-Fort Worth'}
-        imageObjectPosition={hp.heroImage?.position || 'center center'}
+        imageSrc={hp.heroImage?.src || '/images/lone-wolf/lone_wolf_hero_top.png'}
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
         trustItems={heroTrustItems}
       />
 

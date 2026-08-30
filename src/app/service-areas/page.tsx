@@ -39,8 +39,9 @@ export default function ServiceAreasPage() {
         headlineWhite="PROUDLY SERVING"
         headlineRed="48 DFW CITIES &amp; TOWNS"
         description="Fast, reliable, driveway-safe roll-off dumpster rentals across Tarrant, Dallas, and Denton Counties. Choose your city below for localized delivery info and rates."
-        imageSrc="/images/lone-wolf/real/contractor_jobsite_showcase.jpg"
-        imageAlt="Lone Wolf Roll-Off Dumpster Delivery Service Active Across 48 DFW Cities"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
       />
 
       {/* 2. Interactive 48-City Map Component */}

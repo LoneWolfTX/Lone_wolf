@@ -25,3 +25,4 @@ extracted_tail.css
 .DS_Store
 *.log
 .vercel
+/*.png

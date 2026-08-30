@@ -6,14 +6,10 @@
  */
 
 export const CITY_HERO_POOL = [
-  '/images/lone-wolf/real/hero_main.jpg',
-  '/images/lone-wolf/real/hero_fleet_environment.jpg',
-  '/images/lone-wolf/real/contractor_environment_showcase.jpg',
-  '/images/lone-wolf/real/commercial_environment_showcase.jpg',
-  '/images/lone-wolf/real/dumpster_15_environment.jpg',
-  '/images/lone-wolf/real/dumpster_20_environment.jpg',
-  '/images/lone-wolf/real/dumpster_25_environment.jpg',
-  '/images/lone-wolf/real/residential_environment_showcase.jpg',
+  '/images/lone-wolf/lone_wolf_hero_top.png',
+  '/images/lone-wolf/lone_wolf_hero_residential.png',
+  '/images/lone-wolf/lone_wolf_hero_construction.png',
+  '/images/lone-wolf/lone_wolf_hero_debris.png',
 ];
 
 export function getCityHeroImage(citySlug: string): string {

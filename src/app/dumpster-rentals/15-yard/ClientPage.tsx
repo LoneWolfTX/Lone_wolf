@@ -14,8 +14,8 @@ export default function FifteenYardDumpsterClient() {
   const content = useDumpsterPageContent('15-yard-dumpster');
 
   const heroImg = content.image || {
-    src: '/images/lone-wolf/real/dumpster_15_environment.jpg',
-    alt: '15 Yard Lone Wolf Dumpster in Residential Driveway Setting',
+    src: '/images/lone-wolf/lone_wolf_hero_residential.png',
+    alt: 'Black roll-off dumpster placed in a residential driveway',
     position: 'center center'
   };
 

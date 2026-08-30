@@ -477,17 +477,17 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     introTitle: "WELCOME TO LONE WOLF DUMPSTERS",
     introDescription: "Dallas-Fort Worth's local owner-operator roll-off dumpster service. Upfront flat-rate pricing, 5.0 Google rating, driveway-safe delivery.",
     heroImage: {
-      src: "/images/lone-wolf/real/hero_main.jpg",
-      alt: "Lone Wolf Roll-Off Dumpster Fleet Ready for Delivery Across Dallas-Fort Worth",
-      position: "center center"
+      src: "/images/lone-wolf/lone_wolf_hero_top.png",
+      alt: "Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area",
+      position: "center right"
     },
     showcaseImage: {
-      src: "/images/lone-wolf/real/hero_fleet_environment.jpg",
+      src: "/images/lone-wolf/lone_wolf_hero_debris.png",
       alt: "Full-Service Junk & Debris Removal Service in DFW",
       position: "center center"
     },
     closingBannerImage: {
-      src: "/images/lone-wolf/real/contractor_environment_showcase.jpg",
+      src: "/images/lone-wolf/lone_wolf_hero_top.png",
       alt: "Real Lone Wolf Roll-Off Dumpster Ready for Delivery in DFW",
       position: "center center"
     },
@@ -497,18 +497,18 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       position: "center top"
     },
     commercialHeaderImage: {
-      src: "/images/lone-wolf/real/commercial_environment_showcase.jpg",
-      alt: "Lone Wolf Commercial Dumpster Placement at Industrial Warehouse Facility",
+      src: "/images/lone-wolf/lone_wolf_hero_debris.png",
+      alt: "Black roll-off dumpster loaded with renovation and cleanup debris",
       position: "center center"
     },
     contractorHeaderImage: {
-      src: "/images/lone-wolf/real/contractor_environment_showcase.jpg",
-      alt: "Lone Wolf Heavy-Duty Contractor Dumpster on Job Site in DFW",
+      src: "/images/lone-wolf/lone_wolf_hero_construction.png",
+      alt: "Black roll-off dumpster at a residential construction job site",
       position: "center center"
     },
     residentialHeaderImage: {
-      src: "/images/lone-wolf/real/dumpster_15_environment.jpg",
-      alt: "Driveway Safe Residential Dumpster Rental in Dallas-Fort Worth",
+      src: "/images/lone-wolf/lone_wolf_hero_residential.png",
+      alt: "Black roll-off dumpster placed in a residential driveway",
       position: "center center"
     }
   },
@@ -635,8 +635,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       importantNotice: "",
       ctaText: "Book 15 Yard Now →",
       image: {
-        src: "/images/lone-wolf/real/dumpster_15_environment.jpg",
-        alt: "15 Yard Lone Wolf Dumpster in Residential Driveway Setting",
+        src: "/images/lone-wolf/lone_wolf_hero_residential.png",
+        alt: "Black roll-off dumpster placed in a residential driveway",
         position: "center center"
       }
     },
@@ -659,8 +659,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       importantNotice: "",
       ctaText: "Book 20 Yard Now →",
       image: {
-        src: "/images/lone-wolf/real/contractor_environment_showcase.jpg",
-        alt: "20 Yard Lone Wolf Dumpster Container on Active Job Site",
+        src: "/images/lone-wolf/lone_wolf_hero_construction.png",
+        alt: "Black roll-off dumpster at a residential construction job site",
         position: "center center"
       }
     },
@@ -684,8 +684,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       importantNotice: "",
       ctaText: "Book 25 Yard Now →",
       image: {
-        src: "/images/lone-wolf/real/commercial_environment_showcase.jpg",
-        alt: "25 Yard Lone Wolf Dumpster at Commercial Facility",
+        src: "/images/lone-wolf/lone_wolf_hero_debris.png",
+        alt: "Black roll-off dumpster loaded with renovation and cleanup debris",
         position: "center center"
       }
     }

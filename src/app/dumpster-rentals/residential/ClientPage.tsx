@@ -56,8 +56,8 @@ export default function ResidentialPageClient() {
         headlineWhite="RESIDENTIAL"
         headlineRed="DUMPSTER RENTALS"
         description="The easy way to clean up your home and property. Perfect for DIY projects, home cleanouts, renovations, and yard debris."
-        imageSrc="/images/lone-wolf/real/residential_environment_showcase.jpg"
-        imageAlt="Lone Wolf Residential Roll-Off Dumpster on Driveway in Front of Texas Suburban Home"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_residential.png"
+        imageAlt="Black roll-off dumpster placed in a residential driveway"
         imageObjectPosition="center center"
       />
 
