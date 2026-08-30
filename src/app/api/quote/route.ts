@@ -25,10 +25,6 @@ const VALID_DURATIONS = new Set([
 ]);
 
 function getClientIp(req: NextRequest): string {
-  if (process.env.NODE_ENV === 'test' || process.env.ENABLE_TEST_OVERRIDE === 'true') {
-    const testIp = req.headers.get('x-test-ip');
-    if (testIp) return testIp.trim();
-  }
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown-ip';
 }
 

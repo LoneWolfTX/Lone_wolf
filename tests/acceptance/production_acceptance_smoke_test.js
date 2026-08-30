@@ -75,8 +75,14 @@ const CORE_ROUTES = [
 async function request(path, options = {}) {
   const url = BASE_URL + path;
   const headers = options.headers || {};
-  if (IS_LOCAL) {
-    headers['x-test-ip'] = options.testIp || ('qa-runner-' + Math.floor(Date.now() / 1000));
+  
+  // Use standard proxy header x-forwarded-for for client IP simulation
+  if (!headers['x-forwarded-for']) {
+    headers['x-forwarded-for'] = options.clientIp || ('198.51.100.' + (Math.floor(Math.random() * 200) + 1));
+  }
+  
+  if (options.testIp) {
+    headers['x-test-ip'] = options.testIp;
   }
   if (options.origin !== false) {
     headers['Origin'] = options.origin || BASE_URL;
@@ -117,7 +123,7 @@ async function runAcceptanceSuite() {
   console.log('===============================================================');
   console.log('   LONE WOLF DUMPSTERS - ' + modeLabel + ' ACCEPTANCE SUITE');
   console.log('   Target URL: ' + BASE_URL);
-  console.log('===============================================================\n');
+  console.log('===============================================================\\n');
 
   let passed = 0;
   let failed = 0;
@@ -140,7 +146,7 @@ async function runAcceptanceSuite() {
   }
 
   // 2. 48 Canonical Cities
-  console.log('\n--- 2. Testing All 48 Canonical City Service Area Pages ---');
+  console.log('\\n--- 2. Testing All 48 Canonical City Service Area Pages ---');
   for (const city of CANONICAL_48_CITIES) {
     const route = '/service-areas/' + city;
     const res = await request(route);
@@ -148,7 +154,7 @@ async function runAcceptanceSuite() {
   }
 
   // 3. Server-Gated Admin Page
-  console.log('\n--- 3. Testing Server-Gated /admin Boundary ---');
+  console.log('\\n--- 3. Testing Server-Gated /admin Boundary ---');
   const anonymousAdmin = await request('/admin');
   assert(anonymousAdmin.status === 200, 'Anonymous GET /admin returns HTTP 200');
   const adminHtml = typeof anonymousAdmin.body === 'string' ? anonymousAdmin.body : '';
@@ -156,7 +162,7 @@ async function runAcceptanceSuite() {
   assert(!adminHtml.includes('Save All Changes to Redis'), 'Anonymous /admin does NOT leak authenticated dashboard controls');
 
   // 4. Authentication & Gating
-  console.log('\n--- 4. Testing Server Authentication & Gating ---');
+  console.log('\\n--- 4. Testing Server Authentication & Gating ---');
   const unauthLeads = await request('/api/leads');
   assert(unauthLeads.status === 401, 'Anonymous GET /api/leads is rejected with 401');
 
@@ -181,7 +187,7 @@ async function runAcceptanceSuite() {
   assert(sessionCheck.body && sessionCheck.body.authenticated === true, 'GET /api/admin/auth/session confirms authenticated: true');
 
   // 5. CSRF Fail-Closed Verification
-  console.log('\n--- 5. Testing CSRF Fail-Closed Protection ---');
+  console.log('\\n--- 5. Testing CSRF Fail-Closed Protection ---');
   const noOriginRes = await request('/api/leads', {
     method: 'POST',
     cookie: sessionCookie,
@@ -190,8 +196,25 @@ async function runAcceptanceSuite() {
   });
   assert(noOriginRes.status === 403, 'POST /api/leads with missing Origin is rejected with 403 Forbidden');
 
-  // 6. Quote Validation & Abuse Protection
-  console.log('\n--- 6. Testing Quote Validation & Bot/Honeypot Checks ---');
+  // 6. Test Rate Limit Defense Against Arbitrary x-test-ip Injection
+  console.log('\\n--- 6. Testing Rate Limiting & x-test-ip Bypass Immunity ---');
+  const fixedIp = '198.51.100.99';
+  let rateLimitHit = false;
+  for (let i = 0; i < 7; i++) {
+    const res = await request('/api/quote', {
+      method: 'POST',
+      headers: { 'x-forwarded-for': fixedIp, 'x-test-ip': 'spoofed-fake-ip-' + i },
+      body: { name: 'A' }, // triggers 400 validation error or 429 rate limit
+    });
+    if (res.status === 429) {
+      rateLimitHit = true;
+      break;
+    }
+  }
+  assert(rateLimitHit, 'Production rate limiter tracks true proxy IP and ignores arbitrary x-test-ip injection (HTTP 429 triggered)');
+
+  // 7. Quote Validation & Abuse Protection
+  console.log('\\n--- 7. Testing Quote Validation & Bot/Honeypot Checks ---');
   const invalidNameRes = await request('/api/quote', { method: 'POST', body: { name: 'A', phone: '(214) 555-0199' } });
   assert(invalidNameRes.status === 400 && !invalidNameRes.body?.success, 'POST /api/quote with 1-character name returns HTTP 400 validation error');
 
@@ -204,8 +227,8 @@ async function runAcceptanceSuite() {
   });
   assert(honeypotRes.status === 200 && honeypotRes.body?.leadId === 'lead_bot_filtered', 'Honeypot trap catches bot submissions silently');
 
-  // 7. Quote Intake & Atomic Redis Lead Persistence
-  console.log('\n--- 7. Testing Quote Intake & Lead Persistence ---');
+  // 8. Quote Intake & Atomic Redis Lead Persistence (/multi-exec)
+  console.log('\\n--- 8. Testing Quote Intake & Lead Persistence (/multi-exec) ---');
   const testPayload = {
     name: 'QA ACCEPTANCE TEST - DO NOT CONTACT',
     phone: '(214) 555-0199',
@@ -223,15 +246,15 @@ async function runAcceptanceSuite() {
   assert(quoteRes.status === 200 && quoteRes.body && quoteRes.body.success, 'POST /api/quote returns HTTP 200 with success: true (Lead ID: ' + (quoteRes.body ? quoteRes.body.leadId : 'unknown') + ')');
   const testLeadId = quoteRes.body ? quoteRes.body.leadId : null;
 
-  // 8. Verify Lead Appears in Authenticated Admin Leads Index
-  console.log('\n--- 8. Testing Lead Index in Admin Console ---');
+  // 9. Verify Lead Appears in Authenticated Admin Leads Index
+  console.log('\\n--- 9. Testing Lead Index in Admin Console ---');
   const authLeads = await request('/api/leads', { cookie: sessionCookie });
   assert(authLeads.status === 200 && Array.isArray(authLeads.body && authLeads.body.leads), 'Authenticated GET /api/leads returns lead list');
   const foundLead = authLeads.body && authLeads.body.leads && authLeads.body.leads.find((l) => l.id === testLeadId || l.name === testPayload.name);
   assert(Boolean(foundLead), 'Created QA Lead exists in authenticated Leads list');
 
-  // 9. Mutate Lead Status & Verify Persistence Across Reload
-  console.log('\n--- 9. Testing Lead Status Mutation & Persistence ---');
+  // 10. Mutate Lead Status & Verify Persistence Across Reload
+  console.log('\\n--- 10. Testing Lead Status Mutation & Persistence ---');
   if (testLeadId) {
     const updateRes = await request('/api/leads', {
       method: 'POST',
@@ -245,8 +268,8 @@ async function runAcceptanceSuite() {
     assert(updatedLead && updatedLead.status === 'Quoted', 'Updated status "Quoted" persists across reload');
   }
 
-  // 10. Full Document Workflow (Quote -> Invoice -> Payment -> Paid Receipt)
-  console.log('\n--- 10. Testing Document Lifecycle (Quote -> Invoice -> Payment) ---');
+  // 11. Full Document Workflow (Quote -> Invoice -> Payment -> Paid Receipt)
+  console.log('\\n--- 11. Testing Document Lifecycle (Quote -> Invoice -> Payment) ---');
   let testDocId = null;
   if (testLeadId) {
     const createQuoteRes = await request('/api/admin/documents', {
@@ -323,8 +346,8 @@ async function runAcceptanceSuite() {
     }
   }
 
-  // 11. Clean up QA Test Lead from Redis
-  console.log('\n--- 11. Cleaning up QA Test Lead ---');
+  // 12. Clean up QA Test Lead from Redis
+  console.log('\\n--- 12. Cleaning up QA Test Lead ---');
   if (testLeadId) {
     const delLead = await request('/api/leads', {
       method: 'POST',
@@ -334,8 +357,8 @@ async function runAcceptanceSuite() {
     assert(delLead.body && delLead.body.success, 'Deleted QA Test Lead from database (No test records left in production)');
   }
 
-  // 12. Logout & Invalidation
-  console.log('\n--- 12. Testing Admin Logout & Cookie Invalidation ---');
+  // 13. Logout & Invalidation
+  console.log('\\n--- 13. Testing Admin Logout & Cookie Invalidation ---');
   const logoutRes = await request('/api/admin/auth/logout', { method: 'POST', cookie: sessionCookie });
   assert(logoutRes.status === 200 && logoutRes.body?.success, 'POST /api/admin/auth/logout returns HTTP 200');
 
@@ -347,12 +370,12 @@ async function runAcceptanceSuite() {
   const postLogoutLeads = await request('/api/leads', { cookie: postLogoutCookie });
   assert(postLogoutLeads.status === 401, 'Post-logout GET /api/leads is rejected with 401');
 
-  // 13. 404 Route Verification
-  console.log('\n--- 13. Testing 404 Handler ---');
+  // 14. 404 Route Verification
+  console.log('\\n--- 14. Testing 404 Handler ---');
   const notFoundRes = await request('/non-existent-page-qa-test');
   assert(notFoundRes.status === 404, 'Non-existent route returns HTTP 404');
 
-  console.log('\n===============================================================');
+  console.log('\\n===============================================================');
   console.log('   SUITE COMPLETE: ' + passed + ' PASSED, ' + failed + ' FAILED');
   console.log('===============================================================');
 
