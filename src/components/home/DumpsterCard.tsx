@@ -93,11 +93,16 @@ export const DumpsterCard: React.FC<DumpsterCardProps> = ({ product }) => {
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
           <div>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block' }}>
-              3 DAYS
+              FLAT RATE
             </span>
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.0rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>
-              {`3 Days – ${product.priceDisplay || `$${product.startingPrice}`}`}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.0rem', fontWeight: 800, color: 'var(--accent-red)', lineHeight: 1 }}>
+                {product.priceDisplay || `$${product.startingPrice}`}
+              </span>
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569' }}>
+                (Up to 3 days)
+              </span>
+            </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', display: 'block' }}>
@@ -122,6 +127,10 @@ export const DumpsterCard: React.FC<DumpsterCardProps> = ({ product }) => {
           <div style={{ fontSize: '0.84rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>•</span>
             <strong>Dimensions:</strong> {product.dimensionsText}
+          </div>
+          <div style={{ fontSize: '0.84rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>•</span>
+            <strong>Capacity:</strong> Maximum Safe Load Capacity: 9,000 lbs
           </div>
           <div style={{ fontSize: '0.84rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>•</span>

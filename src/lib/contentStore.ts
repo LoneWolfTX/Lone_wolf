@@ -292,13 +292,13 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     junkStarting: 150
   },
   dimensions: {
-    fifteenYard: "16' L × 7.5' W × 4' H",
-    twentyYard: "16' L × 7.5' W × 4.5' H",
-    twentyFiveYard: "16' L × 7.5' W × 6' H"
+    fifteenYard: "16' L × 8' W × 4' H",
+    twentyYard: "16' L × 8' W × 5.4' H",
+    twentyFiveYard: "16' L × 8' W × 6.5' H"
   },
   rentalPeriods: {
-    standardDays: "7 Days",
-    extraDayRate: "$20 / Day after 7 days",
+    standardDays: "Up to 3, 5, or 7 Days",
+    extraDayRate: "$20 / Day",
     maxRentalDays: 10
   },
   contractorRates: {
@@ -535,18 +535,18 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 1.5,
       includedLbs: 3000,
       overageRate: 80,
-      rentalPeriod: "1 to 5 Days",
+      rentalPeriod: "3 & 5 Days",
       additionalDayFee: 20,
-      dimensions: "16' L × 7.5' W × 4' H",
+      dimensions: "16' L × 8' W × 4' H",
       image: "/images/lone-wolf/dumpster-15.jpeg",
       imageAlt: "Lone Wolf 15-yard roll-off dumpster rental on residential driveway in Dallas-Fort Worth",
-      badgeText: "3 DAYS — $385 • 1.5 TONS",
+      badgeText: "UP TO 3 DAYS — $385 • 1.5 TONS",
       description: "Ideal for small home cleanouts, single-room remodels, yard debris, and light renovation projects.",
       bestFor: [
         "Garage & attic cleanouts",
         "Single bathroom remodels",
         "Flooring removal & yard debris",
-        "Max Safe Load Capacity: 4.5 tons.",
+        "Maximum Safe Load Capacity: 9,000 lbs (4.5 tons)",
         "And other similar projects."
       ],
       importantNotice: "",
@@ -564,18 +564,19 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 2.0,
       includedLbs: 4000,
       overageRate: 80,
-      rentalPeriod: "1 to 7 Days",
+      rentalPeriod: "3, 5 & 7 Days",
       additionalDayFee: 20,
-      dimensions: "16' L × 7.5' W × 4.5' H",
+      dimensions: "16' L × 8' W × 5.4' H",
       image: "/images/lone-wolf/dumpster-20.jpeg",
       imageAlt: "Lone Wolf 20-yard roll-off dumpster container for residential and contractor projects",
-      badgeText: "3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
+      badgeText: "UP TO 3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
       description: "Our most versatile container. Perfect for kitchen remodels, home cleanouts, and medium renovation projects. Driveway-safe placement.",
       bestFor: [
         "Kitchen & Multiple Room Remodels",
         "Moving & Decluttering",
         "Garage & Home Cleanouts",
         "Property Cleanouts",
+        "Maximum Safe Load Capacity: 9,000 lbs",
         "And other similar projects."
       ],
       importantNotice: "",
@@ -593,12 +594,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       includedTonnage: 2.2,
       includedLbs: 4400,
       overageRate: 80,
-      rentalPeriod: "1 to 7 Days",
+      rentalPeriod: "3, 5 & 7 Days",
       additionalDayFee: 20,
-      dimensions: "16' L × 7.5' W × 6' H",
+      dimensions: "16' L × 8' W × 6.5' H",
       image: "/images/lone-wolf/dumpster-25.jpeg",
       imageAlt: "Lone Wolf 25-yard heavy-duty roll-off dumpster on commercial contractor job site",
-      badgeText: "3 DAYS — $475 • 2.2 TONS",
+      badgeText: "UP TO 3 DAYS — $475 • 2.2 TONS",
       description: "Maximum capacity for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bestFor: [
         "Major Home Renovations",
@@ -607,6 +608,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Commercial Cleanouts",
         "Warehouses & Packaging Cleanouts",
         "Property Cleanouts",
+        "Maximum Safe Load Capacity: 9,000 lbs",
         "And other similar projects."
       ],
       importantNotice: "",
@@ -617,9 +619,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   dumpsterPages: [
     {
       id: "15-yard-dumpster",
-      badgeText: "3 DAYS — $385 • 1.5 TONS",
+      badgeText: "UP TO 3 DAYS — $385 • 1.5 TONS",
       heroDescription: "Compact, driveway-friendly, and perfect for small home cleanouts, garage organizing, yard debris, and light bathroom or kitchen remodeling.",
-      bodyDescription: "The 15-yard roll-off container holds approximately 6 pickup truck loads of debris. It is low enough for easy over-the-side loading and includes a swinging rear door for walk-in ground access.",
+      bodyDescription: "The 15-yard roll-off container holds approximately 6 pickup truck loads of debris. Dimensions: 16' L × 8' W × 4' H with swinging rear door for easy walk-in loading.",
       priceDisplay: "$385",
       weightIncludedText: "1.5 Tons (3,000 lbs)",
       overagePrice: "$80 / ton",
@@ -627,7 +629,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Garage & attic cleanouts",
         "Single bathroom remodels",
         "Flooring removal & yard debris",
-        "Max Safe Load Capacity: 4.5 tons.",
+        "Maximum Safe Load Capacity: 9,000 lbs (4.5 tons)",
         "And other similar projects."
       ],
       importantNotice: "",
@@ -640,9 +642,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "20-yard-dumpster",
-      badgeText: "3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
+      badgeText: "UP TO 3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
       heroDescription: "Our versatile container size across DFW. Handles medium-to-large home renovations, garage cleanouts, and flooring swaps.",
-      bodyDescription: "The 20-yard roll-off container holds approximately 8 pickup truck loads of waste. Feature low 4.5-ft sidewalls for effortless loading and wood board driveway protection included.",
+      bodyDescription: "The 20-yard roll-off container holds approximately 8 pickup truck loads of waste. Dimensions: 16' L × 8' W × 5.4' H with wood board driveway protection included.",
       priceDisplay: "$425",
       weightIncludedText: "2.0 Tons (4,000 lbs)",
       overagePrice: "$80 / ton",
@@ -651,6 +653,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         "Moving & Decluttering",
         "Garage & Home Cleanouts",
         "Property Cleanouts",
+        "Maximum Safe Load Capacity: 9,000 lbs",
         "And other similar projects."
       ],
       importantNotice: "",
@@ -663,9 +666,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "25-yard-dumpster",
-      badgeText: "3 DAYS — $475 • 2.2 TONS",
+      badgeText: "UP TO 3 DAYS — $475 • 2.2 TONS",
       heroDescription: "Our maximum volume container for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
-      bodyDescription: "The 25-yard container holds approximately 10 pickup truck loads of debris. Built with reinforced steel walls and heavy-duty rear doors for efficient loading on major jobsites.",
+      bodyDescription: "The 25-yard container holds approximately 10 pickup truck loads of debris. Dimensions: 16' L × 8' W × 6.5' H with reinforced steel walls for efficient loading on major jobsites.",
       priceDisplay: "$475",
       weightIncludedText: "2.2 Tons (4,400 lbs)",
       overagePrice: "$80 / ton",

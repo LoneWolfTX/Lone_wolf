@@ -2010,7 +2010,7 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      value={siteContent.dimensions?.fifteenYard || "16' L × 7.5' W × 4' H"}
+                      value={siteContent.dimensions?.fifteenYard || "16' L × 8' W × 4' H"}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         dimensions: { ...siteContent.dimensions, fifteenYard: e.target.value }
@@ -2025,7 +2025,7 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      value={siteContent.dimensions?.twentyYard || "16' x 7.5' x 4.5'"}
+                      value={siteContent.dimensions?.twentyYard || "16' L × 8' W × 5.4' H"}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         dimensions: { ...siteContent.dimensions, twentyYard: e.target.value }
@@ -2040,7 +2040,7 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      value={siteContent.dimensions?.twentyFiveYard || "16' x 7.5' x 6'"}
+                      value={siteContent.dimensions?.twentyFiveYard || "16' L × 8' W × 6.5' H"}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         dimensions: { ...siteContent.dimensions, twentyFiveYard: e.target.value }
