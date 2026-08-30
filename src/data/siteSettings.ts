@@ -21,12 +21,12 @@ export function getSiteSettings(content: SiteContent = DEFAULT_SITE_CONTENT): Si
       email: b.email || 'lonewolfdumpsters@gmail.com',
     },
     yard: {
-      name: 'Lone Wolf Dumpsters — Dispatch Yard',
-      address: b.yardStreet || '4141 Singleton Blvd',
-      city: b.yardCity || 'Dallas',
+      name: 'Lone Wolf Dumpsters — Service Area',
+      address: b.yardStreet || 'DFW Metroplex',
+      city: b.yardCity || 'Colleyville',
       state: b.yardState || 'TX',
-      zip: b.yardZip || '75212',
-      note: 'Company yard & dispatch facility — not a public walk-in storefront',
+      zip: b.yardZip || '76034',
+      note: 'Service Area: DFW Metroplex, Texas, Colleyville, TX 76034',
     },
     hours: [
       { days: 'Monday – Saturday', hours: '6:00 AM – 6:00 PM' },

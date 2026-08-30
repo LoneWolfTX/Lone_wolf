@@ -638,7 +638,7 @@ export const cityServiceAreas: CityServiceArea[] = [
       "75208"
     ],
     "headline": "Dumpster Rental in Dallas, TX",
-    "localIntro": "Direct roll-off dumpster dispatch from our central Singleton Blvd facility to Dallas homes, job sites, and commercial facilities.",
+    "localIntro": "Direct roll-off dumpster dispatch to Dallas homes, job sites, and commercial facilities.",
     "keyProjects": [
       "Downtown & Uptown tenant cleanouts",
       "Oak Cliff residential renovations",

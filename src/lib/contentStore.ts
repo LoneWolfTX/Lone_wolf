@@ -263,11 +263,11 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     phone: "(214) 876-0321",
     phoneRaw: "+12148760321",
     email: "lonewolfdumpsters@gmail.com",
-    yardAddress: "4141 Singleton Blvd, Dallas, TX 75212",
-    yardStreet: "4141 Singleton Blvd",
-    yardCity: "Dallas",
+    yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034",
+    yardStreet: "DFW Metroplex",
+    yardCity: "Colleyville",
     yardState: "TX",
-    yardZip: "75212",
+    yardZip: "76034",
     businessHours: "Mon-Fri 7:00am-6:00pm, Sat 8:00am-2:00pm",
     googleReviewUrl: "https://g.page/r/lonewolfdumpsters/review",
     googleRating: "5.0",
@@ -279,7 +279,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     phone: "(214) 876-0321",
     phoneRaw: "+12148760321",
     email: "lonewolfdumpsters@gmail.com",
-    yardAddress: "4141 Singleton Blvd, Dallas, TX 75212"
+    yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034"
   },
   pricing: {
     fifteenYard: 385,
@@ -447,7 +447,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     }
   ],
   serviceAreasList: [
-    { id: "sa-1", city: "Dallas", state: "TX", county: "Dallas", slug: "dallas", zipCodes: ["75201", "75212", "75219", "75208"], active: true, serviceStatus: "Active", localIntro: "Direct dispatch from our Singleton Blvd facility across all Dallas neighborhoods.", headline: "Dumpster Rental in Dallas, TX", keyProjects: ["Home cleanouts in Oak Cliff", "Commercial remodels in Downtown", "Property clearouts in East Dallas"], neighborhoods: ["Downtown", "Oak Cliff", "Uptown", "Kiest Park"] },
+    { id: "sa-1", city: "Dallas", state: "TX", county: "Dallas", slug: "dallas", zipCodes: ["75201", "75212", "75219", "75208"], active: true, serviceStatus: "Active", localIntro: "Direct roll-off dumpster dispatch across all Dallas neighborhoods.", headline: "Dumpster Rental in Dallas, TX", keyProjects: ["Home cleanouts in Oak Cliff", "Commercial remodels in Downtown", "Property clearouts in East Dallas"], neighborhoods: ["Downtown", "Oak Cliff", "Uptown", "Kiest Park"] },
     { id: "sa-2", city: "Fort Worth", state: "TX", county: "Tarrant", slug: "fort-worth", zipCodes: ["76102", "76104", "76107", "76116", "76132"], active: true, serviceStatus: "Active", localIntro: "Priority scheduling and roll-off dumpster rentals delivered directly to Fort Worth homeowners and contractors.", headline: "Dumpster Rental in Fort Worth, TX", keyProjects: ["Cleanouts near TCU", "Demolition in Downtown Fort Worth", "Remodeling jobs in Cultural District"], neighborhoods: ["Downtown", "TCU", "Cultural District", "Tanglewood"] },
     { id: "sa-3", city: "Arlington", state: "TX", county: "Tarrant", slug: "arlington", zipCodes: ["76010", "76011", "76012", "76013"], active: true, serviceStatus: "Active", localIntro: "Serving Arlington residential neighborhoods and commercial entertainment district sites.", headline: "Dumpster Rental in Arlington, TX", keyProjects: ["Remodels near AT&T Stadium", "Estate clearouts in North Arlington", "General construction"], neighborhoods: ["Entertainment District", "North Arlington", "Pantego", "Dalworthington Gardens"] },
     { id: "sa-4", city: "Keller", state: "TX", county: "Tarrant", slug: "keller", zipCodes: ["76248", "76244"], active: true, serviceStatus: "Active", localIntro: "Residential driveway-safe roll-off container delivery across Keller and North Tarrant County.", headline: "Dumpster Rental in Keller, TX", keyProjects: ["Garage decluttering", "Kitchen renovations", "Yard debris removal"], neighborhoods: ["Town Center", "Hidden Lakes", "Marshall Ridge"] }

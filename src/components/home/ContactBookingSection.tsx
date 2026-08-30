@@ -165,7 +165,7 @@ export const ContactBookingSection: React.FC = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <MapPin size={16} className="text-accent" style={{ flexShrink: 0 }} />
-                <span><strong>Yard:</strong> 4141 Singleton Blvd, Dallas, TX 75212</span>
+                <span><strong>Service Area:</strong> DFW Metroplex, Texas, Colleyville, TX 76034</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShieldCheck size={16} className="text-accent" style={{ flexShrink: 0 }} />

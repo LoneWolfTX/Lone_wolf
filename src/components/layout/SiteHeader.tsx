@@ -78,7 +78,7 @@ export const SiteHeader: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            height: '84px',
+            height: '88px',
             gap: '16px',
           }}
         >
@@ -95,13 +95,13 @@ export const SiteHeader: React.FC = () => {
               flexShrink: 0,
             }}
           >
-            <div className="header-logo-icon" style={{ position: 'relative', width: '60px', height: '60px', flexShrink: 0 }}>
+            <div className="header-logo-icon" style={{ position: 'relative', width: '68px', height: '68px', flexShrink: 0 }}>
               <Image
                 src="/images/lone-wolf/logo.png"
                 alt="Lone Wolf Dumpsters Logo"
                 fill
                 priority
-                sizes="60px"
+                sizes="68px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
@@ -110,7 +110,7 @@ export const SiteHeader: React.FC = () => {
                 className="header-logo-text"
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.35rem, 4vw, 1.7rem)',
+                  fontSize: 'clamp(1.4rem, 4.2vw, 1.8rem)',
                   fontWeight: 900,
                   letterSpacing: '0.5px',
                   color: '#ffffff',

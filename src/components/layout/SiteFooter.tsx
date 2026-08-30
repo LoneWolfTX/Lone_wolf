@@ -20,7 +20,7 @@ export const SiteFooter: React.FC = () => {
   const phone = formatPhoneNumber(b.phone);
   const phoneRaw = b.phoneRaw || '+12148760321';
   const email = b.email || 'lonewolfdumpsters@gmail.com';
-  const yardAddress = b.yardAddress || '4141 Singleton Blvd, Dallas, TX 75212';
+  const yardAddress = b.yardAddress || 'DFW Metroplex, Texas, Colleyville, TX 76034';
   return (
     <footer style={{ backgroundColor: '#000000', color: '#ffffff', borderTop: '1px solid #1e293b' }}>
       <div className="container" style={{ paddingTop: '40px', paddingBottom: '24px' }}>
@@ -37,12 +37,12 @@ export const SiteFooter: React.FC = () => {
           {/* Column 1: Brand & Slogan */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-              <div style={{ position: 'relative', width: '38px', height: '38px' }}>
+              <div style={{ position: 'relative', width: '48px', height: '48px' }}>
                 <Image
                   src="/images/lone-wolf/logo.png"
                   alt="Lone Wolf Dumpsters Logo"
                   fill
-                  sizes="38px"
+                  sizes="48px"
                   style={{ objectFit: 'contain' }}
                 />
               </div>

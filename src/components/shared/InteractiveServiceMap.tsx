@@ -46,7 +46,7 @@ export const all48MapCities: MapCityLocation[] = [
   { slug: 'lakeside', name: 'Lakeside', county: 'Tarrant', lat: 32.8182, lng: -97.4914, zips: ['76135'], headline: 'West Tarrant County roll-off service.', deliverySpeed: 'Next-Day Dispatch' },
 
   // DALLAS COUNTY (13)
-  { slug: 'dallas', name: 'Dallas', county: 'Dallas', lat: 32.7767, lng: -96.7970, zips: ['75201', '75212', '75219', '75208'], headline: 'Direct dispatch from our Singleton Blvd facility.', deliverySpeed: 'Same-Day When Available' },
+  { slug: 'dallas', name: 'Dallas', county: 'Dallas', lat: 32.7767, lng: -96.7970, zips: ['75201', '75212', '75219', '75208'], headline: 'Direct roll-off dumpster dispatch across all Dallas neighborhoods.', deliverySpeed: 'Same-Day When Available' },
   { slug: 'irving', name: 'Irving', county: 'Dallas', lat: 32.8140, lng: -96.9489, zips: ['75038', '75061', '75062', '75063'], headline: 'Las Colinas & Central Irving dumpster service.', deliverySpeed: 'Same-Day When Available' },
   { slug: 'grand-prairie', name: 'Grand Prairie', county: 'Dallas', lat: 32.7460, lng: -96.9978, zips: ['75050', '75051', '75052'], headline: 'Central DFW roll-off container rentals.', deliverySpeed: 'Same-Day / Next-Day Dispatch' },
   { slug: 'carrollton', name: 'Carrollton', county: 'Dallas', lat: 32.9746, lng: -96.8899, zips: ['75006', '75007', '75010'], headline: 'North Dallas County cleanouts & roofing.', deliverySpeed: 'Same-Day / Next-Day Dispatch' },
