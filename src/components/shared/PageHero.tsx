@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -153,6 +153,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
             {/* Optional Badge */}
             {badgeText && (
               <div
+                className="hero-badge-pill"
                 style={{
                   alignSelf: 'flex-start',
                   backgroundColor: 'rgba(220, 38, 38, 0.14)',
@@ -208,6 +209,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
             {/* Optional Google Rating Chip */}
             {showRating && (
               <div
+                className="hero-rating-badge"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
