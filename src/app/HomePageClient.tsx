@@ -50,8 +50,8 @@ export default function HomePageClient() {
     },
     {
       icon: <ShieldCheck size={20} />,
-      title: 'RELIABLE SERVICE',
-      subtitle: 'On time. Every time.',
+      title: 'EASY SCHEDULING',
+      subtitle: 'Delivery when you need it.',
     },
     {
       icon: <HardHat size={20} />,
@@ -126,12 +126,12 @@ export default function HomePageClient() {
         badgeText="DFW'S TRUSTED DUMPSTER RENTAL SERVICE"
         headlineWhite={hp.heroHeadlineWhite || 'FAST & RELIABLE'}
         headlineRed={hp.heroHeadlineRed || 'DUMPSTER RENTALS ACROSS DFW'}
-        description={hp.heroDescription || 'Perfect for home cleanouts, remodeling projects, construction jobs and everything in between.'}
+        description={hp.heroDescription || 'Dumpsters for cleanouts, remodels, construction, roofing, and more — delivered across DFW.'}
         showRating={true}
         heroTopImageSrc={hp.heroTopImage?.src || '/images/lone-wolf/hero_tile_top.jpg'}
         heroTopImageAlt={hp.heroTopImage?.alt || 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard'}
-        heroBottomImageSrc={hp.heroBottomImage?.src || '/images/lone-wolf/hero_tile_bottom.jpg'}
-        heroBottomImageAlt={hp.heroBottomImage?.alt || 'Lone Wolf dumpsters fleet ready for delivery across DFW'}
+        heroBottomImageSrc={hp.heroBottomImage?.src || '/images/lone-wolf/real/residential_landscape_full.jpg'}
+        heroBottomImageAlt={hp.heroBottomImage?.alt || 'Lone Wolf roll-off dumpster placed on residential driveway in DFW'}
         trustItems={heroTrustItems}
       />
 

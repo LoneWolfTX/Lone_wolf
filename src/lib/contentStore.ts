@@ -489,17 +489,17 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   homepage: {
     heroHeadlineWhite: "FAST & RELIABLE",
     heroHeadlineRed: "DUMPSTER RENTALS ACROSS DFW",
-    heroDescription: "Perfect for home cleanouts, remodeling projects, construction jobs and everything in between.",
+    heroDescription: "Dumpsters for cleanouts, remodels, construction, roofing, and more — delivered across DFW.",
     introTitle: "WELCOME TO LONE WOLF DUMPSTERS",
     introDescription: "Dallas-Fort Worth's local owner-operator roll-off dumpster service. Upfront flat-rate pricing, 5.0 Google rating, driveway-safe delivery.",
     heroTopImage: {
       src: "/images/lone-wolf/hero_tile_top.jpg",
-      alt: "Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard",
+      alt: "Wayne with Lone Wolf roll-off dumpster in Colleyville yard",
       position: "center center"
     },
     heroBottomImage: {
-      src: "/images/lone-wolf/hero_tile_bottom.jpg",
-      alt: "Lone Wolf dumpsters fleet ready for delivery across DFW",
+      src: "/images/lone-wolf/real/residential_landscape_full.jpg",
+      alt: "Lone Wolf roll-off dumpster placed on residential driveway in DFW",
       position: "center center"
     },
     heroImage: {

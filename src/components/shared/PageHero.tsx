@@ -47,9 +47,9 @@ export const PageHero: React.FC<PageHeroProps> = ({
   imageSrc = '/images/lone-wolf/lone_wolf_hero_top.png',
   imageAlt = 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
   heroTopImageSrc = '/images/lone-wolf/hero_tile_top.jpg',
-  heroTopImageAlt = 'Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard',
-  heroBottomImageSrc = '/images/lone-wolf/hero_tile_bottom.jpg',
-  heroBottomImageAlt = 'Lone Wolf dumpsters fleet ready for delivery across DFW',
+  heroTopImageAlt = 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard',
+  heroBottomImageSrc = '/images/lone-wolf/real/residential_landscape_full.jpg',
+  heroBottomImageAlt = 'Lone Wolf roll-off dumpster placed on residential driveway in DFW',
   showRating = false,
   trustItems,
   badgeText,
@@ -227,7 +227,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   ))}
                 </div>
                 <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>
-                  5.0 Rated DFW Dumpster Service
+                  5-Star Rated by DFW Customers
                 </span>
               </div>
             )}
@@ -458,7 +458,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   <h4 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 800, textTransform: 'uppercase', color: '#ffffff' }}>
                     {item.title}
                   </h4>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#94a3b8' }}>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 500 }}>
                     {item.subtitle}
                   </p>
                 </div>
