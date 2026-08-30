@@ -1,4 +1,4 @@
-import { getRedisConfig, requireRedisConfig, redisPipeline } from './redis';
+import { getRedisConfig, requireRedisConfig, redisPipeline, redisTransaction } from './redis';
 
 export type DocumentType = 'QUOTE' | 'INVOICE' | 'RECEIPT';
 export type QuoteStatus = 'Draft' | 'Sent' | 'Accepted' | 'Declined' | 'Expired' | 'Converted';
@@ -121,10 +121,10 @@ export async function saveDocumentInRedis(doc: LoneWolfDocument): Promise<LoneWo
       commands.push(['RPUSH', LEAD_DOCS_KEY_PREFIX + doc.leadId.trim(), docId]);
     }
 
-    await redisPipeline(commands);
+    await redisTransaction(commands);
     return doc;
   } catch (err) {
-    console.error('Failed to save document in Upstash Redis:', err);
+    console.error('Failed to save document in Upstash Redis transaction:', err);
     return null;
   }
 }
@@ -237,10 +237,10 @@ export async function deleteDocumentFromRedis(docId: string, leadId?: string): P
       commands.push(['LREM', LEAD_DOCS_KEY_PREFIX + effectiveLeadId.trim(), '0', cleanId]);
     }
 
-    await redisPipeline(commands);
+    await redisTransaction(commands);
     return true;
   } catch (err) {
-    console.error('Failed to delete document from Upstash Redis:', err);
+    console.error('Failed to delete document from Upstash Redis transaction:', err);
     return false;
   }
 }

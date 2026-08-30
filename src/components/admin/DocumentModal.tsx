@@ -7,7 +7,7 @@ import {
   DocumentLineItem,
   PaymentMethod,
 } from '@/lib/documents';
-import { Lead } from '@/app/admin/page';
+import { Lead } from '@/components/admin/AdminDashboardClient';
 import { QuoteProposalView } from './documents/QuoteProposalView';
 import { InvoiceView } from './documents/InvoiceView';
 import { ReceiptView } from './documents/ReceiptView';

@@ -24,13 +24,21 @@ const VALID_DURATIONS = new Set([
   'Custom',
 ]);
 
+function getClientIp(req: NextRequest): string {
+  if (process.env.NODE_ENV === 'test' || process.env.ENABLE_TEST_OVERRIDE === 'true') {
+    const testIp = req.headers.get('x-test-ip');
+    if (testIp) return testIp.trim();
+  }
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown-ip';
+}
+
 /**
  * POST /api/quote
- * Atomic lead intake & verification endpoint with bot & rate protection.
+ * Lead intake & verification endpoint with bot & rate protection.
  */
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-test-ip') || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown-ip';
+    const ip = getClientIp(req);
 
     // 1. IP Rate Limiting: max 5 quote requests per 10 minutes
     const rate = await checkRateLimit('quote_submission', ip, 5, 10 * 60);

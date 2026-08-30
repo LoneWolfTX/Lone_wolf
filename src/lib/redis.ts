@@ -36,7 +36,36 @@ const LEADS_KEY_PREFIX = 'lonewolf:lead:';
 const LEADS_LIST_KEY = 'lonewolf:leads';
 
 /**
- * Execute an atomic pipeline of commands against Upstash Redis REST API.
+ * Execute an atomic transaction of commands against Upstash Redis REST API using /multi-exec.
+ * Guarantees all-or-nothing atomic execution inside a MULTI...EXEC transaction block.
+ */
+export async function redisTransaction(commands: (string | number)[][]): Promise<any[]> {
+  const cfg = requireRedisConfig();
+
+  const res = await fetch(`${cfg.url}/multi-exec`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${cfg.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(commands),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Redis transaction failed with HTTP ${res.status}: ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  if (!Array.isArray(data)) {
+    throw new Error('Unexpected Redis transaction response format');
+  }
+
+  return data;
+}
+
+/**
+ * Execute a batched pipeline of independent commands against Upstash Redis REST API.
+ * Used for batched read operations like MGET.
  */
 export async function redisPipeline(commands: (string | number)[][]): Promise<any[]> {
   const cfg = requireRedisConfig();
@@ -202,7 +231,7 @@ export interface LeadSubmission {
 }
 
 /**
- * Save incoming lead to Upstash Redis using an atomic pipeline.
+ * Save incoming lead to Upstash Redis using an atomic transaction (/multi-exec).
  * Guarantees that the lead record and master index update succeed or fail together.
  */
 export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'createdAt'>): Promise<LeadSubmission | null> {
@@ -217,7 +246,7 @@ export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'created
   const jsonString = JSON.stringify(fullLead);
 
   try {
-    const results = await redisPipeline([
+    const results = await redisTransaction([
       ['SET', `${LEADS_KEY_PREFIX}${id}`, jsonString],
       ['LPUSH', LEADS_LIST_KEY, id],
     ]);
@@ -231,10 +260,10 @@ export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'created
       return fullLead;
     }
 
-    console.error('Lead pipeline write did not return expected results:', results);
+    console.error('Lead transaction write did not return expected results:', results);
     return null;
   } catch (err) {
-    console.error('Failed atomic lead save in Upstash Redis:', err);
+    console.error('Failed atomic lead save in Upstash Redis transaction:', err);
     return null;
   }
 }
@@ -270,7 +299,7 @@ export async function getLeadsFromRedis(limit: number = 100): Promise<LeadSubmis
 
     if (leadIds.length === 0) return [];
 
-    // Pipeline MGET for all leads in one round-trip
+    // Batched MGET pipeline for all leads in one round-trip
     const mgetCommands = leadIds.map((id) => ['GET', `${LEADS_KEY_PREFIX}${id.trim()}`]);
     const results = await redisPipeline(mgetCommands);
 
@@ -356,25 +385,25 @@ export async function updateLeadInRedis(
 }
 
 /**
- * Permanently delete a lead from Upstash Redis atomically.
+ * Permanently delete a lead from Upstash Redis using an atomic transaction (/multi-exec).
  */
 export async function deleteLeadFromRedis(id: string): Promise<boolean> {
   const cleanId = id.trim();
   try {
-    await redisPipeline([
+    await redisTransaction([
       ['DEL', `${LEADS_KEY_PREFIX}${cleanId}`],
       ['LREM', LEADS_LIST_KEY, '0', cleanId],
       ['LREM', LEADS_LIST_KEY, '0', `["${cleanId}"]`],
     ]);
     return true;
   } catch (err) {
-    console.error('Failed to delete lead from Upstash Redis:', err);
+    console.error('Failed to delete lead from Upstash Redis transaction:', err);
     return false;
   }
 }
 
 /**
- * Atomic IP rate limiter.
+ * Atomic IP rate limiter using /multi-exec transaction.
  * Returns { allowed: boolean, remaining: number }
  */
 export async function checkRateLimit(
@@ -390,7 +419,7 @@ export async function checkRateLimit(
 
   const key = `lonewolf:ratelimit:${prefix}:${ip}`;
   try {
-    const results = await redisPipeline([
+    const results = await redisTransaction([
       ['INCR', key],
       ['EXPIRE', key, windowSeconds.toString()],
     ]);

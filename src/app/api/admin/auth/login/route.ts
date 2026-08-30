@@ -4,9 +4,17 @@ import { checkRateLimit } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
+function getClientIp(req: NextRequest): string {
+  if (process.env.NODE_ENV === 'test' || process.env.ENABLE_TEST_OVERRIDE === 'true') {
+    const testIp = req.headers.get('x-test-ip');
+    if (testIp) return testIp.trim();
+  }
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown-ip';
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-test-ip') || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown-ip';
+    const ip = getClientIp(req);
 
     const body = await req.json().catch(() => null);
     const password = body?.password;

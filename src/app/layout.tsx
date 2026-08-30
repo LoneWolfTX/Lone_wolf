@@ -31,6 +31,14 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Single Source of Truth Architecture:
+ * - `siteSettings` and `seoConfig` serve as the intentionally immutable server-level configuration
+ *   for root HTML metadata, SEO tags, and LocalBusiness schema, ensuring all 48 canonical city pages
+ *   can be statically prerendered (SSG) with 100% build-time reliability.
+ * - Dynamic runtime edits made via the Owner Studio are persisted to Upstash Redis and served
+ *   via `/api/content` and client views.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

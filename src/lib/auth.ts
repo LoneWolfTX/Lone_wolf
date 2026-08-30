@@ -118,25 +118,39 @@ export function verifyCsrfOrigin(req: NextRequest | Request): boolean {
   const origin = req.headers.get('origin');
   const host = req.headers.get('host');
 
+  // State-changing requests without an Origin header fail closed
   if (!origin) {
-    const fetchSite = req.headers.get('sec-fetch-site');
-    if (fetchSite && ['same-origin', 'same-site'].includes(fetchSite)) {
-      return true;
-    }
-    return true;
+    return false;
   }
 
   try {
     const originUrl = new URL(origin);
-    if (host && (originUrl.host === host || originUrl.host === host.split(':')[0])) {
+
+    // 1. Strict same-origin match against Host header
+    if (host && (originUrl.host.toLowerCase() === host.toLowerCase() || originUrl.host.toLowerCase() === host.split(':')[0].toLowerCase())) {
       return true;
     }
-    if (originUrl.hostname === 'localhost' || originUrl.hostname === '127.0.0.1') {
+
+    // 2. Canonical production domain match
+    const trustedDomains = ['lonewolfdumpsters.com', 'www.lonewolfdumpsters.com'];
+    if (trustedDomains.includes(originUrl.hostname.toLowerCase())) {
       return true;
     }
+
+    // 3. Vercel deployment preview URL match
+    const vercelUrl = process.env.VERCEL_URL;
+    if (vercelUrl && originUrl.hostname.toLowerCase() === vercelUrl.replace(/^https?:\/\//, '').toLowerCase()) {
+      return true;
+    }
+
+    // 4. Localhost permitted exclusively in development / test
+    const isLocalhost = originUrl.hostname === 'localhost' || originUrl.hostname === '127.0.0.1';
+    if (isLocalhost && process.env.NODE_ENV !== 'production') {
+      return true;
+    }
+
+    return false;
   } catch {
     return false;
   }
-
-  return false;
 }
