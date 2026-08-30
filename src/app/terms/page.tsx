@@ -6,6 +6,8 @@ import { ArrowLeft } from 'lucide-react';
 import { useSiteContent } from '@/lib/useEditableContent';
 import { formatTonnage, formatOverageRate, formatExtraDayRate, formatPhoneNumber } from '@/lib/formatters';
 
+import { PageHero } from '@/components/shared/PageHero';
+
 export default function TermsOfServicePage() {
   const { content } = useSiteContent();
   const pr = content.pricing;
@@ -19,32 +21,18 @@ export default function TermsOfServicePage() {
 
   return (
     <>
-      <section className="subpage-header">
-        <div className="container">
-          <div style={{ marginBottom: '16px' }}>
-            <Link
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-              }}
-            >
-              <ArrowLeft size={16} />
-              <span>Back to Home</span>
-            </Link>
-          </div>
-          <h1 className="subpage-title">
-            Terms of <span className="text-accent">Service</span>
-          </h1>
-          <p className="subpage-lead">
-            Standard rental agreements, weight allowances, and container placement terms for {legalName}.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Terms of Service' },
+        ]}
+        headlineWhite="TERMS OF"
+        headlineRed="SERVICE & POLICIES"
+        description={`Standard rental agreements, weight allowances, and container placement terms for ${legalName}.`}
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
+      />
 
       <section style={{ backgroundColor: '#ffffff', color: '#1e293b', padding: '60px 0', minHeight: '50vh' }}>
         <div className="container" style={{ maxWidth: '860px', lineHeight: 1.7, fontSize: '1rem' }}>

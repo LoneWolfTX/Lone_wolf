@@ -16,35 +16,23 @@ export const metadata: Metadata = {
   },
 };
 
+import { PageHero } from '@/components/shared/PageHero';
+
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <section className="subpage-header">
-        <div className="container">
-          <div style={{ marginBottom: '16px' }}>
-            <Link
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-              }}
-            >
-              <ArrowLeft size={16} />
-              <span>Back to Home</span>
-            </Link>
-          </div>
-          <h1 className="subpage-title">
-            Privacy <span className="text-accent">Policy</span>
-          </h1>
-          <p className="subpage-lead">
-            Last Updated: August 16, 2026. American Wolf Rent LLC DBA Lone Wolf Dumpsters is committed to protecting your personal privacy.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Privacy Policy' },
+        ]}
+        headlineWhite="PRIVACY"
+        headlineRed="POLICY"
+        description="Learn how American Wolf Rent LLC DBA Lone Wolf Dumpsters collects, protects, and manages customer information across Dallas–Fort Worth."
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
+        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageObjectPosition="center right"
+      />
 
       <section style={{ backgroundColor: '#ffffff', color: '#1e293b', padding: '60px 0', minHeight: '50vh' }}>
         <div className="container" style={{ maxWidth: '860px', lineHeight: 1.7, fontSize: '1rem' }}>

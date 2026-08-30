@@ -35,7 +35,7 @@ export default function ContactPage() {
       <ClosingCtaBanner
         headline="NEED IMMEDIATE ASSISTANCE?"
         subheadline="CALL OR TEXT (214) 876-0321"
-        imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
+        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
         imageAlt="Lone Wolf Dumpster Service"
       />
     </>

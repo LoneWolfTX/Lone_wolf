@@ -20,7 +20,7 @@ interface ClosingCtaBannerProps {
 export const ClosingCtaBanner: React.FC<ClosingCtaBannerProps> = ({
   headline = 'READY TO RENT YOUR DUMPSTER?',
   subheadline = 'BOOK ONLINE OR CALL TODAY!',
-  imageSrc = '/images/lone-wolf/real/contractor_environment_showcase.jpg',
+  imageSrc = '/images/lone-wolf/lone_wolf_hero_top.png',
   imageAlt = 'Real Lone Wolf Roll-Off Dumpster Ready for Delivery in DFW',
   imageObjectPosition = 'center center',
 }) => {
