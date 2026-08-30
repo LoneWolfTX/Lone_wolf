@@ -3271,23 +3271,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
   align-items: center;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 961px) {
+  .homepage-hero-root {
+    min-height: 560px !important;
+  }
+  .homepage-hero-root .desktop-cinematic-bg {
+    display: block !important;
+  }
+  .homepage-hero-root .homepage-hero-image-frame {
+    display: none !important;
+  }
   .homepage-hero-root .hero-grid-wrapper {
-    grid-template-columns: 1fr 1.12fr;
-    gap: 44px;
+    grid-template-columns: minmax(320px, 620px) 1fr !important;
+    gap: 40px !important;
   }
 }
 
 @media (max-width: 960px) {
-  .hero-grid-wrapper {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
+  .homepage-hero-root .desktop-cinematic-bg {
+    display: none !important;
   }
 
-  .homepage-hero-root .hero-image-frame {
+  .hero-grid-wrapper {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .homepage-hero-root .homepage-hero-image-frame {
+    display: block !important;
     aspect-ratio: 16 / 9 !important;
     max-height: 360px !important;
-    margin-top: 6px;
+    margin-top: 8px;
   }
 
   .secondary-hero-root .hero-image-frame {
@@ -3322,7 +3336,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     justify-content: center !important;
   }
 
-  .homepage-hero-root .hero-image-frame {
+  .homepage-hero-root .homepage-hero-image-frame {
     aspect-ratio: 16 / 9 !important;
     max-height: 280px !important;
   }
@@ -3338,8 +3352,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     align-items: center !important;
   }
 
-  .homepage-hero-root .hero-image-frame {
+  .homepage-hero-root .homepage-hero-image-frame {
     aspect-ratio: 16 / 9 !important;
     max-height: 230px !important;
   }
 }
+

@@ -63,42 +63,59 @@ export const PageHero: React.FC<PageHeroProps> = ({
     <section
       className={`page-hero-container ${isHome ? 'homepage-hero-root' : 'secondary-hero-root'}`}
       style={{
-        backgroundColor: '#0a0d12',
-        backgroundImage: isHome
-          ? 'radial-gradient(ellipse at 80% 30%, rgba(220, 38, 38, 0.08) 0%, rgba(15, 23, 42, 0.4) 40%, rgba(10, 13, 18, 1) 85%)'
-          : 'radial-gradient(ellipse at 70% 30%, rgba(30, 41, 59, 0.45) 0%, rgba(10, 13, 18, 1) 75%)',
+        backgroundColor: '#07090e',
         color: '#ffffff',
         position: 'relative',
         overflow: 'hidden',
         borderBottom: '1px solid #1e293b',
-        padding: isHome ? '32px 0 44px 0' : '32px 0 40px 0',
+        padding: isHome ? '48px 0 52px 0' : '36px 0 40px 0',
+        minHeight: isHome ? '540px' : 'auto',
+        display: isHome ? 'flex' : 'block',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}
       aria-label="Hero Section"
     >
-      {/* Subtle Background Glow on Homepage */}
+      {/* Cinematic Full-Bleed Desktop Hero Background */}
       {hasImage && isHome && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 1,
-            pointerEvents: 'none',
-            opacity: 0.08,
-            filter: 'blur(40px) scale(1.15)',
-          }}
-        >
+        <div className="desktop-cinematic-bg" style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           <Image
             src={imageSrc}
-            alt=""
+            alt={imageAlt}
             fill
             priority
+            loading="eager"
             sizes="100vw"
-            style={{ objectFit: 'cover', objectPosition: 'center right' }}
+            onLoad={() => setImageLoaded(true)}
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center right',
+              opacity: imageLoaded ? 1 : 0.2,
+              transition: 'opacity 0.3s ease-in-out',
+            }}
+          />
+          {/* Left-to-right deep dark gradient: left 38-45% dark for copy, right 55-65% bright and crisp for truck */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(90deg, #07090e 0%, #07090e 34%, rgba(7, 9, 14, 0.96) 44%, rgba(7, 9, 14, 0.6) 58%, rgba(7, 9, 14, 0.15) 75%, rgba(7, 9, 14, 0) 90%)',
+              pointerEvents: 'none',
+            }}
+          />
+          {/* Top/Bottom edge vignettes */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(7, 9, 14, 0.4) 0%, transparent 20%, transparent 80%, #07090e 100%)',
+              pointerEvents: 'none',
+            }}
           />
         </div>
       )}
 
-      <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
         
         {/* 1. Breadcrumbs Trail (Secondary Pages) */}
         {!isHome && breadcrumbs && breadcrumbs.length > 0 && (
@@ -138,12 +155,12 @@ export const PageHero: React.FC<PageHeroProps> = ({
           className="hero-grid-wrapper"
           style={{
             display: 'grid',
-            gridTemplateColumns: hasImage
-              ? isHome
-                ? 'minmax(320px, 1fr) minmax(320px, 1.15fr)'
-                : 'repeat(auto-fit, minmax(320px, 1fr))'
-              : '1fr',
-            gap: isHome ? '36px' : '32px',
+            gridTemplateColumns: isHome
+              ? 'minmax(320px, 600px) 1fr'
+              : hasImage
+                ? 'repeat(auto-fit, minmax(320px, 1fr))'
+                : '1fr',
+            gap: isHome ? '40px' : '32px',
             alignItems: 'center',
           }}
         >
@@ -320,20 +337,20 @@ export const PageHero: React.FC<PageHeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Full Environmental Showcase Image Card */}
+          {/* Right Column: Mobile image frame on Homepage, or standard Hero Frame on Secondary pages */}
           {hasImage && (
             <div
-              className="hero-image-frame"
+              className={`hero-image-frame ${isHome ? 'homepage-hero-image-frame' : 'secondary-hero-image-frame'}`}
               style={{
                 position: 'relative',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                border: '1px solid #334155',
+                border: isHome ? '1px solid #334155' : '1px solid #334155',
                 boxShadow: isHome
-                  ? '0 24px 48px -12px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)'
+                  ? '0 20px 40px -12px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)'
                   : '0 20px 40px -15px rgba(0,0,0,0.7)',
                 aspectRatio: isHome ? '16 / 9' : '16 / 10',
-                maxHeight: isHome ? '480px' : '420px',
+                maxHeight: isHome ? '420px' : '400px',
                 width: '100%',
                 backgroundColor: '#0a0d14',
               }}
@@ -354,27 +371,15 @@ export const PageHero: React.FC<PageHeroProps> = ({
                 }}
               />
               
-              {/* Subtle directional vignette overlay on homepage to keep text ultra-readable while preserving truck details */}
-              {isHome ? (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to right, rgba(10, 13, 18, 0.4) 0%, rgba(10, 13, 18, 0) 40%)',
-                    pointerEvents: 'none',
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '8px',
-                    pointerEvents: 'none',
-                  }}
-                />
-              )}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '8px',
+                  pointerEvents: 'none',
+                }}
+              />
             </div>
           )}
         </div>
