@@ -100,7 +100,7 @@ export default async function CityServiceAreaPage({ params }: CityPageProps) {
       <PageHero
         breadcrumbs={[
           { label: 'Home', href: '/' },
-          { label: 'Services Areas', href: '/service-areas' },
+          { label: 'Service Areas', href: '/service-areas' },
           { label: `${data.cityName}, TX` },
         ]}
         headlineWhite="DUMPSTER RENTAL IN"

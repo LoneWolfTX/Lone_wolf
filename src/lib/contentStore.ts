@@ -284,7 +284,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     yardCity: "Colleyville",
     yardState: "TX",
     yardZip: "76034",
-    businessHours: "Mon-Fri 7:00am-6:00pm, Sat 8:00am-2:00pm",
+    businessHours: "Monday – Saturday: 6:00 AM – 6:00 PM | Sunday: Closed",
     googleReviewUrl: "https://g.page/r/lonewolfdumpsters/review",
     googleRating: "5.0",
     reviewCount: 48,
@@ -878,7 +878,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-6",
       question: "How fast can I get a dumpster delivered?",
-      answer: "Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.",
+      answer: "Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, and Denton Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.",
       category: "placement"
     },
     {

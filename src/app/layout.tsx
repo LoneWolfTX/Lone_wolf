@@ -61,8 +61,8 @@ export default function RootLayout({
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: '32.7797',
-      longitude: '-96.8615',
+      latitude: '32.8854',
+      longitude: '-97.1472',
     },
     url: 'https://lonewolfdumpsters.com',
     priceRange: '$$',

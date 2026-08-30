@@ -35,7 +35,7 @@ export const ServiceAreaSection: React.FC = () => {
             </h2>
 
             <p style={{ fontSize: '0.96rem', color: '#475569', lineHeight: '1.6', marginBottom: '20px' }}>
-              Lone Wolf Dumpsters provides prompt roll-off container delivery across <strong>Dallas, Tarrant, Denton, and Collin counties</strong> with guaranteed driveway protection and flexible rental periods.
+              Lone Wolf Dumpsters provides prompt roll-off container delivery across <strong>Dallas, Tarrant, and Denton Counties</strong> with guaranteed driveway protection and flexible rental periods.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>

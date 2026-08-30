@@ -25,7 +25,7 @@ interface MarketingDashboardProps {
   adminPassword?: string;
 }
 
-export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPassword = 'LoneWolf2026!' }) => {
+export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPassword }) => {
   const [range, setRange] = useState('30days');
   const [loading, setLoading] = useState(true);
   const [statsData, setStatsData] = useState<any>(null);
@@ -67,9 +67,7 @@ export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPas
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/marketing/stats?range=${range}`, {
-        headers: { 'X-Admin-Password': adminPassword },
-      });
+      const res = await fetch(`/api/admin/marketing/stats?range=${range}`);
       if (res.ok) {
         const json = await res.json();
         if (json.success) {
@@ -105,7 +103,6 @@ export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPas
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': adminPassword,
         },
         body: JSON.stringify({
           action: 'save_campaign',
@@ -138,7 +135,6 @@ export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPas
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': adminPassword,
         },
         body: JSON.stringify({
           action: 'save_spend_entry',

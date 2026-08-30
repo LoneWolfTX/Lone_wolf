@@ -1,58 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminSession, verifyCsrfOrigin } from '@/lib/auth';
 import {
-  LoneWolfDocument,
-  DocumentType,
-  PaymentRecord,
-  generateAtomicDocumentNumber,
   saveDocumentInRedis,
   getDocumentByIdFromRedis,
   getDocumentsForLeadFromRedis,
   deleteDocumentFromRedis,
+  generateAtomicDocumentNumber,
+  LoneWolfDocument,
 } from '@/lib/documents';
 
 export const dynamic = 'force-dynamic';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.LONEWOLFDUMPSTER_ADMIN_PASSWORD || 'LoneWolf2026!';
-
-function isAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('X-Admin-Password') || req.headers.get('Authorization');
-  const providedPass = authHeader ? authHeader.replace(/^Bearer\s+/i, '').trim() : '';
-  if (!ADMIN_PASSWORD) return true;
-  return providedPass === ADMIN_PASSWORD || providedPass === 'LoneWolf2026!';
-}
 
 /**
  * GET /api/admin/documents
  */
 export async function GET(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const docId = searchParams.get('docId');
+  const leadId = searchParams.get('leadId');
+
   try {
-    if (!isAuthorized(req)) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Valid Admin password required.' },
-        { status: 401 }
-      );
-    }
-
-    const { searchParams } = new URL(req.url);
-    const leadId = searchParams.get('leadId');
-    const docId = searchParams.get('docId');
-
     if (docId) {
       const doc = await getDocumentByIdFromRedis(docId);
-      if (doc) {
-        return NextResponse.json({ success: true, document: doc });
+      if (!doc) {
+        return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
       }
-      return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
+      return NextResponse.json({ success: true, document: doc });
     }
 
     if (leadId) {
       const docs = await getDocumentsForLeadFromRedis(leadId);
-      return NextResponse.json({ success: true, documents: docs });
+      return NextResponse.json({ success: true, documents: docs, total: docs.length });
     }
 
-    return NextResponse.json({ success: false, error: 'leadId or docId parameter required' }, { status: 400 });
+    return NextResponse.json({ success: false, error: 'Provide docId or leadId' }, { status: 400 });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Server error: ' + err.message }, { status: 500 });
   }
 }
 
@@ -60,291 +47,111 @@ export async function GET(req: NextRequest) {
  * POST /api/admin/documents
  */
 export async function POST(req: NextRequest) {
-  try {
-    if (!isAuthorized(req)) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Valid Admin password required.' },
-        { status: 401 }
-      );
-    }
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!verifyCsrfOrigin(req)) {
+    return NextResponse.json({ success: false, error: 'Invalid origin header' }, { status: 403 });
+  }
 
+  try {
     const body = await req.json().catch(() => null);
     if (!body || !body.action) {
-      return NextResponse.json({ success: false, error: 'action parameter required' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Action is required' }, { status: 400 });
     }
 
-    const { action } = body;
+    const { action, docData, docId, leadId, payment } = body;
 
-    // 1. CREATE DOCUMENT (Quote, Invoice, Receipt)
     if (action === 'create') {
-      const { docData } = body;
-      if (!docData || !docData.type) {
-        return NextResponse.json({ success: false, error: 'docData and type required' }, { status: 400 });
-      }
-
-      const docType: DocumentType = docData.type;
-      const docNumber = await generateAtomicDocumentNumber(docType);
-      const now = new Date().toISOString();
-      const docId = `doc_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-
-      // Calculate totals
-      const lineItems = Array.isArray(docData.lineItems) ? docData.lineItems : [];
-      const subtotal = lineItems.reduce((sum: number, item: any) => sum + (Number(item.amount) || 0), 0);
-      const taxRate = Number(docData.taxRate) || 0;
-      const discountAmount = Number(docData.discountAmount) || 0;
-      const taxAmount = (subtotal - discountAmount) * (taxRate / 100);
-      const total = Math.max(0, subtotal - discountAmount + taxAmount);
+      const docType = docData.type || 'QUOTE';
+      const docNumber = docData.number || (await generateAtomicDocumentNumber(docType));
+      const id = 'doc_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
 
       const newDoc: LoneWolfDocument = {
-        id: docId,
-        docNumber,
-        leadId: docData.leadId || '',
+        id,
         type: docType,
-        status: docData.status || (docType === 'QUOTE' ? 'Draft' : docType === 'INVOICE' ? 'Due' : 'Paid'),
-        createdAt: now,
-        updatedAt: now,
-        date: docData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        dueDate: docData.dueDate || '',
-        validThrough: docData.validThrough || '',
-        paymentTerms: docData.paymentTerms || 'Due Upon Delivery',
-
-        // Lineage
-        sourceQuoteId: docData.sourceQuoteId || '',
-        sourceQuoteNumber: docData.sourceQuoteNumber || '',
-        sourceInvoiceId: docData.sourceInvoiceId || '',
-        sourceInvoiceNumber: docData.sourceInvoiceNumber || '',
-
-        // Company Snapshot
-        companyName: docData.companyName || 'Lone Wolf Dumpsters',
-        companyPhone: docData.companyPhone || '(214) 876-0321',
-        companyEmail: docData.companyEmail || 'lonewolfdumpsters@gmail.com',
-        companyWebsite: docData.companyWebsite || 'www.lonewolfdumpsters.com',
-        companyTagline: docData.companyTagline || 'Rent Smart • Dump Easy',
-
-        // Customer Snapshot
-        customerName: docData.customerName || 'Valued Customer',
+        number: docNumber,
+        leadId: leadId || docData.leadId,
+        customerName: docData.customerName || 'Customer',
         customerPhone: docData.customerPhone || '',
         customerEmail: docData.customerEmail || '',
         deliveryAddress: docData.deliveryAddress || 'DFW Metroplex',
-        projectType: docData.projectType || 'General Disposal',
-
-        // Rental Specs Snapshot
-        dumpsterSize: docData.dumpsterSize || '20 Yard Dumpster',
-        rentalPeriod: docData.rentalPeriod || '7 Days',
-        tonnageAllowance: docData.tonnageAllowance || 'See Rental Terms',
+        dumpsterSize: docData.dumpsterSize || '20 Yard',
+        projectType: docData.projectType || 'General Waste',
+        deliveryDate: docData.deliveryDate || new Date().toISOString().split('T')[0],
+        rentalDuration: docData.rentalDuration || '7 Days',
+        includedWeight: docData.includedWeight || '2.0 Tons',
+        extraWeightRate: docData.extraWeightRate || '$80/ton',
         extraDayRate: docData.extraDayRate || '$20/day',
-        extraWeightRate: docData.extraWeightRate || '$75/ton',
-        maxWeightLanguage: docData.maxWeightLanguage || '4.5 tons',
-        deliveryDate: docData.deliveryDate || '',
-        pickupDate: docData.pickupDate || '',
-        specialInstructions: docData.specialInstructions || '',
-        policyNotes: docData.policyNotes || 'Maximum weight allowed is 4.5 tons. Additional days billed at $20/day.',
-
-        // Financial Snapshot
-        lineItems,
-        subtotal,
-        taxRate,
-        taxAmount,
-        discountAmount,
-        total,
-
-        // Payments
+        lineItems: Array.isArray(docData.lineItems) ? docData.lineItems : [],
+        subtotal: typeof docData.subtotal === 'number' ? docData.subtotal : 425,
+        tax: typeof docData.tax === 'number' ? docData.tax : 0,
+        total: typeof docData.total === 'number' ? docData.total : 425,
+        quoteStatus: docType === 'QUOTE' ? docData.quoteStatus || 'Draft' : undefined,
+        invoiceStatus: docType === 'INVOICE' ? docData.invoiceStatus || 'Due' : undefined,
+        issuedDate: docData.issuedDate || new Date().toISOString().split('T')[0],
+        dueDate: docData.dueDate,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         payments: Array.isArray(docData.payments) ? docData.payments : [],
-        totalPaid: docData.totalPaid || 0,
-        balanceDue: Math.max(0, total - (docData.totalPaid || 0)),
+        balanceDue: typeof docData.balanceDue === 'number' ? docData.balanceDue : (docData.total || 425),
+        notes: docData.notes || '',
+        terms: docData.terms || 'Standard Lone Wolf Dumpsters terms apply. Prohibited items: paint, tires, hazardous chemicals.',
+        originalQuoteId: docData.originalQuoteId,
       };
 
       const saved = await saveDocumentInRedis(newDoc);
-      if (saved) {
-        return NextResponse.json({ success: true, document: saved });
-      }
-      return NextResponse.json({ success: false, error: 'Failed to save document in Redis' }, { status: 500 });
+      return NextResponse.json({ success: !!saved, document: saved });
     }
 
-    // 2. UPDATE DOCUMENT
-    if (action === 'update') {
-      const { docId, updates } = body;
-      if (!docId || !updates) {
-        return NextResponse.json({ success: false, error: 'docId and updates required' }, { status: 400 });
-      }
-
+    if (action === 'update' && docId && docData) {
       const existing = await getDocumentByIdFromRedis(docId);
-      if (!existing) {
-        return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
-      }
-
-      const lineItems = updates.lineItems || existing.lineItems;
-      const subtotal = lineItems.reduce((sum: number, item: any) => sum + (Number(item.amount) || 0), 0);
-      const taxRate = updates.taxRate !== undefined ? Number(updates.taxRate) : existing.taxRate;
-      const discountAmount = updates.discountAmount !== undefined ? Number(updates.discountAmount) : existing.discountAmount;
-      const taxAmount = (subtotal - discountAmount) * (taxRate / 100);
-      const total = Math.max(0, subtotal - discountAmount + taxAmount);
-      const totalPaid = updates.payments
-        ? updates.payments.reduce((sum: number, p: any) => sum + (Number(p.amount) || 0), 0)
-        : existing.totalPaid;
+      if (!existing) return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
 
       const updatedDoc: LoneWolfDocument = {
         ...existing,
-        ...updates,
-        lineItems,
-        subtotal,
-        taxRate,
-        taxAmount,
-        discountAmount,
-        total,
-        totalPaid,
-        balanceDue: Math.max(0, total - totalPaid),
+        ...docData,
+        id: existing.id,
         updatedAt: new Date().toISOString(),
       };
 
       const saved = await saveDocumentInRedis(updatedDoc);
-      if (saved) {
-        return NextResponse.json({ success: true, document: saved });
-      }
-      return NextResponse.json({ success: false, error: 'Failed to update document in Redis' }, { status: 500 });
+      return NextResponse.json({ success: !!saved, document: saved });
     }
 
-    // 3. CONVERT QUOTE TO INVOICE
-    if (action === 'convert_to_invoice') {
-      const { quoteId } = body;
-      if (!quoteId) {
-        return NextResponse.json({ success: false, error: 'quoteId required' }, { status: 400 });
-      }
+    if (action === 'add_payment' && docId && payment) {
+      const existing = await getDocumentByIdFromRedis(docId);
+      if (!existing) return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
 
-      const quote = await getDocumentByIdFromRedis(quoteId);
-      if (!quote) {
-        return NextResponse.json({ success: false, error: 'Quote document not found' }, { status: 404 });
-      }
-
-      const invoiceNumber = await generateAtomicDocumentNumber('INVOICE');
-      const now = new Date().toISOString();
-      const invoiceId = `doc_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-
-      const newInvoice: LoneWolfDocument = {
-        ...quote,
-        id: invoiceId,
-        docNumber: invoiceNumber,
-        type: 'INVOICE',
-        status: 'Due',
-        createdAt: now,
-        updatedAt: now,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        paymentTerms: 'Due Upon Delivery',
-        sourceQuoteId: quote.id,
-        sourceQuoteNumber: quote.docNumber,
-        payments: [],
-        totalPaid: 0,
-        balanceDue: quote.total,
+      const paymentEntry = {
+        id: 'pay_' + Date.now(),
+        amount: Number(payment.amount) || 0,
+        date: payment.date || new Date().toISOString().split('T')[0],
+        method: payment.method || 'Card',
+        notes: payment.notes || '',
       };
 
-      // Save Invoice
-      await saveDocumentInRedis(newInvoice);
+      const updatedPayments = [...(existing.payments || []), paymentEntry];
+      const totalPaid = updatedPayments.reduce((sum, p) => sum + p.amount, 0);
+      const newBalance = Math.max(0, existing.total - totalPaid);
+      const newStatus = newBalance === 0 ? 'Paid' : totalPaid > 0 ? 'Partial' : existing.invoiceStatus;
 
-      // Update Quote status to Converted
-      quote.status = 'Converted';
-      quote.updatedAt = now;
-      await saveDocumentInRedis(quote);
-
-      return NextResponse.json({ success: true, invoice: newInvoice, quote });
-    }
-
-    // 4. RECORD PAYMENT (Mark Paid / Partial Payment -> Generate Receipt)
-    if (action === 'record_payment') {
-      const { invoiceId, amount, date, method, notes } = body;
-      if (!invoiceId || !amount || !method) {
-        return NextResponse.json({ success: false, error: 'invoiceId, amount, and method required' }, { status: 400 });
-      }
-
-      const invoice = await getDocumentByIdFromRedis(invoiceId);
-      if (!invoice) {
-        return NextResponse.json({ success: false, error: 'Invoice not found' }, { status: 404 });
-      }
-
-      const paymentAmt = Number(amount);
-      const newPayment: PaymentRecord = {
-        id: `pmt_${Date.now()}`,
-        amount: paymentAmt,
-        date: date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        method,
-        notes: notes || '',
+      const updatedDoc: LoneWolfDocument = {
+        ...existing,
+        payments: updatedPayments,
+        balanceDue: newBalance,
+        invoiceStatus: newStatus as any,
+        paidAt: newBalance === 0 ? new Date().toISOString() : existing.paidAt,
+        updatedAt: new Date().toISOString(),
       };
 
-      const updatedPayments = [...(invoice.payments || []), newPayment];
-      const newTotalPaid = updatedPayments.reduce((sum, p) => sum + Number(p.amount), 0);
-      const newBalanceDue = Math.max(0, invoice.total - newTotalPaid);
-      const newStatus = newBalanceDue === 0 ? 'Paid' : newTotalPaid > 0 ? 'Partial' : 'Due';
-
-      invoice.payments = updatedPayments;
-      invoice.totalPaid = newTotalPaid;
-      invoice.balanceDue = newBalanceDue;
-      invoice.status = newStatus;
-      invoice.updatedAt = new Date().toISOString();
-
-      await saveDocumentInRedis(invoice);
-
-      let createdReceipt: LoneWolfDocument | null = null;
-
-      // If fully paid (or explicit receipt request), generate Receipt
-      if (newStatus === 'Paid') {
-        const receiptNumber = await generateAtomicDocumentNumber('RECEIPT');
-        const receiptId = `doc_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-        const now = new Date().toISOString();
-
-        createdReceipt = {
-          ...invoice,
-          id: receiptId,
-          docNumber: receiptNumber,
-          type: 'RECEIPT',
-          status: 'Paid',
-          createdAt: now,
-          updatedAt: now,
-          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          sourceInvoiceId: invoice.id,
-          sourceInvoiceNumber: invoice.docNumber,
-          totalPaid: invoice.total,
-          balanceDue: 0,
-        };
-
-        await saveDocumentInRedis(createdReceipt);
-      }
-
-      return NextResponse.json({
-        success: true,
-        invoice,
-        receipt: createdReceipt,
-      });
+      const saved = await saveDocumentInRedis(updatedDoc);
+      return NextResponse.json({ success: !!saved, document: saved, payment: paymentEntry });
     }
 
-    // 5. DELETE DOCUMENT
-    if (action === 'delete') {
-      const { docId, leadId, force } = body;
-      if (!docId) {
-        return NextResponse.json({ success: false, error: 'docId required' }, { status: 400 });
-      }
-
-      const doc = await getDocumentByIdFromRedis(docId);
-      if (doc && doc.type === 'INVOICE' && doc.payments && doc.payments.length > 0 && !force) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: `Invoice ${doc.docNumber} has ${doc.payments.length} payment record(s). Confirm deletion with force flag to proceed.`,
-            requiresForce: true,
-          },
-          { status: 400 }
-        );
-      }
-
-      const deleted = await deleteDocumentFromRedis(docId, leadId);
-      if (deleted) {
-        return NextResponse.json({ success: true, message: `Document ${docId} permanently deleted.` });
-      }
-      return NextResponse.json({ success: false, error: 'Failed to delete document from Redis' }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: false, error: `Unknown action: ${action}` }, { status: 400 });
+    return NextResponse.json({ success: false, error: 'Invalid document action' }, { status: 400 });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Server error: ' + err.message }, { status: 500 });
   }
 }
 
@@ -352,41 +159,21 @@ export async function POST(req: NextRequest) {
  * DELETE /api/admin/documents
  */
 export async function DELETE(req: NextRequest) {
-  try {
-    if (!isAuthorized(req)) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Valid Admin password required.' },
-        { status: 401 }
-      );
-    }
-
-    const { searchParams } = new URL(req.url);
-    const docId = searchParams.get('docId');
-    const leadId = searchParams.get('leadId') || undefined;
-    const force = searchParams.get('force') === 'true';
-
-    if (!docId) {
-      return NextResponse.json({ success: false, error: 'docId parameter required' }, { status: 400 });
-    }
-
-    const doc = await getDocumentByIdFromRedis(docId);
-    if (doc && doc.type === 'INVOICE' && doc.payments && doc.payments.length > 0 && !force) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: `Invoice ${doc.docNumber} has ${doc.payments.length} payment record(s). Confirm deletion with force=true to proceed.`,
-          requiresForce: true,
-        },
-        { status: 400 }
-      );
-    }
-
-    const deleted = await deleteDocumentFromRedis(docId, leadId);
-    if (deleted) {
-      return NextResponse.json({ success: true, message: `Document ${docId} permanently deleted.` });
-    }
-    return NextResponse.json({ success: false, error: 'Failed to delete document from Redis' }, { status: 500 });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
+  if (!verifyCsrfOrigin(req)) {
+    return NextResponse.json({ success: false, error: 'Invalid origin header' }, { status: 403 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const docId = searchParams.get('docId');
+  const leadId = searchParams.get('leadId') || undefined;
+
+  if (!docId) {
+    return NextResponse.json({ success: false, error: 'docId is required' }, { status: 400 });
+  }
+
+  const deleted = await deleteDocumentFromRedis(docId, leadId);
+  return NextResponse.json({ success: deleted, docId });
 }

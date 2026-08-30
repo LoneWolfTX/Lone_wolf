@@ -26,3 +26,12 @@ extracted_tail.css
 *.log
 .vercel
 /*.png
+
+# Environment Secrets
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+!.env.example
+

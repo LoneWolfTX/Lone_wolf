@@ -49,7 +49,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   const [rentalPeriod, setRentalPeriod] = useState('7 Days');
   const [tonnageAllowance, setTonnageAllowance] = useState('See Rental Terms');
   const [extraDayRate, setExtraDayRate] = useState('$20/day');
-  const [extraWeightRate, setExtraWeightRate] = useState('$75/ton');
+  const [extraWeightRate, setExtraWeightRate] = useState('$80/ton');
   const [maxWeightLanguage, setMaxWeightLanguage] = useState('4.5 tons');
   const [deliveryDate, setDeliveryDate] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
@@ -79,23 +79,20 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     if (existingDoc) {
       setCurrentDoc(existingDoc);
       setDocType(existingDoc.type);
-      setCustomerName(existingDoc.customerName);
-      setCustomerPhone(existingDoc.customerPhone);
-      setCustomerEmail(existingDoc.customerEmail);
-      setDeliveryAddress(existingDoc.deliveryAddress);
-      setProjectType(existingDoc.projectType);
-      setDumpsterSize(existingDoc.dumpsterSize);
-      setRentalPeriod(existingDoc.rentalPeriod);
-      setTonnageAllowance(existingDoc.tonnageAllowance);
+      setCustomerName(existingDoc.customerName || '');
+      setCustomerPhone(existingDoc.customerPhone || '');
+      setCustomerEmail(existingDoc.customerEmail || '');
+      setDeliveryAddress(existingDoc.deliveryAddress || '');
+      setProjectType(existingDoc.projectType || '');
+      setDumpsterSize(existingDoc.dumpsterSize || '20 Yard Dumpster');
+      setRentalPeriod(existingDoc.rentalDuration || '7 Days');
+      setTonnageAllowance(existingDoc.includedWeight || 'See Rental Terms');
       setExtraDayRate(existingDoc.extraDayRate || '$20/day');
-      setExtraWeightRate(existingDoc.extraWeightRate || '$75/ton');
-      setMaxWeightLanguage(existingDoc.maxWeightLanguage || '4.5 tons');
+      setExtraWeightRate(existingDoc.extraWeightRate || '$80/ton');
       setDeliveryDate(existingDoc.deliveryDate || '');
-      setSpecialInstructions(existingDoc.specialInstructions || '');
-      setPaymentTerms(existingDoc.paymentTerms || 'Due Upon Delivery');
+      setSpecialInstructions(existingDoc.notes || '');
+      setPaymentTerms(existingDoc.terms || 'Due Upon Delivery');
       setLineItems(existingDoc.lineItems || []);
-      setDiscountAmount(existingDoc.discountAmount || 0);
-      setTaxRate(existingDoc.taxRate || 0);
     } else {
       setDocType(initialType || 'QUOTE');
       setMode('edit');
@@ -129,7 +126,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       setRentalPeriod(lead?.rentalDuration || '7 Days');
       setTonnageAllowance(tonnage);
       setExtraDayRate('$20/day');
-      setExtraWeightRate('$75/ton');
+      setExtraWeightRate('$80/ton');
       setMaxWeightLanguage('4.5 tons');
       setDeliveryDate(lead?.preferredDate || '');
       setSpecialInstructions(lead?.notes || '');
@@ -255,7 +252,6 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify(
           isNew ? { action: 'create', docData: payload } : { action: 'update', docId: currentDoc.id, updates: payload }
@@ -293,7 +289,6 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({ action: 'convert_to_invoice', quoteId: activeDoc.id }),
       });
@@ -333,7 +328,6 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({
           action: 'record_payment',
@@ -382,7 +376,6 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({
           docId: activeDoc.id,
@@ -472,7 +465,6 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({
           action: 'delete',
@@ -500,14 +492,17 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
 
   const previewDocObj: LoneWolfDocument = currentDoc || {
     id: 'temp_preview',
+    number: docType === 'QUOTE' ? 'Q-2026-DRAFT' : docType === 'INVOICE' ? 'INV-2026-DRAFT' : 'REC-2026-DRAFT',
     docNumber: docType === 'QUOTE' ? 'Q-2026-DRAFT' : docType === 'INVOICE' ? 'INV-2026-DRAFT' : 'REC-2026-DRAFT',
     leadId: lead?.id || '',
     type: docType,
     status: docType === 'QUOTE' ? 'Draft' : docType === 'INVOICE' ? 'Due' : 'Paid',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    issuedDate: new Date().toISOString().split('T')[0],
     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    tax: taxAmount,
     validThrough: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     paymentTerms,
     companyName: 'Lone Wolf Dumpsters',

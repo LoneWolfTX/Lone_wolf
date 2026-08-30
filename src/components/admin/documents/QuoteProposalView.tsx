@@ -214,14 +214,14 @@ export const QuoteProposalView: React.FC<QuoteProposalViewProps> = ({ document: 
               <strong style={{ color: '#0f172a' }}>${Number(doc.subtotal).toFixed(2)}</strong>
             </div>
 
-            {doc.discountAmount > 0 && (
+            {(doc.discountAmount || 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '0.9rem', color: '#dc2626' }}>
                 <span>Discount:</span>
                 <strong>-${Number(doc.discountAmount).toFixed(2)}</strong>
               </div>
             )}
 
-            {doc.taxAmount > 0 && (
+            {(doc.taxAmount || 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '0.9rem', color: '#475569' }}>
                 <span>Tax ({doc.taxRate}%):</span>
                 <strong>+${Number(doc.taxAmount).toFixed(2)}</strong>

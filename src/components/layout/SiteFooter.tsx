@@ -10,11 +10,11 @@ import { formatCurrency, formatPhoneNumber } from '@/lib/formatters';
 
 export const SiteFooter: React.FC = () => {
   const pathname = usePathname();
+  const { content } = useSiteContent();
+
   if (pathname?.startsWith('/admin')) {
     return null;
   }
-
-  const { content } = useSiteContent();
   const pr = content.pricing;
   const b = content.business || content.contact;
   const phone = formatPhoneNumber(b.phone);

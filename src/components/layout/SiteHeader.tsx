@@ -127,9 +127,20 @@ export const SiteHeader: React.FC = () => {
               style={{ position: 'relative', whiteSpace: 'nowrap' }}
               onMouseEnter={() => setDumpsterDropdownOpen(true)}
               onMouseLeave={() => setDumpsterDropdownOpen(false)}
+              onFocus={() => setDumpsterDropdownOpen(true)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setDumpsterDropdownOpen(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setDumpsterDropdownOpen(false);
+              }}
             >
               <Link
                 href="/dumpster-rentals"
+                aria-haspopup="true"
+                aria-expanded={dumpsterDropdownOpen}
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontSize: '0.92rem',
@@ -152,6 +163,7 @@ export const SiteHeader: React.FC = () => {
 
               {dumpsterDropdownOpen && (
                 <div
+                  role="menu"
                   style={{
                     position: 'absolute',
                     top: '100%',
@@ -168,6 +180,7 @@ export const SiteHeader: React.FC = () => {
                     <Link
                       key={sub.href}
                       href={sub.href}
+                      role="menuitem"
                       onClick={() => setDumpsterDropdownOpen(false)}
                       style={{
                         display: 'block',
@@ -200,9 +213,20 @@ export const SiteHeader: React.FC = () => {
               style={{ position: 'relative', whiteSpace: 'nowrap' }}
               onMouseEnter={() => setAreasDropdownOpen(true)}
               onMouseLeave={() => setAreasDropdownOpen(false)}
+              onFocus={() => setAreasDropdownOpen(true)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setAreasDropdownOpen(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setAreasDropdownOpen(false);
+              }}
             >
               <Link
                 href="/service-areas"
+                aria-haspopup="true"
+                aria-expanded={areasDropdownOpen}
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontSize: '0.92rem',
@@ -225,6 +249,7 @@ export const SiteHeader: React.FC = () => {
 
               {areasDropdownOpen && (
                 <div
+                  role="menu"
                   style={{
                     position: 'absolute',
                     top: '100%',
@@ -241,6 +266,7 @@ export const SiteHeader: React.FC = () => {
                     <Link
                       key={sub.href}
                       href={sub.href}
+                      role="menuitem"
                       onClick={() => setAreasDropdownOpen(false)}
                       style={{
                         display: 'block',

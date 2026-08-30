@@ -112,7 +112,7 @@ export const InteractiveIntakeForm: React.FC = () => {
     };
 
     try {
-      const res = await fetch('/api/quote.php', {
+      const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload),
@@ -120,7 +120,7 @@ export const InteractiveIntakeForm: React.FC = () => {
 
       const result = await res.json().catch(() => null);
 
-      if (res.ok && result?.success !== false) {
+      if (res.ok && result?.success) {
         setFormSubmitted(true);
         trackLeadSubmitted({
           service: payload.service,
@@ -131,13 +131,7 @@ export const InteractiveIntakeForm: React.FC = () => {
         setErrorMessage(result?.error || 'Unable to submit online. Please call or text our team at (214) 876-0321.');
       }
     } catch {
-      // Graceful fallback for offline testing
-      setFormSubmitted(true);
-      trackLeadSubmitted({
-        service: payload.service,
-        projectType: payload.projectType,
-        location: payload.deliveryAddress,
-      });
+      setErrorMessage('Network connection issue. Please call or text our team at (214) 876-0321.');
     } finally {
       setSubmitting(false);
     }

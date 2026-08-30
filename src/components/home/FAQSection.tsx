@@ -34,7 +34,7 @@ export const FAQSection: React.FC = () => {
     },
     {
       q: 'How fast can I get a dumpster delivered?',
-      a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, Denton, and Collin Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
+      a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, and Denton Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
     },
   ];
 

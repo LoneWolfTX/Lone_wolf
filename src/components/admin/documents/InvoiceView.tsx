@@ -10,7 +10,7 @@ interface InvoiceViewProps {
 
 export const InvoiceView: React.FC<InvoiceViewProps> = ({ document: doc, logoBase64 }) => {
   const logoSrc = logoBase64 || '/images/lone-wolf/logo.png';
-  const statusColor = doc.balanceDue === 0 ? '#16a34a' : doc.totalPaid > 0 ? '#f59e0b' : '#dc2626';
+  const statusColor = doc.balanceDue === 0 ? '#16a34a' : (doc.totalPaid || 0) > 0 ? '#f59e0b' : '#dc2626';
 
   return (
     <div
@@ -147,14 +147,14 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ document: doc, logoBas
               <strong style={{ color: '#0f172a' }}>${Number(doc.subtotal).toFixed(2)}</strong>
             </div>
 
-            {doc.discountAmount > 0 && (
+            {(doc.discountAmount || 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '0.9rem', color: '#dc2626' }}>
                 <span>Discount:</span>
                 <strong>-${Number(doc.discountAmount).toFixed(2)}</strong>
               </div>
             )}
 
-            {doc.taxAmount > 0 && (
+            {(doc.taxAmount || 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '0.9rem', color: '#475569' }}>
                 <span>Tax ({doc.taxRate}%):</span>
                 <strong>+${Number(doc.taxAmount).toFixed(2)}</strong>
@@ -166,7 +166,7 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ document: doc, logoBas
               <span>${Number(doc.total).toFixed(2)}</span>
             </div>
 
-            {doc.totalPaid > 0 && (
+            {(doc.totalPaid || 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '0.9rem', color: '#16a34a', fontWeight: 700 }}>
                 <span>Payments Received:</span>
                 <span>-${Number(doc.totalPaid).toFixed(2)}</span>

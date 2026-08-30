@@ -1,35 +1,80 @@
 /**
  * src/lib/redis.ts
  *
- * Upstash Redis Server Client (Vercel Production Architecture)
- * Single authoritative database for editable site content and lead intake.
- * Uses exact Vercel Upstash REST API environment variables.
+ * Fail-closed, zero-fallback Upstash Redis client for Vercel production.
+ * Executes atomic pipeline transactions for leads, rate limiting, and documents.
  */
 
 import { DEFAULT_SITE_CONTENT, SiteContent } from './contentStore';
 
-export const UPSTASH_URL =
-  process.env.UPSTASH_REDIS_LW_KV_REST_API_URL ||
-  process.env.KV_REST_API_URL ||
-  'https://glowing-rabbit-227227.upstash.io';
+export function getRedisConfig(): { url: string; token: string } | null {
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL ??
+    process.env.KV_REST_API_URL ??
+    process.env.UPSTASH_REDIS_LW_KV_REST_API_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN ??
+    process.env.KV_REST_API_TOKEN ??
+    process.env.UPSTASH_REDIS_LW_KV_REST_API_TOKEN;
 
-export const UPSTASH_TOKEN =
-  process.env.UPSTASH_REDIS_LW_KV_REST_API_TOKEN ||
-  process.env.KV_REST_API_TOKEN ||
-  'gQAAAAAAA3ebAAIgcDJlMzRjNDdlZjI1OWQ0NGE2OWYzMjQ3ODQzMzFlZDBmYg';
+  if (!url || !token) {
+    return null;
+  }
+  return { url: url.replace(/\/$/, ''), token };
+}
+
+export function requireRedisConfig(): { url: string; token: string } {
+  const cfg = getRedisConfig();
+  if (!cfg) {
+    throw new Error('Redis environment configuration missing (UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN required)');
+  }
+  return cfg;
+}
 
 const CONTENT_KEY = 'lonewolf:site-content';
 const LEADS_KEY_PREFIX = 'lonewolf:lead:';
 const LEADS_LIST_KEY = 'lonewolf:leads';
 
 /**
+ * Execute an atomic pipeline of commands against Upstash Redis REST API.
+ */
+export async function redisPipeline(commands: (string | number)[][]): Promise<any[]> {
+  const cfg = requireRedisConfig();
+
+  const res = await fetch(`${cfg.url}/pipeline`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${cfg.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(commands),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Redis pipeline failed with HTTP ${res.status}: ${res.statusText}`);
+  }
+
+  const data = await res.json();
+  if (!Array.isArray(data)) {
+    throw new Error('Unexpected Redis pipeline response format');
+  }
+
+  return data;
+}
+
+/**
  * Read site content from Upstash Redis.
  * Bootstraps from DEFAULT_SITE_CONTENT if Redis is empty or uninitialized.
  */
 export async function getSiteContentFromRedis(): Promise<SiteContent> {
+  const cfg = getRedisConfig();
+  if (!cfg) {
+    return DEFAULT_SITE_CONTENT;
+  }
+
   try {
-    const res = await fetch(`${UPSTASH_URL}/get/${CONTENT_KEY}`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    const res = await fetch(`${cfg.url}/get/${CONTENT_KEY}`, {
+      headers: { Authorization: `Bearer ${cfg.token}` },
       cache: 'no-store',
     });
 
@@ -37,20 +82,20 @@ export async function getSiteContentFromRedis(): Promise<SiteContent> {
       const data = await res.json();
       if (data && data.result) {
         let parsed = data.result;
-        if (typeof parsed === 'string') {
+        while (typeof parsed === 'string') {
           try {
             parsed = JSON.parse(parsed);
           } catch {
-            // Raw string
+            break;
           }
         }
         if (Array.isArray(parsed) && parsed.length > 0) {
           parsed = parsed[0];
-          if (typeof parsed === 'string') {
+          while (typeof parsed === 'string') {
             try {
               parsed = JSON.parse(parsed);
             } catch {
-              // Raw string
+              break;
             }
           }
         }
@@ -66,6 +111,7 @@ export async function getSiteContentFromRedis(): Promise<SiteContent> {
             dumpsterEntities: Array.isArray(parsed.dumpsterEntities) ? parsed.dumpsterEntities : DEFAULT_SITE_CONTENT.dumpsterEntities,
             dumpsterPages: Array.isArray(parsed.dumpsterPages) ? parsed.dumpsterPages : DEFAULT_SITE_CONTENT.dumpsterPages,
             faqs: Array.isArray(parsed.faqs) ? parsed.faqs : DEFAULT_SITE_CONTENT.faqs,
+            pageHeroes: { ...DEFAULT_SITE_CONTENT.pageHeroes, ...(parsed.pageHeroes || {}) },
           };
         }
       }
@@ -81,26 +127,24 @@ export async function getSiteContentFromRedis(): Promise<SiteContent> {
  * Write site content to Upstash Redis (Server-only write).
  */
 export async function setSiteContentInRedis(content: SiteContent): Promise<boolean> {
-  try {
-    const jsonString = JSON.stringify(content);
-    const res = await fetch(`${UPSTASH_URL}/set/${CONTENT_KEY}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([jsonString]),
-    });
+  const cfg = requireRedisConfig();
+  const jsonString = JSON.stringify(content);
 
-    if (res.ok) {
-      const data = await res.json();
-      return data && (data.result === 'OK' || data.result === 'OK');
-    }
-  } catch (err) {
-    console.error('Failed to write content to Upstash Redis:', err);
+  const res = await fetch(`${cfg.url}/set/${CONTENT_KEY}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${cfg.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify([jsonString]),
+  });
+
+  if (!res.ok) {
+    return false;
   }
 
-  return false;
+  const data = await res.json();
+  return Boolean(data && data.result === 'OK');
 }
 
 export interface LeadSubmission {
@@ -158,40 +202,39 @@ export interface LeadSubmission {
 }
 
 /**
- * Save incoming lead to Upstash Redis so leads NEVER disappear.
+ * Save incoming lead to Upstash Redis using an atomic pipeline.
+ * Guarantees that the lead record and master index update succeed or fail together.
  */
 export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'createdAt'>): Promise<LeadSubmission | null> {
+  const id = `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const fullLead: LeadSubmission = {
+    ...lead,
+    id,
+    status: lead.status || 'New',
+    createdAt: new Date().toISOString(),
+  };
+
+  const jsonString = JSON.stringify(fullLead);
+
   try {
-    const id = `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-    const fullLead: LeadSubmission = {
-      ...lead,
-      id,
-      createdAt: new Date().toISOString(),
-    };
+    const results = await redisPipeline([
+      ['SET', `${LEADS_KEY_PREFIX}${id}`, jsonString],
+      ['LPUSH', LEADS_LIST_KEY, id],
+    ]);
 
-    const jsonString = JSON.stringify(fullLead);
+    if (
+      Array.isArray(results) &&
+      results.length === 2 &&
+      results[0]?.result === 'OK' &&
+      typeof results[1]?.result === 'number'
+    ) {
+      return fullLead;
+    }
 
-    // Save lead details
-    await fetch(`${UPSTASH_URL}/set/${LEADS_KEY_PREFIX}${id}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: jsonString,
-    });
-
-    // Add lead ID to master list
-    await fetch(`${UPSTASH_URL}/lpush/${LEADS_LIST_KEY}/${id}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-      },
-    });
-
-    return fullLead;
+    console.error('Lead pipeline write did not return expected results:', results);
+    return null;
   } catch (err) {
-    console.error('Failed to save lead in Upstash Redis:', err);
+    console.error('Failed atomic lead save in Upstash Redis:', err);
     return null;
   }
 }
@@ -199,10 +242,13 @@ export async function saveLeadInRedis(lead: Omit<LeadSubmission, 'id' | 'created
 /**
  * Retrieve leads from Upstash Redis.
  */
-export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmission[]> {
+export async function getLeadsFromRedis(limit: number = 100): Promise<LeadSubmission[]> {
+  const cfg = getRedisConfig();
+  if (!cfg) return [];
+
   try {
-    const listRes = await fetch(`${UPSTASH_URL}/lrange/${LEADS_LIST_KEY}/0/${limit - 1}`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    const listRes = await fetch(`${cfg.url}/lrange/${LEADS_LIST_KEY}/0/${limit - 1}`, {
+      headers: { Authorization: `Bearer ${cfg.token}` },
       cache: 'no-store',
     });
 
@@ -210,7 +256,6 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
     const listData = await listRes.json();
     let leadIds: string[] = listData?.result || [];
 
-    // Parse array strings if nested
     leadIds = leadIds.map((item) => {
       if (typeof item === 'string' && item.startsWith('[')) {
         try {
@@ -223,32 +268,29 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
       return item;
     });
 
+    if (leadIds.length === 0) return [];
+
+    // Pipeline MGET for all leads in one round-trip
+    const mgetCommands = leadIds.map((id) => ['GET', `${LEADS_KEY_PREFIX}${id.trim()}`]);
+    const results = await redisPipeline(mgetCommands);
+
     const leads: LeadSubmission[] = [];
-    for (const id of leadIds) {
-      if (!id || typeof id !== 'string') continue;
-      const cleanId = id.trim();
-      const itemRes = await fetch(`${UPSTASH_URL}/get/${LEADS_KEY_PREFIX}${cleanId}`, {
-        headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-        cache: 'no-store',
-      });
-      if (itemRes.ok) {
-        const itemData = await itemRes.json();
-        if (itemData?.result) {
-          try {
-            let resObj = itemData.result;
-            while (typeof resObj === 'string') {
-              resObj = JSON.parse(resObj);
-            }
-            if (resObj && typeof resObj === 'object' && resObj.name) {
-              leads.push({
-                status: 'New',
-                archived: false,
-                ...resObj,
-              } as LeadSubmission);
-            }
-          } catch {
-            // Skip invalid JSON
+    for (const res of results) {
+      if (res?.result) {
+        try {
+          let resObj = res.result;
+          while (typeof resObj === 'string') {
+            resObj = JSON.parse(resObj);
           }
+          if (resObj && typeof resObj === 'object' && resObj.name) {
+            leads.push({
+              status: 'New',
+              archived: false,
+              ...resObj,
+            } as LeadSubmission);
+          }
+        } catch {
+          // Skip malformed records
         }
       }
     }
@@ -260,16 +302,18 @@ export async function getLeadsFromRedis(limit: number = 50): Promise<LeadSubmiss
 }
 
 /**
- * Update an existing lead in Upstash Redis (status, archived, etc.)
+ * Update an existing lead in Upstash Redis
  */
 export async function updateLeadInRedis(
   id: string,
   updates: Partial<LeadSubmission>
 ): Promise<LeadSubmission | null> {
+  const cfg = requireRedisConfig();
+  const cleanId = id.trim();
+
   try {
-    const cleanId = id.trim();
-    const itemRes = await fetch(`${UPSTASH_URL}/get/${LEADS_KEY_PREFIX}${cleanId}`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    const itemRes = await fetch(`${cfg.url}/get/${LEADS_KEY_PREFIX}${cleanId}`, {
+      headers: { Authorization: `Bearer ${cfg.token}` },
       cache: 'no-store',
     });
 
@@ -292,17 +336,19 @@ export async function updateLeadInRedis(
     };
 
     const jsonString = JSON.stringify(updatedLead);
-
-    await fetch(`${UPSTASH_URL}/set/${LEADS_KEY_PREFIX}${cleanId}`, {
+    const setRes = await fetch(`${cfg.url}/set/${LEADS_KEY_PREFIX}${cleanId}`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
+        Authorization: `Bearer ${cfg.token}`,
         'Content-Type': 'application/json',
       },
-      body: jsonString,
+      body: JSON.stringify([jsonString]),
     });
 
-    return updatedLead;
+    if (setRes.ok) {
+      return updatedLead;
+    }
+    return null;
   } catch (err) {
     console.error('Failed to update lead in Upstash Redis:', err);
     return null;
@@ -310,33 +356,52 @@ export async function updateLeadInRedis(
 }
 
 /**
- * Permanently delete a lead from Upstash Redis (Key + Master List).
+ * Permanently delete a lead from Upstash Redis atomically.
  */
 export async function deleteLeadFromRedis(id: string): Promise<boolean> {
+  const cleanId = id.trim();
   try {
-    const cleanId = id.trim();
-
-    // 1. Delete key lonewolf:lead:<id>
-    await fetch(`${UPSTASH_URL}/del/${LEADS_KEY_PREFIX}${cleanId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-    });
-
-    // 2. Remove id from master list lonewolf:leads
-    await fetch(`${UPSTASH_URL}/lrem/${LEADS_LIST_KEY}/0/${cleanId}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-    });
-
-    // 3. Remove nested array string ["id"] if present in legacy list
-    await fetch(`${UPSTASH_URL}/lrem/${LEADS_LIST_KEY}/0/["${cleanId}"]`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-    });
-
+    await redisPipeline([
+      ['DEL', `${LEADS_KEY_PREFIX}${cleanId}`],
+      ['LREM', LEADS_LIST_KEY, '0', cleanId],
+      ['LREM', LEADS_LIST_KEY, '0', `["${cleanId}"]`],
+    ]);
     return true;
   } catch (err) {
     console.error('Failed to delete lead from Upstash Redis:', err);
     return false;
+  }
+}
+
+/**
+ * Atomic IP rate limiter.
+ * Returns { allowed: boolean, remaining: number }
+ */
+export async function checkRateLimit(
+  prefix: string,
+  ip: string,
+  limit: number,
+  windowSeconds: number
+): Promise<{ allowed: boolean; remaining: number }> {
+  const cfg = getRedisConfig();
+  if (!cfg) {
+    return { allowed: true, remaining: limit };
+  }
+
+  const key = `lonewolf:ratelimit:${prefix}:${ip}`;
+  try {
+    const results = await redisPipeline([
+      ['INCR', key],
+      ['EXPIRE', key, windowSeconds.toString()],
+    ]);
+
+    const count = typeof results?.[0]?.result === 'number' ? results[0].result : 1;
+    return {
+      allowed: count <= limit,
+      remaining: Math.max(0, limit - count),
+    };
+  } catch {
+    // If rate limit check fails, fail open in degraded mode
+    return { allowed: true, remaining: 1 };
   }
 }

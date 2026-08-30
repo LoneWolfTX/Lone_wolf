@@ -23,22 +23,9 @@ async function fetchCanonicalSiteContent(): Promise<SiteContent> {
 
   fetchPromise = (async (): Promise<SiteContent> => {
     try {
-      // 1. Try Vercel + Upstash Redis server API route first
-      let res = await fetch('/api/admin/content?t=' + Date.now(), {
+      const res = await fetch('/api/content?t=' + Date.now(), {
         cache: 'no-store',
       }).catch(() => null);
-
-      // 2. Fallback to static JSON endpoint or PHP if Redis API is unavailable
-      if (!res || !res.ok) {
-        res = await fetch('/api/content.php?t=' + Date.now(), {
-          cache: 'no-store',
-        }).catch(() => null);
-      }
-      if (!res || !res.ok) {
-        res = await fetch('/api/site-content.json?t=' + Date.now(), {
-          cache: 'no-store',
-        }).catch(() => null);
-      }
 
       if (res && res.ok) {
         const data = await res.json().catch(() => null);

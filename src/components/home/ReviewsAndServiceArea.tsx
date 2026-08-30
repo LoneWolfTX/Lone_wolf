@@ -151,7 +151,7 @@ export const ReviewsAndServiceArea: React.FC = () => {
                 </h3>
               </div>
               <p style={{ fontSize: '0.84rem', color: '#64748b', margin: '0 0 12px 0', lineHeight: 1.4 }}>
-                Fast roll-off container delivery across Dallas, Tarrant, Denton, and Collin counties.
+                Fast roll-off container delivery across Dallas, Tarrant, and Denton Counties.
               </p>
 
               {/* City Pill Links */}

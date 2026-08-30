@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:acceptance": "node scratch/production_acceptance_smoke_test.js"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.22",
+    "@vercel/blob": "^2.8.0",
     "basic-ftp": "^6.2.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
@@ -21,9 +23,12 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.1.0",
     "typescript": "^5.7.0"
   }
 }

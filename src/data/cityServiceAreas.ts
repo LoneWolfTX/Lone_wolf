@@ -1150,59 +1150,5 @@ export const cityServiceAreas: CityServiceArea[] = [
       "Double Oak West"
     ],
     "active": true
-  },
-  {
-    "slug": "plano",
-    "cityName": "Plano",
-    "county": "Collin County",
-    "code": "PLN",
-    "zipCodes": [
-      "75024",
-      "75093",
-      "75075",
-      "75023",
-      "75025"
-    ],
-    "headline": "Dumpster Rental in Plano, TX",
-    "localIntro": "Reliable roll-off dumpster delivery and driveway-safe containers for Plano homeowners, remodelers, and commercial job sites.",
-    "keyProjects": [
-      "West Plano kitchen & bathroom remodels",
-      "Legacy West commercial renovations",
-      "Estate cleanouts & yard debris removal"
-    ],
-    "neighborhoods": [
-      "West Plano",
-      "Legacy West",
-      "Willow Bend",
-      "Deerfield",
-      "Kings Ridge"
-    ],
-    "active": true
-  },
-  {
-    "slug": "frisco",
-    "cityName": "Frisco",
-    "county": "Collin County",
-    "code": "FRS",
-    "zipCodes": [
-      "75034",
-      "75036",
-      "75035"
-    ],
-    "headline": "Dumpster Rental in Frisco, TX",
-    "localIntro": "Priority roll-off dumpster dispatch and driveway protection boards for Frisco residential developments and contractor projects.",
-    "keyProjects": [
-      "Residential renovations near The Star & Stonebriar",
-      "Commercial construction & build-outs",
-      "Garage clearouts & moving cleanups"
-    ],
-    "neighborhoods": [
-      "Stonebriar",
-      "Newman Village",
-      "Starwood",
-      "Phillips Creek Ranch",
-      "Main Street District"
-    ],
-    "active": true
   }
 ];

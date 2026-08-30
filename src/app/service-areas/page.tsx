@@ -42,7 +42,7 @@ export default function ServiceAreasPage() {
       <PageHero
         breadcrumbs={[
           { label: 'Home', href: '/' },
-          { label: 'Services Areas' },
+          { label: 'Service Areas' },
         ]}
         headlineWhite="PROUDLY SERVING"
         headlineRed="48 DFW CITIES & TOWNS"
@@ -385,7 +385,7 @@ export default function ServiceAreasPage() {
           {filteredCities.length === 0 && (
             <div style={{ textAlign: 'center', padding: '40px 20px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
               <p style={{ fontSize: '1rem', color: '#64748b', margin: 0 }}>
-                No cities found matching "{searchQuery}". We likely still service your area!
+                No cities found matching &quot;{searchQuery}&quot;. We likely still service your area!
               </p>
               <div style={{ marginTop: '14px' }}>
                 <a

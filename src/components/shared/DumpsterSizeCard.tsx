@@ -152,8 +152,6 @@ export const DumpsterSizeCard: React.FC<DumpsterSizeCardProps> = ({
           src={product.image}
           alt={product.imageAlt}
           fill
-          priority={true}
-          unoptimized={true}
           sizes="(min-width: 1200px) 380px, (min-width: 768px) 33vw, 100vw"
           style={{ objectFit: 'cover' }}
         />

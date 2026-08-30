@@ -89,6 +89,12 @@ export interface Lead {
 const defaultLeads: Lead[] = [];
 
 export default function AdminDashboardPage() {
+  const [authChecking, setAuthChecking] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
+
   const [activeTab, setActiveTab] = useState<
     'leads' | 'marketing' | 'homepage' | 'about' | 'images' | 'pricing' | 'dumpsters' | 'cards' | 'faqs' | 'guides'
   >('leads');
@@ -124,7 +130,7 @@ export default function AdminDashboardPage() {
   const fetchDocumentsForLead = async (leadId: string) => {
     try {
       const res = await fetch(`/api/admin/documents?leadId=${leadId}&t=${Date.now()}`, {
-        headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+        headers: { },
         cache: 'no-store',
       });
       const data = await res.json().catch(() => null);
@@ -152,7 +158,7 @@ export default function AdminDashboardPage() {
     setIsRefreshingLeads(true);
     try {
       const res = await fetch('/api/leads?t=' + Date.now(), {
-        headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+        headers: { },
         cache: 'no-store',
       });
       if (res.ok) {
@@ -178,7 +184,7 @@ export default function AdminDashboardPage() {
     fetch('/api/admin/content?t=' + Date.now(), { cache: 'no-store' })
       .then((res) => {
         if (res.ok) return res.json();
-        return fetch('/api/content.php?t=' + Date.now(), { cache: 'no-store' }).then((r) => r.json());
+        return null;
       })
       .then((data) => {
         if (data && typeof data === 'object' && (data.homepage || data.business)) {
@@ -191,8 +197,72 @@ export default function AdminDashboardPage() {
         console.warn('Using default content store:', err);
       });
 
-    fetchLeads();
+    checkAuthSession();
   }, []);
+
+  const checkAuthSession = async () => {
+    try {
+      const res = await fetch('/api/admin/auth/session', { cache: 'no-store' });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.authenticated) {
+        setAuthenticated(true);
+        fetchLeads();
+      } else {
+        setAuthenticated(false);
+      }
+    } catch {
+      setAuthenticated(false);
+    } finally {
+      setAuthChecking(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginPassword.trim()) return;
+
+    setLoggingIn(true);
+    setLoginError('');
+
+    try {
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: loginPassword }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (res.ok && data?.success) {
+        setAuthenticated(true);
+        setLoginPassword('');
+        fetchLeads();
+        // Load content
+        fetch('/api/admin/content?t=' + Date.now(), { cache: 'no-store' })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => {
+            if (d && (d.homepage || d.business)) {
+              const merged = { ...DEFAULT_SITE_CONTENT, ...d };
+              setSiteContent(merged);
+              setSavedServerContent(merged);
+            }
+          });
+      } else {
+        setLoginError(data?.error || 'Invalid admin credentials');
+      }
+    } catch {
+      setLoginError('Connection error. Please try again.');
+    } finally {
+      setLoggingIn(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+    } catch {}
+    setAuthenticated(false);
+  };
 
   // Update dirty state whenever siteContent changes relative to savedServerContent
   useEffect(() => {
@@ -213,7 +283,6 @@ export default function AdminDashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify(siteContent),
       });
@@ -268,15 +337,14 @@ export default function AdminDashboardPage() {
 
     const file = files[0];
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
 
     setUploadingImage(true);
 
     try {
-      const res = await fetch('/api/upload-image.php', {
+      const res = await fetch('/api/admin/upload-image', {
         method: 'POST',
         body: formData,
-        credentials: 'same-origin',
       });
 
       const data = await res.json();
@@ -412,7 +480,6 @@ export default function AdminDashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({ action: 'update_status', leadId, status: newStatus }),
       });
@@ -447,7 +514,6 @@ export default function AdminDashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({ action: archiveState ? 'archive' : 'restore', leadId }),
       });
@@ -480,7 +546,6 @@ export default function AdminDashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-Password': 'LoneWolf2026!',
         },
         body: JSON.stringify({ action: 'delete', leadId }),
       });
@@ -648,8 +713,8 @@ export default function AdminDashboardPage() {
               <span>View Website &rarr;</span>
             </Link>
 
-            <a
-              href="/admin/index.php?action=logout"
+            <button
+              onClick={handleLogout}
               style={{
                 backgroundColor: 'transparent',
                 color: '#94a3b8',
@@ -658,10 +723,12 @@ export default function AdminDashboardPage() {
                 fontSize: '0.8rem',
                 textDecoration: 'none',
                 fontWeight: 600,
+                border: 'none',
+                cursor: 'pointer',
               }}
             >
               Logout
-            </a>
+            </button>
 
           </div>
         </div>
@@ -897,7 +964,7 @@ export default function AdminDashboardPage() {
 
         {/* TAB: MARKETING PERFORMANCE DASHBOARD */}
         {activeTab === 'marketing' && (
-          <MarketingDashboard adminPassword="LoneWolf2026!" />
+          <MarketingDashboard  />
         )}
 
         {/* TAB 1: LEADS DASHBOARD */}
@@ -1201,7 +1268,7 @@ export default function AdminDashboardPage() {
                                   <span>📄</span>
                                   <span>
                                     {leadDocs.length === 1
-                                      ? `${leadDocs[0].docNumber} (${leadDocs[0].status})`
+                                      ? `${leadDocs[0].number} (${leadDocs[0].quoteStatus || leadDocs[0].invoiceStatus || leadDocs[0].type})`
                                       : `Documents (${leadDocs.length})`}
                                   </span>
                                 </button>
@@ -2859,12 +2926,13 @@ export default function AdminDashboardPage() {
                         ? { bg: '#082f49', border: '#0284c7', text: '#38bdf8' }
                         : { bg: '#052e16', border: '#16a34a', text: '#4ade80' };
 
+                    const docStatus = doc.quoteStatus || doc.invoiceStatus || 'Draft';
                     const statusColor =
-                      doc.status === 'Paid'
+                      docStatus === 'Paid'
                         ? { bg: '#14532d', text: '#4ade80' }
-                        : doc.status === 'Due' || doc.status === 'Overdue'
+                        : docStatus === 'Due' || docStatus === 'Overdue'
                         ? { bg: '#7f1d1d', text: '#fca5a5' }
-                        : doc.status === 'Accepted'
+                        : docStatus === 'Accepted'
                         ? { bg: '#16537e', text: '#38bdf8' }
                         : { bg: '#334155', text: '#cbd5e1' };
 
@@ -2900,10 +2968,10 @@ export default function AdminDashboardPage() {
                           </span>
                           <div>
                             <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.92rem' }}>
-                              {doc.docNumber}
+                              {doc.number}
                             </div>
                             <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '2px' }}>
-                              {doc.date || doc.createdAt?.slice(0, 10)} {doc.total ? `• Total: $${Number(doc.total).toFixed(2)}` : ''}
+                              {doc.issuedDate || doc.createdAt?.slice(0, 10)} {doc.total ? `• Total: $${Number(doc.total).toFixed(2)}` : ''}
                             </div>
                           </div>
                           <span
@@ -2916,7 +2984,7 @@ export default function AdminDashboardPage() {
                               fontWeight: 700,
                             }}
                           >
-                            {doc.status}
+                            {docStatus}
                           </span>
                         </div>
 
@@ -2949,11 +3017,11 @@ export default function AdminDashboardPage() {
                           <button
                             type="button"
                             onClick={async () => {
-                              if (!window.confirm(`Are you sure you want to permanently delete ${doc.type} ${doc.docNumber}?`)) return;
+                              if (!window.confirm(`Are you sure you want to permanently delete ${doc.type} ${doc.number}?`)) return;
                               try {
                                 const res = await fetch(`/api/admin/documents?docId=${encodeURIComponent(doc.id)}&leadId=${encodeURIComponent(historyModalLead.id)}&force=true`, {
                                   method: 'DELETE',
-                                  headers: { 'X-Admin-Password': 'LoneWolf2026!' },
+                                  headers: { },
                                 });
                                 const data = await res.json();
                                 if (data.success) {

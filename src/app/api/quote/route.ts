@@ -1,68 +1,89 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveLeadInRedis } from '@/lib/redis';
+import { saveLeadInRedis, checkRateLimit } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
 const RECIPIENT_EMAIL = 'lonewolfdumpsters@gmail.com';
 
+const VALID_SERVICES = new Set([
+  '15-yard-dumpster',
+  '20-yard-dumpster',
+  '25-yard-dumpster',
+  'commercial',
+  'contractor',
+  'junk-removal',
+  'other',
+]);
+
+const VALID_DURATIONS = new Set([
+  '3 Days',
+  '5 Days',
+  '7 Days',
+  '14 Days',
+  '30 Days',
+  'Custom',
+]);
+
 /**
  * POST /api/quote
- * Server-side lead intake & direct Resend email delivery pipeline.
+ * Atomic lead intake & verification endpoint with bot & rate protection.
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => null);
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown-ip';
 
-    if (!body || !body.name || !body.phone) {
+    // 1. IP Rate Limiting: max 5 quote requests per 10 minutes
+    const rate = await checkRateLimit('quote_submission', ip, 5, 10 * 60);
+    if (!rate.allowed) {
       return NextResponse.json(
-        { success: false, error: 'Full Name and Phone Number are required.' },
-        { status: 400 }
+        { success: false, error: 'Too many submissions from this IP. Please call or text (214) 876-0321 directly.' },
+        { status: 429 }
       );
     }
 
-    const {
-      name,
-      phone,
-      email = '',
-      deliveryAddress = '',
-      streetAddress = '',
-      city = '',
-      zip = '',
-      service = '20-yard-dumpster',
-      projectType = 'Home Cleanout',
-      preferredDate = 'As soon as possible',
-      rentalDuration = '7 Days',
-      notes = 'None provided',
-      leadMethod = 'Website Form',
-      firstTouchSource,
-      firstTouchMedium,
-      firstTouchCampaign,
-      firstTouchContent,
-      firstTouchTerm,
-      firstTouchLandingPage,
-      firstTouchReferrer,
-      firstTouchGclid,
-      firstTouchFbclid,
-      firstTouchAt,
-      lastTouchSource,
-      lastTouchMedium,
-      lastTouchCampaign,
-      lastTouchContent,
-      lastTouchTerm,
-      lastTouchLandingPage,
-      lastTouchReferrer,
-      lastTouchGclid,
-      lastTouchFbclid,
-      lastTouchAt,
-      normalizedSource,
-      reportingAttributionSource,
-      reportingAttributionCampaignId,
-      attributedCampaignId,
-    } = body;
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ success: false, error: 'Invalid JSON payload' }, { status: 400 });
+    }
 
-    const fullAddress = deliveryAddress || `${streetAddress} ${city} ${zip}`.trim() || 'DFW Metroplex';
+    // 2. Honeypot check: reject bot submissions
+    if (body._hp_website || body.hp_website_company) {
+      // Silently accept bots without persisting
+      return NextResponse.json({ success: true, leadId: 'lead_bot_filtered' });
+    }
 
-    // 1. DURABLE LEAD PERSISTENCE IN UPSTASH REDIS FIRST (Lead cannot disappear!)
+    // 3. Strict field validations
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    const phone = typeof body.phone === 'string' ? body.phone.trim() : '';
+    const email = typeof body.email === 'string' ? body.email.trim().slice(0, 120) : '';
+    const streetAddress = typeof body.streetAddress === 'string' ? body.streetAddress.trim() : '';
+    const city = typeof body.city === 'string' ? body.city.trim() : '';
+    const zip = typeof body.zip === 'string' ? body.zip.trim() : '';
+    const deliveryAddressRaw = typeof body.deliveryAddress === 'string' ? body.deliveryAddress.trim() : '';
+    const rawService = typeof body.service === 'string' ? body.service.trim().toLowerCase() : '20-yard-dumpster';
+    const projectType = typeof body.projectType === 'string' ? body.projectType.trim().slice(0, 100) : 'General Cleanout';
+    const preferredDate = typeof body.preferredDate === 'string' ? body.preferredDate.trim().slice(0, 50) : 'As soon as possible';
+    const rawDuration = typeof body.rentalDuration === 'string' ? body.rentalDuration.trim() : '7 Days';
+    const notes = typeof body.notes === 'string' ? body.notes.trim().slice(0, 1000) : '';
+
+    if (name.length < 2 || name.length > 100) {
+      return NextResponse.json({ success: false, error: 'Name must be between 2 and 100 characters.' }, { status: 400 });
+    }
+
+    const digitsOnly = phone.replace(/\D/g, '');
+    if (digitsOnly.length < 10 || digitsOnly.length > 15) {
+      return NextResponse.json({ success: false, error: 'Please enter a valid 10-digit phone number.' }, { status: 400 });
+    }
+
+    const fullAddress = deliveryAddressRaw || [streetAddress, city, zip].filter(Boolean).join(', ') || 'DFW Metroplex';
+    if (fullAddress.length < 3 || fullAddress.length > 200) {
+      return NextResponse.json({ success: false, error: 'Please provide a valid delivery address or city.' }, { status: 400 });
+    }
+
+    const service = VALID_SERVICES.has(rawService) ? rawService : '20-yard-dumpster';
+    const rentalDuration = VALID_DURATIONS.has(rawDuration) ? rawDuration : '7 Days';
+
+    // 4. ATOMIC DATABASE PERSISTENCE IN UPSTASH REDIS
     const savedLead = await saveLeadInRedis({
       name,
       phone,
@@ -73,118 +94,85 @@ export async function POST(req: NextRequest) {
       preferredDate,
       rentalDuration,
       notes,
-      leadMethod: leadMethod as any,
-      firstTouchSource,
-      firstTouchMedium,
-      firstTouchCampaign,
-      firstTouchContent,
-      firstTouchTerm,
-      firstTouchLandingPage,
-      firstTouchReferrer,
-      firstTouchGclid,
-      firstTouchFbclid,
-      firstTouchAt,
-      lastTouchSource,
-      lastTouchMedium,
-      lastTouchCampaign,
-      lastTouchContent,
-      lastTouchTerm,
-      lastTouchLandingPage,
-      lastTouchReferrer,
-      lastTouchGclid,
-      lastTouchFbclid,
-      lastTouchAt,
-      normalizedSource: normalizedSource || 'Direct',
-      reportingAttributionSource: reportingAttributionSource || normalizedSource || 'Direct',
-      reportingAttributionCampaignId,
-      attributedCampaignId,
+      leadMethod: body.leadMethod || 'Website Form',
+      firstTouchSource: body.firstTouchSource,
+      firstTouchMedium: body.firstTouchMedium,
+      firstTouchCampaign: body.firstTouchCampaign,
+      firstTouchContent: body.firstTouchContent,
+      firstTouchTerm: body.firstTouchTerm,
+      firstTouchLandingPage: body.firstTouchLandingPage,
+      firstTouchReferrer: body.firstTouchReferrer,
+      firstTouchGclid: body.firstTouchGclid,
+      firstTouchFbclid: body.firstTouchFbclid,
+      firstTouchAt: body.firstTouchAt,
+      lastTouchSource: body.lastTouchSource,
+      lastTouchMedium: body.lastTouchMedium,
+      lastTouchCampaign: body.lastTouchCampaign,
+      lastTouchContent: body.lastTouchContent,
+      lastTouchTerm: body.lastTouchTerm,
+      lastTouchLandingPage: body.lastTouchLandingPage,
+      lastTouchReferrer: body.lastTouchReferrer,
+      lastTouchGclid: body.lastTouchGclid,
+      lastTouchFbclid: body.lastTouchFbclid,
+      lastTouchAt: body.lastTouchAt,
+      normalizedSource: body.normalizedSource || 'Direct',
+      reportingAttributionSource: body.reportingAttributionSource || 'Direct',
+      reportingAttributionCampaignId: body.reportingAttributionCampaignId,
+      attributedCampaignId: body.attributedCampaignId,
     });
 
-    const leadId = savedLead ? savedLead.id : `lead_${Date.now()}`;
+    if (!savedLead) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to record quote request in persistent storage. Please call or text (214) 876-0321 directly.',
+        },
+        { status: 500 }
+      );
+    }
 
-    const emailStatus = {
-      status: 'pending',
-      provider: 'Resend API',
-      recipient: RECIPIENT_EMAIL,
-      error: null as string | null,
-    };
-
-    const smsStatus = {
-      status: 'NOT_IMPLEMENTED',
-      provider: 'Paid Provider Required',
-      note: 'Native SMS omitted due to zero-recurring-cost requirement',
-    };
-
-    // 2. DIRECT SERVER-SIDE EMAIL DELIVERY (Resend Vercel API)
+    // 5. EMAIL NOTIFICATION DISPATCH (Non-blocking / Resend)
     const resendApiKey = process.env.RESEND_API_KEY;
-
     if (resendApiKey) {
       try {
-        const resendRes = await fetch('https://api.resend.com/emails', {
+        await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${resendApiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Lone Wolf Dumpsters <onboarding@resend.dev>',
-            to: [RECIPIENT_EMAIL],
-            subject: `🐺 New Quote Request: ${name} (${phone})`,
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; color: #1e293b;">
-                <h2 style="color: #d97706; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-                  🐺 New Lone Wolf Dumpster Quote Lead
-                </h2>
-                <p><strong>Lead ID:</strong> <code>${leadId}</code></p>
-                <p><strong>Customer Name:</strong> ${name}</p>
-                <p><strong>Phone Number:</strong> <a href="tel:${phone}">${phone}</a></p>
-                <p><strong>Email:</strong> ${email ? `<a href="mailto:${email}">${email}</a>` : 'Not provided'}</p>
-                <p><strong>Delivery Address:</strong> ${fullAddress}</p>
-                <p><strong>Dumpster Size / Service:</strong> ${service}</p>
-                <p><strong>Rental Duration Needed:</strong> ${rentalDuration}</p>
-                <p><strong>Project Type:</strong> ${projectType}</p>
-                <p><strong>Preferred Date:</strong> ${preferredDate}</p>
-                <p><strong>Customer Notes:</strong> ${notes || 'None'}</p>
-                <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 20px 0;" />
-                <p style="font-size: 0.85rem; color: #64748b;">
-                  This lead is stored permanently in Upstash Redis and accessible in Admin Studio.
-                </p>
-              </div>
-            `,
+            from: 'Lone Wolf Leads <leads@lonewolfdumpsters.com>',
+            to: RECIPIENT_EMAIL,
+            subject: `🐺 NEW LEAD: ${name} (${service.toUpperCase()}) - ${fullAddress}`,
+            text: `New Dumpster Quote Request
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Address: ${fullAddress}
+Service: ${service}
+Project: ${projectType}
+Date: ${preferredDate}
+Duration: ${rentalDuration}
+Notes: ${notes}
+
+Lead ID: ${savedLead.id}`,
           }),
         });
-
-        const resendData = await resendRes.json().catch(() => null);
-
-        if (resendRes.ok && resendData?.id) {
-          emailStatus.status = 'sent';
-          emailStatus.recipient = RECIPIENT_EMAIL;
-          emailStatus.error = null;
-        } else {
-          emailStatus.status = 'failed';
-          emailStatus.error = resendData?.message || `Resend API returned HTTP ${resendRes.status}`;
-        }
-      } catch (err: any) {
-        emailStatus.status = 'failed';
-        emailStatus.error = err.message || 'Resend network error';
+      } catch (emailErr) {
+        console.error('Email dispatch non-fatal error:', emailErr);
       }
-    } else {
-      emailStatus.status = 'requires_api_key';
-      emailStatus.error = 'RESEND_API_KEY environment variable not set in Vercel. Lead saved to Redis database.';
     }
 
-    // 3. RETURN STRUCTURED PIPELINE RESPONSE
     return NextResponse.json({
       success: true,
-      leadId,
-      message: 'Quote request received and saved to Upstash Redis database.',
-      email: emailStatus,
-      sms: smsStatus,
-      leadSaved: !!savedLead,
+      leadId: savedLead.id,
+      message: 'Quote request received successfully. We will follow up shortly!',
     });
   } catch (err: any) {
     return NextResponse.json(
-      { success: false, error: err.message || 'Server error processing quote submission.' },
+      { success: false, error: 'Server error: ' + err.message },
       { status: 500 }
     );
   }
