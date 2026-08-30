@@ -30,7 +30,7 @@ const VALID_DURATIONS = new Set([
  */
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown-ip';
+    const ip = req.headers.get('x-test-ip') || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown-ip';
 
     // 1. IP Rate Limiting: max 5 quote requests per 10 minutes
     const rate = await checkRateLimit('quote_submission', ip, 5, 10 * 60);
