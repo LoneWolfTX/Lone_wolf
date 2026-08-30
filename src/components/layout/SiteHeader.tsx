@@ -78,11 +78,12 @@ export const SiteHeader: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            height: '96px',
+            minHeight: '128px',
+            padding: '12px 0',
             gap: '16px',
           }}
         >
-          {/* Logo on Left - Enlarged & High Visibility */}
+          {/* Logo on Left - Extra Large & High Visibility */}
           <Link
             href="/"
             className="header-logo-link"
@@ -90,27 +91,18 @@ export const SiteHeader: React.FC = () => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '14px',
+              gap: '16px',
               textDecoration: 'none',
               flexShrink: 0,
             }}
           >
-            <div
-              className="header-logo-icon"
-              style={{
-                position: 'relative',
-                width: '84px',
-                height: '84px',
-                flexShrink: 0,
-                filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))',
-              }}
-            >
+            <div className="header-logo-icon">
               <Image
                 src="/images/lone-wolf/logo.png"
                 alt="Lone Wolf Dumpsters Logo"
                 fill
                 priority
-                sizes="84px"
+                sizes="(max-width: 768px) 88px, 120px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
@@ -119,7 +111,7 @@ export const SiteHeader: React.FC = () => {
                 className="header-logo-text"
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.5rem, 4.5vw, 2.05rem)',
+                  fontSize: 'clamp(1.6rem, 4.5vw, 2.3rem)',
                   fontWeight: 900,
                   letterSpacing: '0.6px',
                   color: '#ffffff',
@@ -133,10 +125,10 @@ export const SiteHeader: React.FC = () => {
                 className="header-logo-tagline"
                 style={{
                   display: 'block',
-                  fontSize: '0.78rem',
+                  fontSize: '0.82rem',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  letterSpacing: '1.2px',
+                  letterSpacing: '1.4px',
                   marginTop: '4px',
                   fontWeight: 700,
                 }}

@@ -3125,3 +3125,34 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		print-color-adjust: exact;
 		}
 	}
+
+/* Header Corner Logo Responsive Dimensions */
+.header-logo-icon {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
+  transition: transform 0.2s ease;
+}
+
+@media (max-width: 1024px) {
+  .header-logo-icon {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-logo-icon {
+    width: 88px;
+    height: 88px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo-icon {
+    width: 76px;
+    height: 76px;
+  }
+}
