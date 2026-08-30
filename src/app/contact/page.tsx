@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
-import { PageHero } from '@/components/shared/PageHero';
-import { FreeQuoteForm } from '@/components/shared/FreeQuoteForm';
-import { ClosingCtaBanner } from '@/components/shared/ClosingCtaBanner';
+import ContactClient from './ContactClient';
 
 export const metadata: Metadata = {
   title: 'Contact Us & Book Online | Lone Wolf Dumpsters DFW',
@@ -12,32 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return (
-    <>
-      {/* 1. Target-Style Hero */}
-      <PageHero
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Contact & Quote' },
-        ]}
-        headlineWhite="CONTACT US &amp;"
-        headlineRed="GET A QUOTE"
-        description="Ready to schedule your dumpster rental? Request a free quote below or call Wayne directly for instant dispatch confirmation across Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
-        imageObjectPosition="center right"
-      />
-
-      {/* 2. Full 2-Column Contact & Quote Form Section */}
-      <FreeQuoteForm id="quote" />
-
-      {/* 3. Closing CTA */}
-      <ClosingCtaBanner
-        headline="NEED IMMEDIATE ASSISTANCE?"
-        subheadline="CALL OR TEXT (214) 876-0321"
-        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpster Service"
-      />
-    </>
-  );
+  return <ContactClient />;
 }

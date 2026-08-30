@@ -29,6 +29,12 @@ export default function AboutPageClient() {
     position: 'center top'
   };
 
+  const heroImg = content.pageHeroes?.about || {
+    src: '/images/lone-wolf/lone_wolf_hero_top.png',
+    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    position: 'center right'
+  };
+
   return (
     <>
       {/* 1. Target-Style Hero */}
@@ -40,9 +46,9 @@ export default function AboutPageClient() {
         headlineWhite={ab.titleWhite}
         headlineRed={ab.titleRed}
         description={ab.heroDescription}
-        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
-        imageObjectPosition="center right"
+        imageSrc={heroImg.src}
+        imageAlt={heroImg.alt}
+        imageObjectPosition={heroImg.position || 'center right'}
       />
 
       {/* 2. Owner Story & Values Section */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCommercialCards } from '@/lib/useEditableContent';
+import { useCommercialCards, useSiteContent } from '@/lib/useEditableContent';
 import { PageHero } from '@/components/shared/PageHero';
 import { BenefitIconGrid, BenefitItem } from '@/components/shared/BenefitIconGrid';
 import { DumpsterSizeGrid } from '@/components/shared/DumpsterSizeGrid';
@@ -32,7 +32,14 @@ const INDUSTRY_ICONS: Record<string, React.ReactNode> = {
 };
 
 export default function CommercialPageClient() {
+  const { content: siteContent } = useSiteContent();
   const industryCards = useCommercialCards();
+
+  const heroImg = siteContent.pageHeroes?.commercial || siteContent.homepage?.commercialHeaderImage || {
+    src: '/images/lone-wolf/lone_wolf_hero_debris.png',
+    alt: 'Black roll-off dumpster loaded with renovation and cleanup debris',
+    position: 'center center'
+  };
 
   const commercialBenefits: BenefitItem[] = [
     {
@@ -81,9 +88,9 @@ export default function CommercialPageClient() {
         headlineWhite="COMMERCIAL"
         headlineRed="DUMPSTER RENTALS"
         description="Reliable waste solutions for your business, job site or facility. Whether it's ongoing service or a one-time cleanout, we've got you covered."
-        imageSrc="/images/lone-wolf/lone_wolf_hero_debris.png"
-        imageAlt="Black roll-off dumpster loaded with renovation and cleanup debris"
-        imageObjectPosition="center center"
+        imageSrc={heroImg.src}
+        imageAlt={heroImg.alt}
+        imageObjectPosition={heroImg.position || 'center center'}
       />
 
       {/* 2. "Built for Your Business" Benefit Strip */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useContractorCards } from '@/lib/useEditableContent';
+import { useContractorCards, useSiteContent } from '@/lib/useEditableContent';
 import { PageHero } from '@/components/shared/PageHero';
 import { BenefitIconGrid, BenefitItem } from '@/components/shared/BenefitIconGrid';
 import { DumpsterSizeGrid } from '@/components/shared/DumpsterSizeGrid';
@@ -11,7 +11,14 @@ import { siteSettings } from '@/data/siteSettings';
 import { Clock, Tag, Truck, ShieldCheck, Headphones } from 'lucide-react';
 
 export default function ContractorPageClient() {
+  const { content: siteContent } = useSiteContent();
   const tradeCards = useContractorCards();
+
+  const heroImg = siteContent.pageHeroes?.contractor || siteContent.homepage?.contractorHeaderImage || {
+    src: '/images/lone-wolf/lone_wolf_hero_construction.png',
+    alt: 'Black roll-off dumpster at a residential construction job site',
+    position: 'center center'
+  };
 
   const contractorBenefits: BenefitItem[] = [
     {
@@ -59,9 +66,9 @@ export default function ContractorPageClient() {
         headlineWhite="DUMPSTER RENTALS"
         headlineRed="CONTRACTOR & COMMERCIAL DUMPSTERS"
         description="Keep your job site clean, safe, and efficient. Direct dispatch, reliable scheduled delivery windows, and same-day swaps across Dallas–Fort Worth."
-        imageSrc="/images/lone-wolf/lone_wolf_hero_construction.png"
-        imageAlt="Black roll-off dumpster at a residential construction job site"
-        imageObjectPosition="center center"
+        imageSrc={heroImg.src}
+        imageAlt={heroImg.alt}
+        imageObjectPosition={heroImg.position || 'center center'}
       />
 
       {/* 2. "A Partner You Can Count On" Benefit Strip */}

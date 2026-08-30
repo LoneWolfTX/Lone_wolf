@@ -5,6 +5,10 @@ export interface StockImageItem {
 }
 
 export const EXISTING_IMAGE_LIBRARY: StockImageItem[] = [
+  // Approved Real Lone Wolf Photos
+  { src: '/images/lone-wolf/hero_tile_top.jpg', name: 'Wayne Standing with Dumpsters (Hero Top Tile)', category: 'real' },
+  { src: '/images/lone-wolf/hero_tile_bottom.jpg', name: 'Fleet Lineup in Colleyville Yard (Hero Bottom Tile)', category: 'real' },
+
   // Approved Hero & Core Identity Set
   { src: '/images/lone-wolf/lone_wolf_hero_top.png', name: 'Approved Main Hero - Truck & Dumpster', category: 'real' },
   { src: '/images/lone-wolf/lone_wolf_hero_residential.png', name: 'Approved Residential Hero - Driveway Container', category: 'real' },

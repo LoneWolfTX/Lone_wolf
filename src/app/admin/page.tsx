@@ -137,7 +137,8 @@ export default function AdminDashboardPage() {
   // Image Library Picker Modal State
   const [libraryModalOpen, setLibraryModalOpen] = useState(false);
   const [activeImageSlotTarget, setActiveImageSlotTarget] = useState<{
-    type: 'homepage_hero' | 'homepage_showcase' | 'homepage_closing' | 'about_owner' | 'dumpster_page';
+    type: string;
+    pageKey?: string;
     dumpsterId?: string;
   } | null>(null);
   const [libraryFilterCategory, setLibraryFilterCategory] = useState<string>('all');
@@ -260,7 +261,7 @@ export default function AdminDashboardPage() {
   // Upload image handler
   const handleFileUploadForSlot = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    slotTarget?: { type: string; dumpsterId?: string }
+    slotTarget?: { type: string; pageKey?: string; dumpsterId?: string }
   ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -304,20 +305,45 @@ export default function AdminDashboardPage() {
   const applyImageToSlot = (
     src: string,
     altDefault: string,
-    targetOverride?: { type: string; dumpsterId?: string }
+    targetOverride?: { type: string; pageKey?: string; dumpsterId?: string }
   ) => {
     const target = targetOverride || activeImageSlotTarget;
     if (!target) return;
 
-    if (target.type === 'homepage_hero') {
+    if (target.type === 'homepage_hero_top') {
       setSiteContent({
         ...siteContent,
         homepage: {
           ...siteContent.homepage,
-          heroImage: {
-            ...siteContent.homepage.heroImage,
+          heroTopImage: {
+            ...siteContent.homepage.heroTopImage,
             src,
-            alt: siteContent.homepage.heroImage?.alt || altDefault,
+            alt: siteContent.homepage.heroTopImage?.alt || altDefault,
+          },
+        },
+      });
+    } else if (target.type === 'homepage_hero_bottom') {
+      setSiteContent({
+        ...siteContent,
+        homepage: {
+          ...siteContent.homepage,
+          heroBottomImage: {
+            ...siteContent.homepage.heroBottomImage,
+            src,
+            alt: siteContent.homepage.heroBottomImage?.alt || altDefault,
+          },
+        },
+      });
+    } else if (target.type === 'page_hero' && target.pageKey) {
+      const pKey = target.pageKey as keyof typeof siteContent.pageHeroes;
+      setSiteContent({
+        ...siteContent,
+        pageHeroes: {
+          ...siteContent.pageHeroes,
+          [pKey]: {
+            ...(siteContent.pageHeroes?.[pKey] || {}),
+            src,
+            alt: siteContent.pageHeroes?.[pKey]?.alt || altDefault,
           },
         },
       });
@@ -357,65 +383,18 @@ export default function AdminDashboardPage() {
           },
         },
       });
-    } else if (target.type === 'commercial_header') {
-      setSiteContent({
-        ...siteContent,
-        homepage: {
-          ...siteContent.homepage,
-          commercialHeaderImage: {
-            src,
-            alt: siteContent.homepage.commercialHeaderImage?.alt || altDefault,
-            position: 'center center',
-          },
-        },
-      });
-    } else if (target.type === 'contractor_header') {
-      setSiteContent({
-        ...siteContent,
-        homepage: {
-          ...siteContent.homepage,
-          contractorHeaderImage: {
-            src,
-            alt: siteContent.homepage.contractorHeaderImage?.alt || altDefault,
-            position: 'center center',
-          },
-        },
-      });
-    } else if (target.type === 'residential_header') {
-      setSiteContent({
-        ...siteContent,
-        homepage: {
-          ...siteContent.homepage,
-          residentialHeaderImage: {
-            src,
-            alt: siteContent.homepage.residentialHeaderImage?.alt || altDefault,
-            position: 'center center',
-          },
-        },
-      });
-    } else if (target.type === 'dumpster_page' && target.dumpsterId) {
-      const updatedPages = siteContent.dumpsterPages.map((p) => {
-        if (p.id === target.dumpsterId) {
-          return {
-            ...p,
-            image: {
-              src,
-              alt: p.image?.alt || altDefault,
-              position: p.image?.position || 'center center',
-            },
-          };
-        }
-        return p;
-      });
-      setSiteContent({ ...siteContent, dumpsterPages: updatedPages });
     }
 
     setLibraryModalOpen(false);
   };
 
   // Helper to open library modal for specific slot
-  const openLibraryModalForSlot = (type: any, dumpsterId?: string) => {
-    setActiveImageSlotTarget({ type, dumpsterId });
+  const openLibraryModalForSlot = (target: { type: string; pageKey?: string; dumpsterId?: string } | string, pageKey?: string) => {
+    if (typeof target === 'string') {
+      setActiveImageSlotTarget({ type: target, pageKey });
+    } else {
+      setActiveImageSlotTarget(target);
+    }
     setLibraryModalOpen(true);
   };
 
@@ -1584,299 +1563,385 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 3: VISUAL IMAGE MANAGER & LIBRARY PICKER */}
+                {/* TAB 3: VISUAL IMAGE MANAGER & PUBLIC PAGE HEROES */}
         {activeTab === 'images' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
               <div>
                 <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                  VISUAL IMAGE MANAGER &amp; FOCAL POSITIONING
+                  WEBSITE IMAGES &amp; HEROES MANAGER
                 </h1>
                 <p style={{ fontSize: '0.86rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                  Assign images to key site slots, upload new files, or choose from existing library photos without typing file paths manually.
+                  Assign images to Home Hero stacked tiles, public page headers, and marketing callouts. Wayne can upload new photos or pick from the authentic photo library.
                 </p>
               </div>
             </div>
 
-            {/* Editable Image Slots Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
-              
-              {/* Slot 1: Homepage Hero Image */}
-              <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                    Homepage Hero Image
-                  </h3>
-                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-                    Slot: Hero Main
-                  </span>
-                </div>
+            {/* GROUP 1: HOME HERO TWO-IMAGE TILES */}
+            <div style={{ marginBottom: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-red)', margin: 0, textTransform: 'uppercase' }}>
+                  1. Home Hero — Two Stacked Image Tiles
+                </h2>
+                <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>Rendered vertically on Homepage right side</span>
+              </div>
 
-                {/* Preview Box */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
-                  <Image
-                    src={siteContent.homepage.heroImage?.src || '/images/lone-wolf/real/hero_main.jpg'}
-                    alt={siteContent.homepage.heroImage?.alt || 'Hero Image'}
-                    fill
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: siteContent.homepage.heroImage?.position || 'center center',
-                    }}
-                  />
-                  <div style={{ position: 'absolute', bottom: '8px', right: '8px', backgroundColor: 'rgba(0,0,0,0.85)', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', color: '#fff', fontWeight: 700 }}>
-                    Focal: {siteContent.homepage.heroImage?.position || 'center center'}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+                
+                {/* Slot: Home Hero Top Image */}
+                <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      Home Hero — Top Image
+                    </h3>
+                    <span style={{ fontSize: '0.72rem', color: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
+                      Top Tile
+                    </span>
+                  </div>
+
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 7.8', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
+                    <Image
+                      src={siteContent.homepage?.heroTopImage?.src || '/images/lone-wolf/hero_tile_top.jpg'}
+                      alt={siteContent.homepage?.heroTopImage?.alt || 'Top Hero Image'}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      onClick={() => openLibraryModalForSlot({ type: 'homepage_hero_top' })}
+                      style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                    >
+                      <ImageIcon size={14} />
+                      <span>Choose from Library</span>
+                    </button>
+                    <label
+                      style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                    >
+                      <Upload size={14} />
+                      <span>Upload New</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUploadForSlot(e, { type: 'homepage_hero_top' })}
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
+                      Image Alt Text
+                    </label>
+                    <input
+                      type="text"
+                      value={siteContent.homepage?.heroTopImage?.alt || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        homepage: {
+                          ...siteContent.homepage,
+                          heroTopImage: { ...(siteContent.homepage?.heroTopImage || {}), alt: e.target.value }
+                        }
+                      })}
+                      style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
+                    />
                   </div>
                 </div>
 
-                {/* Controls */}
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    onClick={() => openLibraryModalForSlot('homepage_hero')}
-                    style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <ImageIcon size={14} />
-                    <span>Choose from Library</span>
-                  </button>
-                  <label
-                    style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <Upload size={14} />
-                    <span>Upload New</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleFileUploadForSlot(e, { type: 'homepage_hero' })}
+                {/* Slot: Home Hero Bottom Image */}
+                <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      Home Hero — Bottom Image
+                    </h3>
+                    <span style={{ fontSize: '0.72rem', color: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
+                      Bottom Tile
+                    </span>
+                  </div>
+
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 7.8', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
+                    <Image
+                      src={siteContent.homepage?.heroBottomImage?.src || '/images/lone-wolf/hero_tile_bottom.jpg'}
+                      alt={siteContent.homepage?.heroBottomImage?.alt || 'Bottom Hero Image'}
+                      fill
+                      style={{ objectFit: 'cover' }}
                     />
-                  </label>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      onClick={() => openLibraryModalForSlot({ type: 'homepage_hero_bottom' })}
+                      style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                    >
+                      <ImageIcon size={14} />
+                      <span>Choose from Library</span>
+                    </button>
+                    <label
+                      style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                    >
+                      <Upload size={14} />
+                      <span>Upload New</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUploadForSlot(e, { type: 'homepage_hero_bottom' })}
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
+                      Image Alt Text
+                    </label>
+                    <input
+                      type="text"
+                      value={siteContent.homepage?.heroBottomImage?.alt || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        homepage: {
+                          ...siteContent.homepage,
+                          heroBottomImage: { ...(siteContent.homepage?.heroBottomImage || {}), alt: e.target.value }
+                        }
+                      })}
+                      style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
+                    />
+                  </div>
                 </div>
 
-                {/* Alt Text & Focal Position */}
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Image Alt Text
-                  </label>
-                  <input
-                    type="text"
-                    value={siteContent.homepage.heroImage?.alt || ''}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        heroImage: { ...siteContent.homepage.heroImage, alt: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  />
-                </div>
+              </div>
+            </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Focal Alignment / Object Position
-                  </label>
-                  <select
-                    value={siteContent.homepage.heroImage?.position || 'center center'}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        heroImage: { ...siteContent.homepage.heroImage, position: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  >
-                    <option value="center center">Center (Default)</option>
-                    <option value="top center">Top Center</option>
-                    <option value="bottom center">Bottom Center</option>
-                    <option value="left center">Left Center</option>
-                    <option value="right center">Right Center</option>
-                    <option value="center 30%">Top 30%</option>
-                    <option value="center 70%">Bottom 70%</option>
-                  </select>
-                </div>
+            {/* GROUP 2: PUBLIC PAGE HEROES */}
+            <div style={{ marginBottom: '36px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-red)', margin: 0, textTransform: 'uppercase' }}>
+                  2. Public Page Hero Images
+                </h2>
+                <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>Hero image headers across all public pages</span>
               </div>
 
-              {/* Slot 2: Homepage Showcase Callout Image */}
-              <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                    Showcase Callout Image
-                  </h3>
-                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-                    Slot: Junk Removal Callout
-                  </span>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                {[
+                  { key: 'dumpsterRentals', title: 'Dumpster Rentals Hero', route: '/dumpster-rentals', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                  { key: 'fifteenYard', title: '15 Yard Dumpster Hero', route: '/dumpster-rentals/15-yard', defaultSrc: '/images/lone-wolf/lone_wolf_hero_residential.png' },
+                  { key: 'twentyYard', title: '20 Yard Dumpster Hero', route: '/dumpster-rentals/20-yard', defaultSrc: '/images/lone-wolf/lone_wolf_hero_construction.png' },
+                  { key: 'twentyFiveYard', title: '25 Yard Dumpster Hero', route: '/dumpster-rentals/25-yard', defaultSrc: '/images/lone-wolf/lone_wolf_hero_debris.png' },
+                  { key: 'residential', title: 'Residential Services Hero', route: '/dumpster-rentals/residential', defaultSrc: '/images/lone-wolf/lone_wolf_hero_residential.png' },
+                  { key: 'contractor', title: 'Contractor Services Hero', route: '/dumpster-rentals/contractor', defaultSrc: '/images/lone-wolf/lone_wolf_hero_construction.png' },
+                  { key: 'commercial', title: 'Commercial Services Hero', route: '/dumpster-rentals/commercial', defaultSrc: '/images/lone-wolf/lone_wolf_hero_debris.png' },
+                  { key: 'junkRemoval', title: 'Junk Removal Hero', route: '/junk-removal', defaultSrc: '/images/lone-wolf/lone_wolf_hero_debris.png' },
+                  { key: 'areasServed', title: 'Service Areas Hero', route: '/service-areas', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                  { key: 'about', title: 'About Lone Wolf Hero', route: '/about', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                  { key: 'guides', title: 'Guides & Resources Hero', route: '/blog', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                  { key: 'contact', title: 'Contact & Quote Hero', route: '/contact', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                ].map((slot) => {
+                  const imgObj = (siteContent.pageHeroes as any)?.[slot.key] || { src: slot.defaultSrc, alt: slot.title };
+                  return (
+                    <div key={slot.key} style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                          {slot.title}
+                        </h3>
+                        <span style={{ fontSize: '0.7rem', color: '#94a3b8', backgroundColor: '#1e293b', padding: '2px 6px', borderRadius: '4px' }}>
+                          {slot.route}
+                        </span>
+                      </div>
 
-                {/* Preview Box */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
-                  <Image
-                    src={siteContent.homepage.showcaseImage?.src || '/images/lone-wolf/real/hero_fleet_environment.jpg'}
-                    alt={siteContent.homepage.showcaseImage?.alt || 'Showcase Image'}
-                    fill
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: siteContent.homepage.showcaseImage?.position || 'center center',
-                    }}
-                  />
-                </div>
+                      <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
+                        <Image
+                          src={imgObj.src || slot.defaultSrc}
+                          alt={imgObj.alt || slot.title}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
 
-                {/* Controls */}
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    onClick={() => openLibraryModalForSlot('homepage_showcase')}
-                    style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <ImageIcon size={14} />
-                    <span>Choose from Library</span>
-                  </button>
-                  <label
-                    style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <Upload size={14} />
-                    <span>Upload New</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleFileUploadForSlot(e, { type: 'homepage_showcase' })}
-                    />
-                  </label>
-                </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          onClick={() => openLibraryModalForSlot({ type: 'page_hero', pageKey: slot.key })}
+                          style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                        >
+                          <ImageIcon size={13} />
+                          <span>Choose</span>
+                        </button>
+                        <label
+                          style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                        >
+                          <Upload size={13} />
+                          <span>Upload</span>
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleFileUploadForSlot(e, { type: 'page_hero', pageKey: slot.key })}
+                          />
+                        </label>
+                      </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Image Alt Text
-                  </label>
-                  <input
-                    type="text"
-                    value={siteContent.homepage.showcaseImage?.alt || ''}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        showcaseImage: { ...siteContent.homepage.showcaseImage, alt: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  />
-                </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', marginBottom: '2px' }}>
+                          Alt Text
+                        </label>
+                        <input
+                          type="text"
+                          value={imgObj.alt || ''}
+                          onChange={(e) => {
+                            setSiteContent({
+                              ...siteContent,
+                              pageHeroes: {
+                                ...siteContent.pageHeroes,
+                                [slot.key]: { ...(siteContent.pageHeroes as any)?.[slot.key], alt: e.target.value }
+                              }
+                            });
+                          }}
+                          style={{ width: '100%', padding: '6px 8px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Focal Alignment / Object Position
-                  </label>
-                  <select
-                    value={siteContent.homepage.showcaseImage?.position || 'center center'}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        showcaseImage: { ...siteContent.homepage.showcaseImage, position: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  >
-                    <option value="center center">Center (Default)</option>
-                    <option value="top center">Top Center</option>
-                    <option value="bottom center">Bottom Center</option>
-                    <option value="left center">Left Center</option>
-                    <option value="right center">Right Center</option>
-                  </select>
-                </div>
+            {/* GROUP 3: FEATURE CALLOUT & STORY IMAGES */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-red)', margin: 0, textTransform: 'uppercase' }}>
+                  3. Feature Callouts &amp; Story Images
+                </h2>
+                <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>Marketing callouts and owner photos</span>
               </div>
 
-              {/* Slot 3: About Page Owner Photo */}
-              <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                    About Page Owner Photo
-                  </h3>
-                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.15)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-                    Slot: Owner Photo
-                  </span>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                
+                {/* Showcase Debris Callout */}
+                <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      Showcase Debris Callout
+                    </h3>
+                    <span style={{ fontSize: '0.7rem', color: '#94a3b8', backgroundColor: '#1e293b', padding: '2px 6px', borderRadius: '4px' }}>
+                      Home Section
+                    </span>
+                  </div>
 
-                {/* Preview Box */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
-                  <Image
-                    src={siteContent.homepage.aboutOwnerImage?.src || '/images/lone-wolf/real/about_owner_photo.jpg'}
-                    alt={siteContent.homepage.aboutOwnerImage?.alt || 'Wayne Owner'}
-                    fill
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: siteContent.homepage.aboutOwnerImage?.position || 'center top',
-                    }}
-                  />
-                </div>
-
-                {/* Controls */}
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    onClick={() => openLibraryModalForSlot('about_owner')}
-                    style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <ImageIcon size={14} />
-                    <span>Choose from Library</span>
-                  </button>
-                  <label
-                    style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '8px 12px', borderRadius: '4px', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                  >
-                    <Upload size={14} />
-                    <span>Upload New</span>
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      style={{ display: 'none' }}
-                      onChange={(e) => handleFileUploadForSlot(e, { type: 'about_owner' })}
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
+                    <Image
+                      src={siteContent.homepage?.showcaseImage?.src || '/images/lone-wolf/lone_wolf_hero_debris.png'}
+                      alt={siteContent.homepage?.showcaseImage?.alt || 'Showcase Image'}
+                      fill
+                      style={{ objectFit: 'cover' }}
                     />
-                  </label>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => openLibraryModalForSlot({ type: 'homepage_showcase' })}
+                      style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                    >
+                      <ImageIcon size={13} />
+                      <span>Choose</span>
+                    </button>
+                    <label
+                      style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                    >
+                      <Upload size={13} />
+                      <span>Upload</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUploadForSlot(e, { type: 'homepage_showcase' })}
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', marginBottom: '2px' }}>
+                      Alt Text
+                    </label>
+                    <input
+                      type="text"
+                      value={siteContent.homepage?.showcaseImage?.alt || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        homepage: {
+                          ...siteContent.homepage,
+                          showcaseImage: { ...(siteContent.homepage?.showcaseImage || {}), alt: e.target.value }
+                        }
+                      })}
+                      style={{ width: '100%', padding: '6px 8px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Image Alt Text
-                  </label>
-                  <input
-                    type="text"
-                    value={siteContent.homepage.aboutOwnerImage?.alt || ''}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        aboutOwnerImage: { ...siteContent.homepage.aboutOwnerImage, alt: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  />
+                {/* About Owner Story Photo */}
+                <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '8px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      About Owner Story Photo
+                    </h3>
+                    <span style={{ fontSize: '0.7rem', color: '#94a3b8', backgroundColor: '#1e293b', padding: '2px 6px', borderRadius: '4px' }}>
+                      About Page
+                    </span>
+                  </div>
+
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '6px', overflow: 'hidden', border: '1px solid #334155', backgroundColor: '#0a0d14' }}>
+                    <Image
+                      src={siteContent.homepage?.aboutOwnerImage?.src || '/images/lone-wolf/real/about_owner_photo.jpg'}
+                      alt={siteContent.homepage?.aboutOwnerImage?.alt || 'Owner Photo'}
+                      fill
+                      style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => openLibraryModalForSlot({ type: 'about_owner' })}
+                      style={{ flex: 1, backgroundColor: '#1e293b', color: '#fff', border: '1px solid #334155', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                    >
+                      <ImageIcon size={13} />
+                      <span>Choose</span>
+                    </button>
+                    <label
+                      style={{ backgroundColor: 'var(--accent-red)', color: '#fff', padding: '7px 10px', borderRadius: '4px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                    >
+                      <Upload size={13} />
+                      <span>Upload</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleFileUploadForSlot(e, { type: 'about_owner' })}
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', marginBottom: '2px' }}>
+                      Alt Text
+                    </label>
+                    <input
+                      type="text"
+                      value={siteContent.homepage?.aboutOwnerImage?.alt || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        homepage: {
+                          ...siteContent.homepage,
+                          aboutOwnerImage: { ...(siteContent.homepage?.aboutOwnerImage || {}), alt: e.target.value }
+                        }
+                      })}
+                      style={{ width: '100%', padding: '6px 8px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.8rem' }}
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#94a3b8', marginBottom: '4px' }}>
-                    Focal Alignment / Object Position
-                  </label>
-                  <select
-                    value={siteContent.homepage.aboutOwnerImage?.position || 'center top'}
-                    onChange={(e) => setSiteContent({
-                      ...siteContent,
-                      homepage: {
-                        ...siteContent.homepage,
-                        aboutOwnerImage: { ...siteContent.homepage.aboutOwnerImage, position: e.target.value }
-                      }
-                    })}
-                    style={{ width: '100%', padding: '7px 10px', backgroundColor: '#0a0d14', border: '1px solid #334155', borderRadius: '4px', color: '#fff', fontSize: '0.84rem' }}
-                  >
-                    <option value="center top">Top Center (Recommended for Portraits)</option>
-                    <option value="center center">Center</option>
-                    <option value="center bottom">Bottom Center</option>
-                  </select>
-                </div>
               </div>
-
             </div>
           </div>
-        )}
-
-        {/* TAB 4: PRICING & 4.5-TON CAPACITY */}
+        )}\n\n        {/* TAB 4: PRICING & 4.5-TON CAPACITY */}
         {activeTab === 'pricing' && (
           <div style={{ maxWidth: '860px', margin: '0 auto' }}>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 800, color: '#ffffff', margin: '0 0 16px 0' }}>

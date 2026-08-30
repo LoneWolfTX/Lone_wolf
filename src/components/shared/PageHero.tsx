@@ -27,6 +27,10 @@ interface PageHeroProps {
   description: string;
   imageSrc?: string;
   imageAlt?: string;
+  heroTopImageSrc?: string;
+  heroTopImageAlt?: string;
+  heroBottomImageSrc?: string;
+  heroBottomImageAlt?: string;
   showRating?: boolean;
   trustItems?: TrustItem[];
   badgeText?: string;
@@ -42,10 +46,14 @@ export const PageHero: React.FC<PageHeroProps> = ({
   description,
   imageSrc = '/images/lone-wolf/lone_wolf_hero_top.png',
   imageAlt = 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+  heroTopImageSrc = '/images/lone-wolf/hero_tile_top.jpg',
+  heroTopImageAlt = 'Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard',
+  heroBottomImageSrc = '/images/lone-wolf/hero_tile_bottom.jpg',
+  heroBottomImageAlt = 'Lone Wolf dumpsters fleet ready for delivery across DFW',
   showRating = false,
   trustItems,
   badgeText,
-  imageObjectPosition = 'center right',
+  imageObjectPosition = 'center center',
   overlayGradient,
   isHomepage,
 }) => {
@@ -57,7 +65,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
 
   React.useEffect(() => {
     setImageLoaded(false);
-  }, [imageSrc]);
+  }, [imageSrc, heroTopImageSrc, heroBottomImageSrc]);
 
   return (
     <section
@@ -68,52 +76,10 @@ export const PageHero: React.FC<PageHeroProps> = ({
         position: 'relative',
         overflow: 'hidden',
         borderBottom: '1px solid #1e293b',
-        padding: isHome ? '48px 0 52px 0' : '36px 0 40px 0',
-        minHeight: isHome ? '540px' : 'auto',
-        display: isHome ? 'flex' : 'block',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        padding: isHome ? '40px 0 44px 0' : '36px 0 40px 0',
       }}
       aria-label="Hero Section"
     >
-      {/* Cinematic Full-Bleed Desktop Hero Background */}
-      {hasImage && isHome && (
-        <div className="desktop-cinematic-bg" style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            priority
-            loading="eager"
-            sizes="100vw"
-            onLoad={() => setImageLoaded(true)}
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center right',
-              opacity: imageLoaded ? 1 : 0.2,
-              transition: 'opacity 0.3s ease-in-out',
-            }}
-          />
-          {/* Left-to-right deep dark gradient: left 38-45% dark for copy, right 55-65% bright and crisp for truck */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(90deg, #07090e 0%, #07090e 34%, rgba(7, 9, 14, 0.96) 44%, rgba(7, 9, 14, 0.6) 58%, rgba(7, 9, 14, 0.15) 75%, rgba(7, 9, 14, 0) 90%)',
-              pointerEvents: 'none',
-            }}
-          />
-          {/* Top/Bottom edge vignettes */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(7, 9, 14, 0.4) 0%, transparent 20%, transparent 80%, #07090e 100%)',
-              pointerEvents: 'none',
-            }}
-          />
-        </div>
-      )}
 
       <div className="container" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
         
@@ -337,50 +303,126 @@ export const PageHero: React.FC<PageHeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Mobile image frame on Homepage, or standard Hero Frame on Secondary pages */}
-          {hasImage && (
+          {/* Right Column: Two Vertically Stacked Image Tiles on Homepage, or single frame on Secondary pages */}
+          {isHome ? (
             <div
-              className={`hero-image-frame ${isHome ? 'homepage-hero-image-frame' : 'secondary-hero-image-frame'}`}
+              className="homepage-two-tile-wrapper"
               style={{
-                position: 'relative',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                border: isHome ? '1px solid #334155' : '1px solid #334155',
-                boxShadow: isHome
-                  ? '0 20px 40px -12px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)'
-                  : '0 20px 40px -15px rgba(0,0,0,0.7)',
-                aspectRatio: isHome ? '16 / 9' : '16 / 10',
-                maxHeight: isHome ? '420px' : '400px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
                 width: '100%',
-                backgroundColor: '#0a0d14',
               }}
             >
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                priority={isHome}
-                loading={isHome ? 'eager' : 'lazy'}
-                sizes={isHome ? '(max-width: 768px) 100vw, (max-width: 1440px) 55vw, 750px' : '(max-width: 768px) 100vw, 650px'}
-                onLoad={() => setImageLoaded(true)}
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: imageObjectPosition,
-                  opacity: imageLoaded ? 1 : 0.05,
-                  transition: 'opacity 0.2s ease-in-out',
-                }}
-              />
-              
+              {/* Top Tile: Wayne with Dumpsters */}
               <div
+                className="hero-tile-top"
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '8px',
-                  pointerEvents: 'none',
+                  position: 'relative',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid #334155',
+                  boxShadow: '0 12px 28px -6px rgba(0,0,0,0.75)',
+                  aspectRatio: '16 / 7.8',
+                  width: '100%',
+                  backgroundColor: '#0a0d14',
                 }}
-              />
+              >
+                <Image
+                  src={heroTopImageSrc || '/images/lone-wolf/hero_tile_top.jpg'}
+                  alt={heroTopImageAlt || 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard'}
+                  fill
+                  priority
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 680px"
+                  style={{ objectFit: 'cover', objectPosition: 'center center' }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '10px',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
+
+              {/* Bottom Tile: Wide Fleet in Yard */}
+              <div
+                className="hero-tile-bottom"
+                style={{
+                  position: 'relative',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid #334155',
+                  boxShadow: '0 12px 28px -6px rgba(0,0,0,0.75)',
+                  aspectRatio: '16 / 7.8',
+                  width: '100%',
+                  backgroundColor: '#0a0d14',
+                }}
+              >
+                <Image
+                  src={heroBottomImageSrc || '/images/lone-wolf/hero_tile_bottom.jpg'}
+                  alt={heroBottomImageAlt || 'Lone Wolf dumpsters fleet ready for delivery across DFW'}
+                  fill
+                  priority
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 680px"
+                  style={{ objectFit: 'cover', objectPosition: 'center center' }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '10px',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
             </div>
+          ) : (
+            hasImage && (
+              <div
+                className="hero-image-frame secondary-hero-image-frame"
+                style={{
+                  position: 'relative',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  border: '1px solid #334155',
+                  boxShadow: '0 20px 40px -15px rgba(0,0,0,0.7)',
+                  aspectRatio: '16 / 10',
+                  maxHeight: '400px',
+                  width: '100%',
+                  backgroundColor: '#0a0d14',
+                }}
+              >
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt}
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 650px"
+                  onLoad={() => setImageLoaded(true)}
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: imageObjectPosition,
+                    opacity: imageLoaded ? 1 : 0.05,
+                    transition: 'opacity 0.2s ease-in-out',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '8px',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </div>
+            )
           )}
         </div>
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useResidentialCards } from '@/lib/useEditableContent';
+import { useResidentialCards, useSiteContent } from '@/lib/useEditableContent';
 import { PageHero } from '@/components/shared/PageHero';
 import { BenefitIconGrid, BenefitItem } from '@/components/shared/BenefitIconGrid';
 import { DumpsterSizeGrid } from '@/components/shared/DumpsterSizeGrid';
@@ -13,7 +13,14 @@ import { siteSettings } from '@/data/siteSettings';
 import { Calendar, ThumbsUp, CircleDollarSign, ShieldCheck } from 'lucide-react';
 
 export default function ResidentialPageClient() {
+  const { content: siteContent } = useSiteContent();
   const projectCards = useResidentialCards();
+
+  const heroImg = siteContent.pageHeroes?.residential || siteContent.homepage?.residentialHeaderImage || {
+    src: '/images/lone-wolf/lone_wolf_hero_residential.png',
+    alt: 'Black roll-off dumpster placed in a residential driveway',
+    position: 'center center'
+  };
 
   const residentialBenefits: BenefitItem[] = [
     {
@@ -56,9 +63,9 @@ export default function ResidentialPageClient() {
         headlineWhite="RESIDENTIAL"
         headlineRed="DUMPSTER RENTALS"
         description="The easy way to clean up your home and property. Perfect for DIY projects, home cleanouts, renovations, and yard debris."
-        imageSrc="/images/lone-wolf/lone_wolf_hero_residential.png"
-        imageAlt="Black roll-off dumpster placed in a residential driveway"
-        imageObjectPosition="center center"
+        imageSrc={heroImg.src}
+        imageAlt={heroImg.alt}
+        imageObjectPosition={heroImg.position || 'center center'}
       />
 
       {/* 2. "Making Home Cleanups Simple" Benefit Strip */}

@@ -9,10 +9,18 @@ import { siteSettings } from '@/data/siteSettings';
 import { cityServiceAreas } from '@/data/cityServiceAreas';
 import { MapPin, Search, CheckCircle2, ArrowRight } from 'lucide-react';
 import { InteractiveServiceMap } from '@/components/shared/InteractiveServiceMap';
+import { useSiteContent } from '@/lib/useEditableContent';
 
 export default function ServiceAreasPage() {
+  const { content: siteContent } = useSiteContent();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCounty, setSelectedCounty] = useState<string>('All');
+
+  const heroImg = siteContent.pageHeroes?.areasServed || {
+    src: '/images/lone-wolf/lone_wolf_hero_top.png',
+    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    position: 'center right'
+  };
 
   const counties = ['All', 'Tarrant County', 'Dallas County', 'Denton County'];
 
@@ -37,11 +45,11 @@ export default function ServiceAreasPage() {
           { label: 'Services Areas' },
         ]}
         headlineWhite="PROUDLY SERVING"
-        headlineRed="48 DFW CITIES &amp; TOWNS"
+        headlineRed="48 DFW CITIES & TOWNS"
         description="Fast, reliable, driveway-safe roll-off dumpster rentals across Tarrant, Dallas, and Denton Counties. Choose your city below for localized delivery info and rates."
-        imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
-        imageObjectPosition="center right"
+        imageSrc={heroImg.src}
+        imageAlt={heroImg.alt}
+        imageObjectPosition={heroImg.position || 'center right'}
       />
 
       {/* 2. Interactive 48-City Map Component */}

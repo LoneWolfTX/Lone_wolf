@@ -67,8 +67,16 @@ async function fetchCanonicalSiteContent(): Promise<SiteContent> {
             testimonials: Array.isArray(data.testimonials) ? data.testimonials : DEFAULT_SITE_CONTENT.testimonials,
             serviceAreasList: Array.isArray(data.serviceAreasList) ? data.serviceAreasList : DEFAULT_SITE_CONTENT.serviceAreasList,
             zipCodes: Array.isArray(data.zipCodes) ? data.zipCodes : DEFAULT_SITE_CONTENT.zipCodes,
-            dumpsterEntities: Array.isArray(data.dumpsterEntities) ? data.dumpsterEntities : DEFAULT_SITE_CONTENT.dumpsterEntities,
-            homepage: { ...DEFAULT_SITE_CONTENT.homepage, ...(data.homepage || {}) },
+            homepage: {
+              ...DEFAULT_SITE_CONTENT.homepage,
+              ...(data.homepage || {}),
+              heroTopImage: data.homepage?.heroTopImage || DEFAULT_SITE_CONTENT.homepage.heroTopImage,
+              heroBottomImage: data.homepage?.heroBottomImage || DEFAULT_SITE_CONTENT.homepage.heroBottomImage,
+            },
+            pageHeroes: {
+              ...DEFAULT_SITE_CONTENT.pageHeroes,
+              ...(data.pageHeroes || {}),
+            },
             about: { ...DEFAULT_SITE_CONTENT.about, ...(data.about || {}) },
             residentialCards: mergeCards(data.residentialCards, DEFAULT_SITE_CONTENT.residentialCards),
             contractorCards: mergeCards(data.contractorCards, DEFAULT_SITE_CONTENT.contractorCards),
@@ -85,6 +93,11 @@ async function fetchCanonicalSiteContent(): Promise<SiteContent> {
   })();
 
   return fetchPromise;
+}
+
+export function invalidateSiteContentCache() {
+  globalSiteContentCache = null;
+  fetchPromise = null;
 }
 
 /**

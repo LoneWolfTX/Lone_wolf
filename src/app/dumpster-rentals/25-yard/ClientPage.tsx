@@ -13,7 +13,7 @@ export default function TwentyFiveYardDumpsterClient() {
   const product = getDumpsterProducts(siteContent).find((p) => p.id === '25-yard-dumpster')!;
   const content = useDumpsterPageContent('25-yard-dumpster');
 
-  const heroImg = content.image || {
+  const heroImg = siteContent.pageHeroes?.twentyFiveYard || content.image || {
     src: '/images/lone-wolf/lone_wolf_hero_debris.png',
     alt: 'Black roll-off dumpster loaded with renovation and cleanup debris',
     position: 'center center'

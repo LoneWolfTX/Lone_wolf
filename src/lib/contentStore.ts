@@ -227,13 +227,29 @@ export interface SiteContent {
     heroDescription: string;
     introTitle: string;
     introDescription: string;
-    heroImage: ImageAssignment;
+    heroTopImage: ImageAssignment;
+    heroBottomImage: ImageAssignment;
+    heroImage?: ImageAssignment;
     showcaseImage: ImageAssignment;
     closingBannerImage: ImageAssignment;
     aboutOwnerImage: ImageAssignment;
     commercialHeaderImage?: ImageAssignment;
     contractorHeaderImage?: ImageAssignment;
     residentialHeaderImage?: ImageAssignment;
+  };
+  pageHeroes: {
+    dumpsterRentals: ImageAssignment;
+    fifteenYard: ImageAssignment;
+    twentyYard: ImageAssignment;
+    twentyFiveYard: ImageAssignment;
+    residential: ImageAssignment;
+    contractor: ImageAssignment;
+    commercial: ImageAssignment;
+    junkRemoval: ImageAssignment;
+    areasServed: ImageAssignment;
+    about: ImageAssignment;
+    guides: ImageAssignment;
+    contact: ImageAssignment;
   };
   about: {
     titleWhite: string;
@@ -476,10 +492,20 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     heroDescription: "Perfect for home cleanouts, remodeling projects, construction jobs and everything in between.",
     introTitle: "WELCOME TO LONE WOLF DUMPSTERS",
     introDescription: "Dallas-Fort Worth's local owner-operator roll-off dumpster service. Upfront flat-rate pricing, 5.0 Google rating, driveway-safe delivery.",
+    heroTopImage: {
+      src: "/images/lone-wolf/hero_tile_top.jpg",
+      alt: "Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard",
+      position: "center center"
+    },
+    heroBottomImage: {
+      src: "/images/lone-wolf/hero_tile_bottom.jpg",
+      alt: "Lone Wolf dumpsters fleet ready for delivery across DFW",
+      position: "center center"
+    },
     heroImage: {
-      src: "/images/lone-wolf/lone_wolf_hero_top.png",
-      alt: "Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area",
-      position: "center right"
+      src: "/images/lone-wolf/hero_tile_top.jpg",
+      alt: "Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard",
+      position: "center center"
     },
     showcaseImage: {
       src: "/images/lone-wolf/lone_wolf_hero_debris.png",
@@ -511,6 +537,20 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       alt: "Black roll-off dumpster placed in a residential driveway",
       position: "center center"
     }
+  },
+  pageHeroes: {
+    dumpsterRentals: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Lone Wolf Dumpster Rentals DFW", position: "center right" },
+    fifteenYard: { src: "/images/lone-wolf/lone_wolf_hero_residential.png", alt: "15 Yard Dumpster Rental", position: "center center" },
+    twentyYard: { src: "/images/lone-wolf/lone_wolf_hero_construction.png", alt: "20 Yard Dumpster Rental", position: "center center" },
+    twentyFiveYard: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "25 Yard Dumpster Rental", position: "center center" },
+    residential: { src: "/images/lone-wolf/lone_wolf_hero_residential.png", alt: "Residential Dumpster Rentals", position: "center center" },
+    contractor: { src: "/images/lone-wolf/lone_wolf_hero_construction.png", alt: "Contractor Dumpster Rentals", position: "center center" },
+    commercial: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "Commercial Dumpster Rentals", position: "center center" },
+    junkRemoval: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "Full-Service Junk Removal", position: "center center" },
+    areasServed: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Service Areas across DFW", position: "center right" },
+    about: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "About Lone Wolf Dumpsters", position: "center right" },
+    guides: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Dumpster Rental Guides", position: "center right" },
+    contact: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Contact Lone Wolf Dumpsters", position: "center right" },
   },
   about: {
     titleWhite: "ABOUT LONE WOLF",
