@@ -73,28 +73,12 @@ export const SiteHeader: React.FC = () => {
       }}
     >
       <div className="container">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            minHeight: '128px',
-            padding: '12px 0',
-            gap: '16px',
-          }}
-        >
-          {/* Logo on Left - Extra Large & High Visibility */}
+        <div className="site-header-inner">
+          {/* Logo on Left - High Visibility Responsive Branding */}
           <Link
             href="/"
             className="header-logo-link"
             onClick={closeMenu}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              textDecoration: 'none',
-              flexShrink: 0,
-            }}
           >
             <div className="header-logo-icon">
               <Image
@@ -102,37 +86,15 @@ export const SiteHeader: React.FC = () => {
                 alt="Lone Wolf Dumpsters Logo"
                 fill
                 priority
-                sizes="(max-width: 768px) 88px, 120px"
+                sizes="(max-width: 768px) 54px, 96px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
             <div>
-              <span
-                className="header-logo-text"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.6rem, 4.5vw, 2.3rem)',
-                  fontWeight: 900,
-                  letterSpacing: '0.6px',
-                  color: '#ffffff',
-                  lineHeight: 1.05,
-                  display: 'block',
-                }}
-              >
+              <span className="header-logo-text">
                 LONE WOLF <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
               </span>
-              <span
-                className="header-logo-tagline"
-                style={{
-                  display: 'block',
-                  fontSize: '0.82rem',
-                  color: '#94a3b8',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1.4px',
-                  marginTop: '4px',
-                  fontWeight: 700,
-                }}
-              >
+              <span className="header-logo-tagline">
                 RENT. RELAX. WE HAUL.
               </span>
             </div>
