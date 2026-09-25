@@ -7,10 +7,10 @@ export function getSiteSettings(content: SiteContent = DEFAULT_SITE_CONTENT): Si
   const pr = content.pricing || DEFAULT_SITE_CONTENT.pricing;
 
   return {
-    businessName: b.companyName || 'Lone Wolf Dumpsters',
-    legalName: b.legalName || 'American Wolf Rent LLC DBA Lone Wolf Dumpsters',
+    businessName: b.companyName || 'Wolf Ridge Dumpsters',
+    legalName: b.legalName || 'Wolf Ridge Dumpsters LLC',
     tagline: 'Dumpster Rentals & Waste Removal in Dallas–Fort Worth',
-    ownerName: 'Lone Wolf Team',
+    ownerName: 'Wolf Ridge Team',
     marketArea: 'Dallas–Fort Worth Metroplex & Surrounding Areas',
     contact: {
       phone: formatPhoneNumber(b.phone),
@@ -18,10 +18,10 @@ export function getSiteSettings(content: SiteContent = DEFAULT_SITE_CONTENT): Si
       sms: formatPhoneNumber(b.phone),
       smsRaw: b.phoneRaw || '+12148760321',
       smsUri: `sms:${b.phoneRaw || '+12148760321'}?&body=Hi%2C%20I%27m%20interested%20in%20renting%20a%20dumpster.%20I%27d%20like%20to%20get%20a%20quote.`,
-      email: b.email || 'lonewolfdumpsters@gmail.com',
+      email: b.email || 'wolfridgedumpsters@gmail.com',
     },
     yard: {
-      name: 'Lone Wolf Dumpsters — Service Area',
+      name: 'Wolf Ridge Dumpsters — Service Area',
       address: b.yardStreet || '',
       city: b.yardCity || 'Colleyville',
       state: b.yardState || 'TX',

@@ -51,7 +51,7 @@ export const guideType = {
       name: 'publishDate',
       title: 'Publish Date',
       type: 'string',
-      initialValue: 'Published by Lone Wolf Dumpsters',
+      initialValue: 'Published by Wolf Ridge Dumpsters',
     },
     {
       name: 'content',

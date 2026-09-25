@@ -6,18 +6,18 @@ import { ClosingCtaBanner } from '@/components/shared/ClosingCtaBanner';
 import { siteSettings } from '@/data/siteSettings';
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions | Lone Wolf Dumpsters DFW',
+  title: 'Frequently Asked Questions | Wolf Ridge Dumpsters DFW',
   description: 'Answers about roll-off dumpster sizes, flat-rate pricing, prohibited materials, weight allowances, driveway protection, and delivery policies in DFW.',
   alternates: {
-    canonical: 'https://lonewolfdumpsters.com/faq',
+    canonical: 'https://wolfridgedumpsters.com/faq',
   },
 };
 
 export default function FAQPage() {
   const rentalAndDeliveryFaqs: FAQItem[] = [
     {
-      q: '1. How does dumpster rental work with Lone Wolf Dumpsters?',
-      a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
+      q: '1. How does dumpster rental work with Wolf Ridge Dumpsters?',
+      a: 'Renting a dumpster with Wolf Ridge Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
     },
     {
       q: '2. How long can I rent a dumpster?',
@@ -32,8 +32,8 @@ export default function FAQPage() {
       a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
     },
     {
-      q: '5. What areas does Lone Wolf Dumpsters serve?',
-      a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+      q: '5. What areas does Wolf Ridge Dumpsters serve?',
+      a: 'Wolf Ridge Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
     },
     {
       q: '6. How fast can I get a dumpster delivered?',
@@ -64,11 +64,11 @@ export default function FAQPage() {
     },
     {
       q: '11. What can I put in a dumpster?',
-      a: 'Lone Wolf Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.',
+      a: 'Wolf Ridge Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.',
     },
     {
       q: '13. What size dumpster do I need for my project?',
-      a: 'The right dumpster size depends on the type and amount of debris from your project. Lone Wolf Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.',
+      a: 'The right dumpster size depends on the type and amount of debris from your project. Wolf Ridge Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.',
     },
     {
       q: '14. What materials are not allowed in a dumpster?',
@@ -88,7 +88,7 @@ export default function FAQPage() {
         headlineRed="QUESTIONS &amp; POLICIES"
         description="Everything you need to know about roll-off dumpster sizes, upfront pricing, driveway protection, permitted materials, and scheduling in Dallas–Fort Worth."
         imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageAlt="Wolf Ridge Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
         imageObjectPosition="center right"
       />
 
@@ -127,7 +127,7 @@ export default function FAQPage() {
         headline="READY TO RENT YOUR DUMPSTER?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Dumpster Service"
+        imageAlt="Wolf Ridge Dumpster Service"
       />
     </>
   );

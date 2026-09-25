@@ -16,7 +16,7 @@ export const EquipmentGallery: React.FC = () => {
             Our Equipment in the <span className="text-accent">Real World</span>
           </h2>
           <p className="section-subtitle">
-            Authentic Lone Wolf roll-off containers and delivery fleet active across Dallas–Fort Worth driveways, remodels, and job sites.
+            Authentic Wolf Ridge roll-off containers and delivery fleet active across Dallas–Fort Worth driveways, remodels, and job sites.
           </p>
         </div>
 

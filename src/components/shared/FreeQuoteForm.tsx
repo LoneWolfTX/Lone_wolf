@@ -350,7 +350,7 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
               >
                 <Image
                   src="/images/lone-wolf/real/real_dumpster_6082.jpg"
-                  alt="Lone Wolf Roll-Off Dumpster Delivery in DFW"
+                  alt="Wolf Ridge Roll-Off Dumpster Delivery in DFW"
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"
                   style={{ objectFit: 'cover' }}
@@ -679,7 +679,7 @@ export const FreeQuoteForm: React.FC<FreeQuoteFormProps> = ({
                 </button>
 
                 <p style={{ fontSize: '0.72rem', color: '#64748b', textAlign: 'center', marginTop: '10px', lineHeight: 1.35, margin: '10px 0 0 0' }}>
-                  By submitting, you consent to receive calls and text messages (SMS) from Lone Wolf Dumpsters regarding your quote and order logistics. Message &amp; data rates may apply. Reply STOP to opt out. View our <a href="/privacy" style={{ color: '#475569', textDecoration: 'underline' }}>Privacy Policy</a>.
+                  By submitting, you consent to receive calls and text messages (SMS) from Wolf Ridge Dumpsters regarding your quote and order logistics. Message &amp; data rates may apply. Reply STOP to opt out. View our <a href="/privacy" style={{ color: '#475569', textDecoration: 'underline' }}>Privacy Policy</a>.
                 </p>
               </form>
             )}

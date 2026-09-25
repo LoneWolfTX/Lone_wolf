@@ -16,8 +16,8 @@ export default function TermsOfServicePage() {
 
   const phone = formatPhoneNumber(b.phone);
   const phoneRaw = b.phoneRaw || '+12148760321';
-  const email = b.email || 'lonewolfdumpsters@gmail.com';
-  const legalName = b.legalName || 'American Wolf Rent LLC DBA Lone Wolf Dumpsters';
+  const email = b.email || 'wolfridgedumpsters@gmail.com';
+  const legalName = b.legalName || 'Wolf Ridge Dumpsters LLC';
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function TermsOfServicePage() {
         headlineRed="SERVICE & POLICIES"
         description={`Standard rental agreements, weight allowances, and container placement terms for ${legalName}.`}
         imageSrc="/images/lone-wolf/lone_wolf_hero_top.png"
-        imageAlt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+        imageAlt="Wolf Ridge Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
         imageObjectPosition="center right"
       />
 
@@ -41,7 +41,7 @@ export default function TermsOfServicePage() {
             1. Rental Period &amp; Extensions
           </h2>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
-            Standard rental periods are 1–7 days. Additional days are {formatExtraDayRate(pr.extraDay)}, subject to availability and advance confirmation. Rentals may be extended up to 10 days total. For longer-term rentals, multiple-week projects, recurring service, or ongoing business and contractor needs, please contact Lone Wolf Dumpsters by email or phone to discuss availability and pricing.
+            Standard rental periods are 1–7 days. Additional days are {formatExtraDayRate(pr.extraDay)}, subject to availability and advance confirmation. Rentals may be extended up to 10 days total. For longer-term rentals, multiple-week projects, recurring service, or ongoing business and contractor needs, please contact Wolf Ridge Dumpsters by email or phone to discuss availability and pricing.
           </p>
 
           <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '10px', textTransform: 'uppercase' }}>
@@ -72,7 +72,7 @@ export default function TermsOfServicePage() {
             <li>AC units</li>
           </ul>
           <p style={{ marginBottom: '12px', color: '#334155' }}>
-            Refrigerators containing Freon require prior approval. Please contact Lone Wolf Dumpsters before loading these items.
+            Refrigerators containing Freon require prior approval. Please contact Wolf Ridge Dumpsters before loading these items.
           </p>
           <p style={{ marginBottom: '24px', color: '#334155' }}>
             These restrictions are subject to applicable Texas and federal regulations and the requirements of the disposal facility.

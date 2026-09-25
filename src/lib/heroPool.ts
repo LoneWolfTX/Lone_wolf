@@ -1,8 +1,8 @@
 /**
  * heroPool.ts
  *
- * Deterministic hero-pool system for the 48 city pages using 8 real Lone Wolf photographs.
- * Uses accurate general alt text ("Lone Wolf Dumpster Delivery in Dallas-Fort Worth").
+ * Deterministic hero-pool system for the 48 city pages using real Wolf Ridge photographs.
+ * Uses accurate general alt text ("Wolf Ridge Dumpster Delivery in Dallas-Fort Worth").
  */
 
 export const CITY_HERO_POOL = [
@@ -22,5 +22,5 @@ export function getCityHeroImage(citySlug: string): string {
 }
 
 export function getCityHeroAlt(cityName: string): string {
-  return `Lone Wolf roll-off dumpster service in the Dallas-Fort Worth area`;
+  return `Wolf Ridge roll-off dumpster service in the Dallas-Fort Worth area`;
 }

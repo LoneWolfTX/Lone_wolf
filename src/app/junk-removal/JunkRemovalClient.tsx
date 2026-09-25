@@ -104,7 +104,7 @@ export default function JunkRemovalClient() {
             >
               <Image
                 src="/images/lone-wolf/gallery/25.png"
-                alt="Lone Wolf Roll-Off Dumpster and Hauling Equipment in DFW"
+                alt="Wolf Ridge Roll-Off Dumpster and Hauling Equipment in DFW"
                 fill
                 sizes="(min-width: 1200px) 580px, 100vw"
                 style={{ objectFit: 'cover' }}
@@ -138,7 +138,7 @@ export default function JunkRemovalClient() {
                 WE DO THE <span style={{ color: 'var(--accent-red)' }}>HEAVY LIFTING</span>
               </h2>
               <p style={{ fontSize: '0.96rem', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
-                Need unwanted items gone without renting and loading a container yourself? Lone Wolf Dumpsters provides complete full-service junk and debris removal across Dallas–Fort Worth. Our uniformed crew handles everything: loading, hauling, landfill disposal, and final sweeping.
+                Need unwanted items gone without renting and loading a container yourself? Wolf Ridge Dumpsters provides complete full-service junk and debris removal across Dallas–Fort Worth. Our uniformed crew handles everything: loading, hauling, landfill disposal, and final sweeping.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>

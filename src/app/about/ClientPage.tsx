@@ -12,26 +12,26 @@ export default function AboutPageClient() {
   const { content } = useSiteContent();
   const hp = content.homepage;
   const ab = content.about || {
-    titleWhite: 'ABOUT LONE WOLF',
+    titleWhite: 'ABOUT WOLF RIDGE',
     titleRed: 'DUMPSTERS',
     heroDescription: 'Locally owned and dedicated to transparent, stress-free roll-off dumpster rentals and junk removal across Dallas–Fort Worth.',
-    ownerBadgeTitle: 'LONE WOLF DUMPSTERS',
+    ownerBadgeTitle: 'WOLF RIDGE DUMPSTERS',
     ownerBadgeSub: 'Direct Local Accountability',
     storyHeadlineWhite: 'STRAIGHTFORWARD SERVICE.',
     storyHeadlineRed: 'LOCAL ACCOUNTABILITY.',
-    storyParagraph: 'Lone Wolf Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, treat every driveway with care and wood board protection, and provide transparent flat-rate pricing with zero hidden fees.',
-    storyQuote: 'When you rent from Lone Wolf Dumpsters, you deal directly with our local team. We make waste removal straightforward, reliable, and hassle-free for homeowners and contractors across the metroplex.',
+    storyParagraph: 'Wolf Ridge Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, treat every driveway with care and wood board protection, and provide transparent flat-rate pricing with zero hidden fees.',
+    storyQuote: 'When you rent from Wolf Ridge Dumpsters, you deal directly with our local team. We make waste removal straightforward, reliable, and hassle-free for homeowners and contractors across the metroplex.',
   };
 
   const ownerImg = hp.aboutOwnerImage || {
     src: '/images/lone-wolf/real/about_owner_photo.jpg',
-    alt: 'Lone Wolf Dumpsters Roll-Off Fleet in DFW',
+    alt: 'Wolf Ridge Dumpsters Roll-Off Fleet in DFW',
     position: 'center top'
   };
 
   const heroImg = content.pageHeroes?.about || {
     src: '/images/lone-wolf/lone_wolf_hero_top.png',
-    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    alt: 'Wolf Ridge Dumpsters roll-off container serving the Dallas-Fort Worth area',
     position: 'center right'
   };
 
@@ -63,7 +63,7 @@ export default function AboutPageClient() {
               alignItems: 'center',
             }}
           >
-            {/* Left: Wayne, Owner & Operator Real Photo */}
+            {/* Left: Wolf Ridge Owner & Operator Real Photo */}
             <div
               style={{
                 position: 'relative',
@@ -113,7 +113,7 @@ export default function AboutPageClient() {
                     </div>
                   </div>
                   <div style={{ position: 'relative', width: '28px', height: '28px' }}>
-                    <Image src="/images/lone-wolf/logo.png" alt="Lone Wolf Logo Badge" fill style={{ objectFit: 'contain' }} />
+                    <Image src="/images/lone-wolf/logo.png" alt="Wolf Ridge Logo Badge" fill style={{ objectFit: 'contain' }} />
                   </div>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function AboutPageClient() {
               <blockquote style={{ borderLeft: '4px solid var(--accent-red)', paddingLeft: '16px', margin: '0 0 20px 0', fontStyle: 'italic', color: '#334155', fontSize: '0.94rem', lineHeight: 1.45 }}>
                 &ldquo;{ab.storyQuote}&rdquo;
                 <footer style={{ marginTop: '6px', fontWeight: 700, color: '#0f172a', fontStyle: 'normal' }}>
-                  — Lone Wolf Dumpsters Team
+                  — Wolf Ridge Dumpsters Team
                 </footer>
               </blockquote>
 
@@ -163,7 +163,7 @@ export default function AboutPageClient() {
         headline="READY TO RENT YOUR DUMPSTER?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc={hp.closingBannerImage?.src || '/images/lone-wolf/hero_dumpster_side.jpg'}
-        imageAlt="Lone Wolf Dumpster"
+        imageAlt="Wolf Ridge Dumpster"
         imageObjectPosition={hp.closingBannerImage?.position || 'center center'}
       />
     </>

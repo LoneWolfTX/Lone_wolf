@@ -56,7 +56,7 @@ export const MobileStickyBar: React.FC = () => {
       <a
         href={`tel:${siteSettings.contact.phoneRaw}`}
         className="sticky-action-btn"
-        aria-label={`Call Lone Wolf Dumpsters directly at ${siteSettings.contact.phone}`}
+        aria-label={`Call Wolf Ridge Dumpsters directly at ${siteSettings.contact.phone}`}
         onClick={() => trackPhoneClick('mobile_sticky_call')}
         style={{
           flex: 1,
@@ -83,7 +83,7 @@ export const MobileStickyBar: React.FC = () => {
       <a
         href={`sms:${siteSettings.contact.phoneRaw}?body=Hi%20Lone%20Wolf%20Dumpsters,%20I'd%20like%20a%20dumpster%20quote.`}
         className="sticky-action-btn"
-        aria-label={`Text Lone Wolf Dumpsters at ${siteSettings.contact.phone} for quote`}
+        aria-label={`Text Wolf Ridge Dumpsters at ${siteSettings.contact.phone} for quote`}
         onClick={() => trackPhoneClick('mobile_sticky_text')}
         style={{
           flex: 1,

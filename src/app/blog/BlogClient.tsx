@@ -14,7 +14,7 @@ export default function BlogClient() {
 
   const heroImg = siteContent.pageHeroes?.guides || {
     src: '/images/lone-wolf/lone_wolf_hero_top.png',
-    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    alt: 'Wolf Ridge Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
     position: 'center right'
   };
 

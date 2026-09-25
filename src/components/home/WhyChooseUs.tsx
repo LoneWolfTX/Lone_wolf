@@ -40,7 +40,7 @@ export const WhyChooseUs: React.FC = () => {
             WHY CHOOSE
           </span>
           <h2 id="why-choose-heading" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 2.7rem)', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', margin: 0 }}>
-            <span style={{ color: 'var(--accent-red)' }}>LONE WOLF</span> DUMPSTERS
+            <span style={{ color: 'var(--accent-red)' }}>WOLF RIDGE</span> DUMPSTERS
           </h2>
         </div>
 

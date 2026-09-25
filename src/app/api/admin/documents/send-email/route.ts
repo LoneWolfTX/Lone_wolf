@@ -34,15 +34,15 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Lone Wolf Dumpsters <dispatch@lonewolfdumpsters.com>',
+          from: 'Wolf Ridge Dumpsters <dispatch@wolfridgedumpsters.com>',
           to: recipientEmail,
-          subject: subject || `${doc.type} ${doc.number} from Lone Wolf Dumpsters`,
+          subject: subject || `${doc.type} ${doc.number} from Wolf Ridge Dumpsters`,
           text: `Dear ${doc.customerName},
 
-Please find your ${doc.type} ${doc.number} from Lone Wolf Dumpsters.
+Please find your ${doc.type} ${doc.number} from Wolf Ridge Dumpsters.
 Total: $${doc.total.toFixed(2)}
 
-Thank you for choosing Lone Wolf Dumpsters! (214) 876-0321`,
+Thank you for choosing Wolf Ridge Dumpsters! (214) 876-0321`,
         }),
       });
     }

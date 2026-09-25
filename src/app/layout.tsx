@@ -12,11 +12,11 @@ import { MobileStickyBar } from '@/components/layout/MobileStickyBar';
 export const metadata: Metadata = {
   title: `${siteSettings.businessName} | Fast & Affordable Dumpster Rentals DFW`,
   description: seoConfig.defaultDescription,
-  metadataBase: new URL('https://lonewolfdumpsters.com'),
+  metadataBase: new URL('https://wolfridgedumpsters.com'),
   openGraph: {
     title: `${siteSettings.businessName} | DFW Dumpster Rental`,
     description: seoConfig.defaultDescription,
-    url: 'https://lonewolfdumpsters.com',
+    url: 'https://wolfridgedumpsters.com',
     siteName: siteSettings.businessName,
     images: [
       {
@@ -56,7 +56,7 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: siteSettings.businessName,
-    image: 'https://lonewolfdumpsters.com/images/lone-wolf/logo.png',
+    image: 'https://wolfridgedumpsters.com/images/lone-wolf/logo.png',
     telephone: siteSettings.contact.phone,
     email: siteSettings.contact.email,
     address: {
@@ -76,7 +76,7 @@ export default function RootLayout({
       latitude: '32.8854',
       longitude: '-97.1472',
     },
-    url: 'https://lonewolfdumpsters.com',
+    url: 'https://wolfridgedumpsters.com',
     priceRange: '$$',
     openingHoursSpecification: [
       {

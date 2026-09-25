@@ -16,7 +16,7 @@ export const ReviewsAndServiceArea: React.FC = () => {
     },
     {
       author: 'Michael R.',
-      quote: 'Direct communication with Wayne made our roofing swap seamless. Highly recommend!',
+      quote: 'Direct communication with Wolf Ridge made our roofing swap seamless. Highly recommend!',
       rating: 5,
     },
   ];

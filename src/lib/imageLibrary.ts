@@ -5,9 +5,9 @@ export interface StockImageItem {
 }
 
 export const EXISTING_IMAGE_LIBRARY: StockImageItem[] = [
-  // Approved Real Lone Wolf Photos
-  { src: '/images/lone-wolf/hero_tile_top.jpg', name: 'Wayne Standing with Dumpsters (Hero Top Tile)', category: 'real' },
-  { src: '/images/lone-wolf/hero_tile_bottom.jpg', name: 'Fleet Lineup in Colleyville Yard (Hero Bottom Tile)', category: 'real' },
+  // Approved Real Wolf Ridge Photos
+  { src: '/images/lone-wolf/hero_tile_top.jpg', name: 'Wolf Ridge Container (Hero Top Tile)', category: 'real' },
+  { src: '/images/lone-wolf/hero_tile_bottom.jpg', name: 'Wolf Ridge Fleet Lineup (Hero Bottom Tile)', category: 'real' },
 
   // Approved Hero & Core Identity Set
   { src: '/images/lone-wolf/lone_wolf_hero_top.png', name: 'Approved Main Hero - Truck & Dumpster', category: 'real' },
@@ -18,7 +18,7 @@ export const EXISTING_IMAGE_LIBRARY: StockImageItem[] = [
   // Real Photography
   { src: '/images/lone-wolf/real/hero_main.jpg', name: 'Hero Main - Roll-Off Fleet', category: 'real' },
   { src: '/images/lone-wolf/real/hero_fleet_environment.jpg', name: 'Fleet Environment Showcase', category: 'real' },
-  { src: '/images/lone-wolf/real/about_owner_photo.jpg', name: 'Wayne - Owner & Operator Photo', category: 'real' },
+  { src: '/images/lone-wolf/real/about_owner_photo.jpg', name: 'Wolf Ridge - Fleet & Equipment Photo', category: 'real' },
   { src: '/images/lone-wolf/real/commercial_environment_showcase.jpg', name: 'Commercial Industrial Showcase', category: 'real' },
   { src: '/images/lone-wolf/real/contractor_environment_showcase.jpg', name: 'Contractor Job Site Showcase', category: 'real' },
   { src: '/images/lone-wolf/real/residential_environment_showcase.jpg', name: 'Residential Driveway Placement', category: 'real' },

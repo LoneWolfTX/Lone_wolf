@@ -21,7 +21,7 @@ export function getFaqs(content: SiteContent = DEFAULT_SITE_CONTENT): FAQItem[] 
     {
       id: 'faq-max-capacity',
       question: 'What is the maximum load capacity for your dumpsters?',
-      answer: `The absolute maximum load capacity for any Lone Wolf dumpster is ${pr.maxCapacityTons} tons (${pr.maxCapacityLbs.toLocaleString()} lbs). While our rental rates include generous allowances (${formatTonnage(1.5)} for 15-yd, ${formatTonnage(2.0)} for 20-yd, and ${formatTonnage(2.2)} for 25-yd), containers cannot legally or safely exceed ${pr.maxCapacityTons} tons for Texas highway safety and hydraulic hoist limits.`,
+      answer: `The absolute maximum load capacity for any Wolf Ridge dumpster is ${pr.maxCapacityTons} tons (${pr.maxCapacityLbs.toLocaleString()} lbs). While our rental rates include generous allowances (${formatTonnage(1.5)} for 15-yd, ${formatTonnage(2.0)} for 20-yd, and ${formatTonnage(2.2)} for 25-yd), containers cannot legally or safely exceed ${pr.maxCapacityTons} tons for Texas highway safety and hydraulic hoist limits.`,
       category: 'pricing',
       sortOrder: 1,
       active: true,

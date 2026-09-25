@@ -62,7 +62,7 @@ export default function AdminLoginForm() {
         }}
       >
         <div style={{ display: 'inline-flex', position: 'relative', width: '64px', height: '64px', marginBottom: '16px' }}>
-          <Image src="/images/lone-wolf/logo.png" alt="Lone Wolf Logo" fill style={{ objectFit: 'contain' }} priority />
+          <Image src="/images/lone-wolf/logo.png" alt="Wolf Ridge Logo" fill style={{ objectFit: 'contain' }} priority />
         </div>
 
         <h1
@@ -75,7 +75,7 @@ export default function AdminLoginForm() {
             marginBottom: '4px',
           }}
         >
-          LONE WOLF <span style={{ color: '#e11d48' }}>STUDIO</span>
+          WOLF RIDGE <span style={{ color: '#e11d48' }}>STUDIO</span>
         </h1>
         <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '28px' }}>
           Owner &amp; Site Management Authentication

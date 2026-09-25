@@ -6,7 +6,7 @@ import {
   getDocumentsForLeadFromRedis,
   deleteDocumentFromRedis,
   generateAtomicDocumentNumber,
-  LoneWolfDocument,
+  WolfRidgeDocument,
 } from '@/lib/documents';
 
 export const dynamic = 'force-dynamic';
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       const docNumber = docData.number || (await generateAtomicDocumentNumber(docType));
       const id = 'doc_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
 
-      const newDoc: LoneWolfDocument = {
+      const newDoc: WolfRidgeDocument = {
         id,
         type: docType,
         number: docNumber,
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
         payments: Array.isArray(docData.payments) ? docData.payments : [],
         balanceDue: typeof docData.balanceDue === 'number' ? docData.balanceDue : (docData.total || 425),
         notes: docData.notes || '',
-        terms: docData.terms || 'Standard Lone Wolf Dumpsters terms apply. Prohibited items: paint, tires, hazardous chemicals.',
+        terms: docData.terms || 'Standard Wolf Ridge Dumpsters terms apply. Prohibited items: paint, tires, hazardous chemicals.',
         originalQuoteId: docData.originalQuoteId,
       };
 
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       const existing = await getDocumentByIdFromRedis(docId);
       if (!existing) return NextResponse.json({ success: false, error: 'Document not found' }, { status: 404 });
 
-      const updatedDoc: LoneWolfDocument = {
+      const updatedDoc: WolfRidgeDocument = {
         ...existing,
         ...docData,
         id: existing.id,
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       const newBalance = Math.max(0, existing.total - totalPaid);
       const newStatus = newBalance === 0 ? 'Paid' : totalPaid > 0 ? 'Partial' : existing.invoiceStatus;
 
-      const updatedDoc: LoneWolfDocument = {
+      const updatedDoc: WolfRidgeDocument = {
         ...existing,
         payments: updatedPayments,
         balanceDue: newBalance,

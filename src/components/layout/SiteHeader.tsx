@@ -83,7 +83,7 @@ export const SiteHeader: React.FC = () => {
             <div className="header-logo-icon">
               <Image
                 src="/images/lone-wolf/logo.png"
-                alt="Lone Wolf Dumpsters Logo"
+                alt="Wolf Ridge Dumpsters Logo"
                 fill
                 priority
                 sizes="(max-width: 768px) 54px, 96px"
@@ -92,7 +92,7 @@ export const SiteHeader: React.FC = () => {
             </div>
             <div>
               <span className="header-logo-text">
-                LONE WOLF <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
+                WOLF RIDGE <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
               </span>
               <span className="header-logo-tagline">
                 RENT. RELAX. WE HAUL.
@@ -541,7 +541,7 @@ export const SiteHeader: React.FC = () => {
               CONTACT
             </Link>
 
-            {/* Mobile Call Wayne Button */}
+            {/* Mobile Call Dispatch Button */}
             <a
               href={`tel:${siteSettings.contact.phoneRaw}`}
               onClick={() => trackPhoneClick('mobile_nav_phone')}

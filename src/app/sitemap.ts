@@ -3,7 +3,7 @@ import { cityServiceAreas } from '@/data/cityServiceAreas';
 import { blogPosts } from '@/data/blogPosts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://lonewolfdumpsters.com';
+  const baseUrl = 'https://wolfridgedumpsters.com';
   const now = new Date();
 
   // Core static pages

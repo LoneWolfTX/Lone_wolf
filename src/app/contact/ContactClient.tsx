@@ -11,7 +11,7 @@ export default function ContactClient() {
 
   const heroImg = siteContent.pageHeroes?.contact || {
     src: '/images/lone-wolf/lone_wolf_hero_top.png',
-    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    alt: 'Wolf Ridge Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
     position: 'center right'
   };
 
@@ -25,7 +25,7 @@ export default function ContactClient() {
         ]}
         headlineWhite="CONTACT US &"
         headlineRed="GET A QUOTE"
-        description="Ready to schedule your dumpster rental? Request a free quote below or call Wayne directly for instant dispatch confirmation across Dallas–Fort Worth."
+        description="Ready to schedule your dumpster rental? Request a free quote below or call our team directly for instant dispatch confirmation across Dallas–Fort Worth."
         imageSrc={heroImg.src}
         imageAlt={heroImg.alt}
         imageObjectPosition={heroImg.position || 'center right'}

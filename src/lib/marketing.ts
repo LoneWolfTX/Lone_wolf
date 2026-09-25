@@ -39,10 +39,10 @@ export interface MarketingSpendEntry {
   createdAt: string;
 }
 
-const CAMPAIGNS_KEY_PREFIX = 'lonewolf:campaign:';
-const CAMPAIGNS_LIST_KEY = 'lonewolf:campaigns';
-const SPEND_KEY_PREFIX = 'lonewolf:spend:';
-const SPEND_LIST_KEY = 'lonewolf:spend_entries';
+const CAMPAIGNS_KEY_PREFIX = 'wolfridge:campaign:';
+const CAMPAIGNS_LIST_KEY = 'wolfridge:campaigns';
+const SPEND_KEY_PREFIX = 'wolfridge:spend:';
+const SPEND_LIST_KEY = 'wolfridge:spend_entries';
 
 /**
  * Fetch all marketing campaigns from Upstash Redis

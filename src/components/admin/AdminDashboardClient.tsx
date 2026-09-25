@@ -50,7 +50,7 @@ import {
   ImageAssignment,
 } from '@/lib/contentStore';
 import { EXISTING_IMAGE_LIBRARY, StockImageItem } from '@/lib/imageLibrary';
-import { LoneWolfDocument, DocumentType } from '@/lib/documents';
+import { WolfRidgeDocument, DocumentType } from '@/lib/documents';
 import { DocumentModal } from '@/components/admin/DocumentModal';
 
 export interface Lead {
@@ -118,10 +118,10 @@ export default function AdminDashboardClient() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Documents State
-  const [leadDocuments, setLeadDocuments] = useState<Record<string, LoneWolfDocument[]>>({});
+  const [leadDocuments, setLeadDocuments] = useState<Record<string, WolfRidgeDocument[]>>({});
   const [docModalOpen, setDocModalOpen] = useState(false);
   const [selectedDocLead, setSelectedDocLead] = useState<Lead | null>(null);
-  const [editingDoc, setEditingDoc] = useState<LoneWolfDocument | null>(null);
+  const [editingDoc, setEditingDoc] = useState<WolfRidgeDocument | null>(null);
   const [docInitialType, setDocInitialType] = useState<DocumentType>('QUOTE');
   const [globalDocMenuOpen, setGlobalDocMenuOpen] = useState(false);
   const [leadDocMenuId, setLeadDocMenuId] = useState<string | null>(null);
@@ -607,11 +607,11 @@ export default function AdminDashboardClient() {
           {/* Brand */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ position: 'relative', width: '40px', height: '40px' }}>
-              <Image src="/images/lone-wolf/logo.png" alt="Lone Wolf Logo" fill style={{ objectFit: 'contain' }} />
+              <Image src="/images/lone-wolf/logo.png" alt="Wolf Ridge Logo" fill style={{ objectFit: 'contain' }} />
             </div>
             <div>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>
-                LONE WOLF <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
+                WOLF RIDGE <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
               </div>
               <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '2px' }}>
                 Owner &amp; Site Management Studio
@@ -1482,7 +1482,7 @@ export default function AdminDashboardClient() {
                                 Call
                               </a>
                               <a
-                                href={`sms:${lead.phone.replace(/[^0-9+]/g, '')}?&body=Hi%20${encodeURIComponent(lead.name)}%2C%20this%20is%20Wayne%20from%20Lone%20Wolf%20Dumpsters.`}
+                                href={`sms:${lead.phone.replace(/[^0-9+]/g, '')}?&body=Hi%20${encodeURIComponent(lead.name)}%2C%20this%20is%20Wolf%20Ridge%20Dumpsters.`}
                                 style={{ backgroundColor: 'rgba(220,38,38,0.2)', color: '#fca5a5', padding: '5px 10px', borderRadius: '4px', fontSize: '0.76rem', fontWeight: 800, textDecoration: 'none', border: '1px solid rgba(220,38,38,0.4)' }}
                               >
                                 Text
@@ -1639,7 +1639,7 @@ export default function AdminDashboardClient() {
                   WEBSITE IMAGES &amp; HEROES MANAGER
                 </h1>
                 <p style={{ fontSize: '0.86rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                  Assign images to Home Hero stacked tiles, public page headers, and marketing callouts. Wayne can upload new photos or pick from the authentic photo library.
+                  Assign images to Home Hero stacked tiles, public page headers, and marketing callouts. Staff can upload new photos or pick from the authentic photo library.
                 </p>
               </div>
             </div>
@@ -1800,7 +1800,7 @@ export default function AdminDashboardClient() {
                   { key: 'commercial', title: 'Commercial Services Hero', route: '/dumpster-rentals/commercial', defaultSrc: '/images/lone-wolf/lone_wolf_hero_debris.png' },
                   { key: 'junkRemoval', title: 'Junk Removal Hero', route: '/junk-removal', defaultSrc: '/images/lone-wolf/lone_wolf_hero_debris.png' },
                   { key: 'areasServed', title: 'Service Areas Hero', route: '/service-areas', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
-                  { key: 'about', title: 'About Lone Wolf Hero', route: '/about', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
+                  { key: 'about', title: 'About Wolf Ridge Hero', route: '/about', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
                   { key: 'guides', title: 'Guides & Resources Hero', route: '/blog', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
                   { key: 'contact', title: 'Contact & Quote Hero', route: '/contact', defaultSrc: '/images/lone-wolf/lone_wolf_hero_top.png' },
                 ].map((slot) => {
@@ -2675,7 +2675,7 @@ export default function AdminDashboardClient() {
             <div style={{ padding: '18px 24px', borderBottom: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                  SELECT IMAGE FROM LONE WOLF LIBRARY
+                  SELECT IMAGE FROM WOLF RIDGE LIBRARY
                 </h2>
                 <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
                   Choose an authentic photography asset or upload a new photo.

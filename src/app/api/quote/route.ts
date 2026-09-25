@@ -3,7 +3,7 @@ import { saveLeadInRedis, checkRateLimit } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
-const RECIPIENT_EMAIL = 'lonewolfdumpsters@gmail.com';
+const RECIPIENT_EMAIL = 'wolfridgedumpsters@gmail.com';
 
 const VALID_SERVICES = new Set([
   '15-yard-dumpster',
@@ -146,7 +146,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Lone Wolf Leads <leads@lonewolfdumpsters.com>',
+            from: 'Wolf Ridge Leads <leads@wolfridgedumpsters.com>',
             to: RECIPIENT_EMAIL,
             subject: `🐺 NEW LEAD: ${name} (${service.toUpperCase()}) - ${fullAddress}`,
             text: `New Dumpster Quote Request

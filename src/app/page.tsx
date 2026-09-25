@@ -3,10 +3,10 @@ import HomePageClient from './HomePageClient';
 import { siteSettings } from '@/data/siteSettings';
 
 export const metadata: Metadata = {
-  title: 'Lone Wolf Dumpsters | Fast & Reliable Dumpster Rentals in DFW',
+  title: 'Wolf Ridge Dumpsters | Fast & Reliable Dumpster Rentals in DFW',
   description: 'Rent 15, 20, and 25-yard driveway-safe roll-off dumpsters in Dallas-Fort Worth. Upfront flat-rate pricing, 5.0 Google rating, local owner-operator.',
   alternates: {
-    canonical: 'https://lonewolfdumpsters.com/',
+    canonical: 'https://wolfridgedumpsters.com/',
   },
 };
 
@@ -18,9 +18,9 @@ export default function HomePage() {
     legalName: siteSettings.businessName,
     telephone: siteSettings.contact.phone,
     email: siteSettings.contact.email,
-    url: 'https://lonewolfdumpsters.com',
-    logo: 'https://lonewolfdumpsters.com/images/lone-wolf/logo.png',
-    image: 'https://lonewolfdumpsters.com/images/lone-wolf/hero_placement.jpg',
+    url: 'https://wolfridgedumpsters.com',
+    logo: 'https://wolfridgedumpsters.com/images/lone-wolf/logo.png',
+    image: 'https://wolfridgedumpsters.com/images/lone-wolf/hero_placement.jpg',
     priceRange: '$385 - $475',
     address: {
       '@type': 'PostalAddress',

@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { LoneWolfDocument } from '@/lib/documents';
+import { WolfRidgeDocument } from '@/lib/documents';
 
 interface ReceiptViewProps {
-  document: LoneWolfDocument;
+  document: WolfRidgeDocument;
   logoBase64?: string;
 }
 
@@ -42,10 +42,10 @@ export const ReceiptView: React.FC<ReceiptViewProps> = ({ document: doc, logoBas
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <img src={logoSrc} alt="Lone Wolf Dumpsters" style={{ height: '54px', width: 'auto', objectFit: 'contain' }} />
+          <img src={logoSrc} alt="Wolf Ridge Dumpsters" style={{ height: '54px', width: 'auto', objectFit: 'contain' }} />
           <div>
             <div style={{ fontSize: '1.3rem', fontWeight: 900, letterSpacing: '1px', color: '#ffffff', textTransform: 'uppercase' }}>
-              {doc.companyName || 'LONE WOLF DUMPSTERS'}
+              {doc.companyName || 'WOLF RIDGE DUMPSTERS'}
             </div>
             <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700 }}>
               {doc.companyTagline || 'RENT SMART • DUMP EASY'}
@@ -173,7 +173,7 @@ export const ReceiptView: React.FC<ReceiptViewProps> = ({ document: doc, logoBas
       </div>
 
       <div style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '14px 32px', fontSize: '0.8rem', textAlign: 'center' }}>
-        Thank you for your business! Lone Wolf Dumpster Rentals | (214) 876-0321
+        Thank you for your business! Wolf Ridge Dumpster Rentals | (214) 876-0321
       </div>
     </div>
   );

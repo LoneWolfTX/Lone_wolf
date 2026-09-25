@@ -585,7 +585,7 @@ export const InteractiveServiceMap: React.FC = () => {
                 }}
               >
                 <Phone size={15} color="var(--accent-red)" />
-                <span>Call Wayne Direct: {siteSettings.contact.phone}</span>
+                <span>Call Dispatch Direct: {siteSettings.contact.phone}</span>
               </a>
             </div>
           </div>

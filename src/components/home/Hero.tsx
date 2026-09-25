@@ -137,11 +137,11 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Authentic Lone Wolf Roll-Off Dumpster Truck & Container Photo */}
+          {/* Right Column: Authentic Wolf Ridge Roll-Off Dumpster Container Photo */}
           <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: '8px', overflow: 'hidden', border: '1px solid #334155', boxShadow: '0 24px 48px -12px rgba(0,0,0,0.85)', backgroundColor: '#0a0d14' }}>
             <Image
               src="/images/lone-wolf/lone_wolf_hero_top.png"
-              alt="Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area"
+              alt="Wolf Ridge Dumpsters roll-off container serving the Dallas-Fort Worth area"
               fill
               priority
               sizes="(min-width: 1200px) 640px, 100vw"

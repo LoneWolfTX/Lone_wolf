@@ -86,7 +86,7 @@ export const MarketingDashboard: React.FC<MarketingDashboardProps> = ({ adminPas
     fetchStats();
   }, [range]);
 
-  const generatedTrackingUrl = `https://lonewolfdumpsters.com${utmPage}?utm_source=${encodeURIComponent(utmSource)}&utm_medium=${encodeURIComponent(utmMedium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
+  const generatedTrackingUrl = `https://wolfridgedumpsters.com${utmPage}?utm_source=${encodeURIComponent(utmSource)}&utm_medium=${encodeURIComponent(utmMedium)}&utm_campaign=${encodeURIComponent(utmCampaign)}`;
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(generatedTrackingUrl);

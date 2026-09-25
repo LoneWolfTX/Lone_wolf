@@ -45,11 +45,11 @@ export const PageHero: React.FC<PageHeroProps> = ({
   headlineRed,
   description,
   imageSrc = '/images/lone-wolf/lone_wolf_hero_top.png',
-  imageAlt = 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+  imageAlt = 'Wolf Ridge Dumpsters roll-off dumpster serving the Dallas-Fort Worth area',
   heroTopImageSrc = '/images/lone-wolf/hero_tile_top.jpg',
-  heroTopImageAlt = 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard',
+  heroTopImageAlt = 'Wolf Ridge roll-off dumpster on Texas driveway',
   heroBottomImageSrc = '/images/lone-wolf/real/residential_landscape_full.jpg',
-  heroBottomImageAlt = 'Lone Wolf roll-off dumpster placed on residential driveway in DFW',
+  heroBottomImageAlt = 'Wolf Ridge roll-off dumpster placed on residential driveway in DFW',
   showRating = false,
   trustItems,
   badgeText,
@@ -314,7 +314,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
                 width: '100%',
               }}
             >
-              {/* Top Tile: Wayne with Dumpsters */}
+              {/* Top Tile: Wolf Ridge Dumpster */}
               <div
                 className="hero-tile-top"
                 style={{
@@ -330,7 +330,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
               >
                 <Image
                   src={heroTopImageSrc || '/images/lone-wolf/hero_tile_top.jpg'}
-                  alt={heroTopImageAlt || 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard'}
+                  alt={heroTopImageAlt || 'Wolf Ridge roll-off dumpster on Texas driveway'}
                   fill
                   priority
                   loading="eager"
@@ -364,7 +364,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
               >
                 <Image
                   src={heroBottomImageSrc || '/images/lone-wolf/hero_tile_bottom.jpg'}
-                  alt={heroBottomImageAlt || 'Lone Wolf dumpsters fleet ready for delivery across DFW'}
+                  alt={heroBottomImageAlt || 'Wolf Ridge dumpsters fleet ready for delivery across DFW'}
                   fill
                   priority
                   loading="eager"

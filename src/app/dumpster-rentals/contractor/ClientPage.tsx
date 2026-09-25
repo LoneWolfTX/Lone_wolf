@@ -75,7 +75,7 @@ export default function ContractorPageClient() {
       <BenefitIconGrid
         titleBlack="A CONTRACTOR PARTNER YOU CAN"
         titleRed="COUNT ON"
-        subtitle="We know downtime costs you money. That's why general contractors, carpenters, and remodelers across DFW rely on Lone Wolf Dumpsters for zero-hassle job site waste logistics."
+        subtitle="We know downtime costs you money. That's why general contractors, carpenters, and remodelers across DFW rely on Wolf Ridge Dumpsters for zero-hassle job site waste logistics."
         items={contractorBenefits}
         columns={5}
         iconStyle="circle-red"
@@ -146,7 +146,7 @@ export default function ContractorPageClient() {
         headline="READY TO KEEP YOUR JOB SITE CLEAN"
         subheadline="AND YOUR PROJECT ON SCHEDULE?"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Contractor Dumpster"
+        imageAlt="Wolf Ridge Contractor Dumpster"
       />
     </>
   );

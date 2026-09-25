@@ -1,7 +1,7 @@
 /**
  * contentStore.ts
  *
- * Canonical schema, type definitions, and default dataset for Lone Wolf Dumpsters.
+ * Canonical schema, type definitions, and default dataset for Wolf Ridge Dumpsters.
  * Architecture: SINGLE CANONICAL SOURCE OF TRUTH for all business facts.
  * Server source of truth: /admin/data/site-content.json via /api/content.php
  */
@@ -273,19 +273,19 @@ export interface SiteContent {
 
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   business: {
-    companyName: "Lone Wolf Dumpsters",
-    legalName: "American Wolf Rent LLC DBA Lone Wolf Dumpsters",
-    brandName: "Lone Wolf Dumpsters",
+    companyName: "Wolf Ridge Dumpsters",
+    legalName: "Wolf Ridge Dumpsters LLC",
+    brandName: "Wolf Ridge Dumpsters",
     phone: "(214) 876-0321",
     phoneRaw: "+12148760321",
-    email: "lonewolfdumpsters@gmail.com",
+    email: "wolfridgedumpsters@gmail.com",
     yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034",
     yardStreet: "DFW Metroplex",
     yardCity: "Colleyville",
     yardState: "TX",
     yardZip: "76034",
     businessHours: "Monday – Saturday: 6:00 AM – 6:00 PM | Sunday: Closed",
-    googleReviewUrl: "https://g.page/r/lonewolfdumpsters/review",
+    googleReviewUrl: "https://g.page/r/wolfridgedumpsters/review",
     googleRating: "5.0",
     reviewCount: 48,
     primaryCtaText: "GET A QUOTE",
@@ -294,7 +294,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   contact: {
     phone: "(214) 876-0321",
     phoneRaw: "+12148760321",
-    email: "lonewolfdumpsters@gmail.com",
+    email: "wolfridgedumpsters@gmail.com",
     yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034"
   },
   pricing: {
@@ -400,7 +400,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       category: "restricted",
       status: "Prior Approval Required",
       shortDescription: "Customers should contact us before disposing of Freon-containing refrigerators.",
-      fullDescription: "Customers must contact Lone Wolf Dumpsters before loading a Freon-containing refrigerator.",
+      fullDescription: "Customers must contact Wolf Ridge Dumpsters before loading a Freon-containing refrigerator.",
       fee: 0,
       active: true
     }
@@ -432,7 +432,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       id: "t1",
       customerName: "Mark S.",
       location: "Fort Worth, TX",
-      testimonial: "Lone Wolf delivered our 20-yard dumpster right on time. They put wooden boards under the wheels so our concrete driveway didn't have a single scratch. Excellent service!",
+      testimonial: "Wolf Ridge delivered our 20-yard dumpster right on time. They put wooden boards under the wheels so our concrete driveway didn't have a single scratch. Excellent service!",
       rating: 5,
       source: "Google Review",
       dumpsterId: "20-yard-dumpster",
@@ -469,7 +469,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     { id: "sa-4", city: "Keller", state: "TX", county: "Tarrant", slug: "keller", zipCodes: ["76248", "76244"], active: true, serviceStatus: "Active", localIntro: "Residential driveway-safe roll-off container delivery across Keller and North Tarrant County.", headline: "Dumpster Rental in Keller, TX", keyProjects: ["Garage decluttering", "Kitchen renovations", "Yard debris removal"], neighborhoods: ["Town Center", "Hidden Lakes", "Marshall Ridge"] }
   ],
   termsContent: {
-    legalEntityName: "American Wolf Rent LLC DBA Lone Wolf Dumpsters",
+    legalEntityName: "Wolf Ridge Dumpsters LLC",
     generalTerms: "Standard rental period includes 1 to 7 days. Weight allowances: 15yd (1.5 tons), 20yd (2.0 tons), 25yd (2.2 tons). Overages billed at $80/ton.",
     paymentTerms: "Payment due upon container delivery. Major credit cards, debit cards, and corporate checks accepted.",
     weightTerms: "Scale weight tickets provided by local landfills determine final billable tonnage according to written terms."
@@ -490,21 +490,21 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     heroHeadlineWhite: "FAST & RELIABLE",
     heroHeadlineRed: "DUMPSTER RENTALS ACROSS DFW",
     heroDescription: "Dumpsters for cleanouts, remodels, construction, roofing, and more — delivered across DFW.",
-    introTitle: "WELCOME TO LONE WOLF DUMPSTERS",
+    introTitle: "WELCOME TO WOLF RIDGE DUMPSTERS",
     introDescription: "Dallas-Fort Worth's local owner-operator roll-off dumpster service. Upfront flat-rate pricing, 5.0 Google rating, driveway-safe delivery.",
     heroTopImage: {
       src: "/images/lone-wolf/hero_tile_top.jpg",
-      alt: "Wayne with Lone Wolf roll-off dumpster in Colleyville yard",
+      alt: "Wolf Ridge roll-off dumpster on Texas driveway",
       position: "center center"
     },
     heroBottomImage: {
       src: "/images/lone-wolf/real/residential_landscape_full.jpg",
-      alt: "Lone Wolf roll-off dumpster placed on residential driveway in DFW",
+      alt: "Wolf Ridge roll-off dumpster placed on residential driveway in DFW",
       position: "center center"
     },
     heroImage: {
       src: "/images/lone-wolf/hero_tile_top.jpg",
-      alt: "Wayne with Lone Wolf roll-off dumpster fleet in Colleyville yard",
+      alt: "Wolf Ridge roll-off dumpster fleet in Colleyville yard",
       position: "center center"
     },
     showcaseImage: {
@@ -514,12 +514,12 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     closingBannerImage: {
       src: "/images/lone-wolf/lone_wolf_hero_top.png",
-      alt: "Real Lone Wolf Roll-Off Dumpster Ready for Delivery in DFW",
+      alt: "Real Wolf Ridge Roll-Off Dumpster Ready for Delivery in DFW",
       position: "center center"
     },
     aboutOwnerImage: {
       src: "/images/lone-wolf/real/about_owner_photo.jpg",
-      alt: "Lone Wolf Dumpsters Roll-Off Fleet in Dallas-Fort Worth",
+      alt: "Wolf Ridge Dumpsters Roll-Off Fleet in Dallas-Fort Worth",
       position: "center top"
     },
     commercialHeaderImage: {
@@ -539,7 +539,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     }
   },
   pageHeroes: {
-    dumpsterRentals: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Lone Wolf Dumpster Rentals DFW", position: "center right" },
+    dumpsterRentals: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Wolf Ridge Dumpster Rentals DFW", position: "center right" },
     fifteenYard: { src: "/images/lone-wolf/lone_wolf_hero_residential.png", alt: "15 Yard Dumpster Rental", position: "center center" },
     twentyYard: { src: "/images/lone-wolf/lone_wolf_hero_construction.png", alt: "20 Yard Dumpster Rental", position: "center center" },
     twentyFiveYard: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "25 Yard Dumpster Rental", position: "center center" },
@@ -548,20 +548,20 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     commercial: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "Commercial Dumpster Rentals", position: "center center" },
     junkRemoval: { src: "/images/lone-wolf/lone_wolf_hero_debris.png", alt: "Full-Service Junk Removal", position: "center center" },
     areasServed: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Service Areas across DFW", position: "center right" },
-    about: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "About Lone Wolf Dumpsters", position: "center right" },
+    about: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "About Wolf Ridge Dumpsters", position: "center right" },
     guides: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Dumpster Rental Guides", position: "center right" },
-    contact: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Contact Lone Wolf Dumpsters", position: "center right" },
+    contact: { src: "/images/lone-wolf/lone_wolf_hero_top.png", alt: "Contact Wolf Ridge Dumpsters", position: "center right" },
   },
   about: {
-    titleWhite: "ABOUT LONE WOLF",
+    titleWhite: "ABOUT WOLF RIDGE",
     titleRed: "DUMPSTERS",
     heroDescription: "Locally owned and dedicated to transparent, stress-free roll-off dumpster rentals and junk removal across Dallas–Fort Worth.",
-    ownerBadgeTitle: "LONE WOLF DUMPSTERS",
+    ownerBadgeTitle: "WOLF RIDGE DUMPSTERS",
     ownerBadgeSub: "Direct Local Accountability",
     storyHeadlineWhite: "STRAIGHTFORWARD SERVICE.",
     storyHeadlineRed: "LOCAL ACCOUNTABILITY.",
-    storyParagraph: "Lone Wolf Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, protect every driveway with care and board protection, and make dumpster rental simple with direct communication, reliable service, and clear pricing from the start.",
-    storyQuote: "When you rent from Lone Wolf Dumpsters, you deal directly with our local team. We make waste removal straightforward, reliable, and hassle-free for homeowners and contractors across the metroplex."
+    storyParagraph: "Wolf Ridge Dumpsters was founded on simple principles: deliver clean, dependable equipment on time, protect every driveway with care and board protection, and make dumpster rental simple with direct communication, reliable service, and clear pricing from the start.",
+    storyQuote: "When you rent from Wolf Ridge Dumpsters, you deal directly with our local team. We make waste removal straightforward, reliable, and hassle-free for homeowners and contractors across the metroplex."
   },
   dumpsterEntities: [
     {
@@ -579,7 +579,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       additionalDayFee: 20,
       dimensions: "16' L × 8' W × 4' H",
       image: "/images/lone-wolf/dumpster-15.jpeg",
-      imageAlt: "Lone Wolf 15-yard roll-off dumpster rental on residential driveway in Dallas-Fort Worth",
+      imageAlt: "Wolf Ridge 15-yard roll-off dumpster rental on residential driveway in Dallas-Fort Worth",
       badgeText: "UP TO 3 DAYS — $385 • 1.5 TONS",
       description: "Ideal for small home cleanouts, single-room remodels, yard debris, and light renovation projects.",
       bestFor: [
@@ -608,7 +608,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       additionalDayFee: 20,
       dimensions: "16' L × 8' W × 5.4' H",
       image: "/images/lone-wolf/dumpster-20.jpeg",
-      imageAlt: "Lone Wolf 20-yard roll-off dumpster container for residential and contractor projects",
+      imageAlt: "Wolf Ridge 20-yard roll-off dumpster container for residential and contractor projects",
       badgeText: "UP TO 3 DAYS — $425 • 2 TONS • DRIVEWAY SAFE",
       description: "Our most versatile container. Perfect for kitchen remodels, home cleanouts, and medium renovation projects. Driveway-safe placement.",
       bestFor: [
@@ -638,7 +638,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       additionalDayFee: 20,
       dimensions: "16' L × 8' W × 6.5' H",
       image: "/images/lone-wolf/dumpster-25.jpeg",
-      imageAlt: "Lone Wolf 25-yard heavy-duty roll-off dumpster on commercial contractor job site",
+      imageAlt: "Wolf Ridge 25-yard heavy-duty roll-off dumpster on commercial contractor job site",
       badgeText: "UP TO 3 DAYS — $475 • 2.2 TONS",
       description: "Maximum capacity for large residential remodels, whole-house estate cleanouts, commercial construction, property cleanouts, and warehouses/distribution centers.",
       bestFor: [
@@ -847,8 +847,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   faqs: [
     {
       id: "faq-1",
-      question: "How does dumpster rental work with Lone Wolf Dumpsters?",
-      answer: "Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.",
+      question: "How does dumpster rental work with Wolf Ridge Dumpsters?",
+      answer: "Renting a dumpster with Wolf Ridge Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.",
       category: "booking"
     },
     {
@@ -871,8 +871,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
     {
       id: "faq-5",
-      question: "What areas does Lone Wolf Dumpsters serve?",
-      answer: "Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.",
+      question: "What areas does Wolf Ridge Dumpsters serve?",
+      answer: "Wolf Ridge Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.",
       category: "placement"
     },
     {
@@ -908,7 +908,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-11",
       question: "What can I put in a dumpster?",
-      answer: "Lone Wolf Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.",
+      answer: "Wolf Ridge Dumpsters accepts a wide variety of approved materials, including construction debris, drywall, wood, furniture, cardboard and packaging, general household junk, yard and landscaping debris, and other approved materials. All materials must be placed inside the dumpster and kept below the top edge. Please review our prohibited items before loading the dumpster.",
       category: "materials"
     },
     {
@@ -920,7 +920,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     {
       id: "faq-13",
       question: "What size dumpster do I need for my project?",
-      answer: "The right dumpster size depends on the type and amount of debris from your project. Lone Wolf Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.",
+      answer: "The right dumpster size depends on the type and amount of debris from your project. Wolf Ridge Dumpsters offers 15-yard, 20-yard, and 25-yard dumpsters for home cleanouts, renovations, remodeling, landscaping, construction debris, and commercial projects. For larger commercial, industrial, distribution, and logistics projects, we can provide multiple dumpsters at the same time, including 2 × 15-yard (30 yards total), 2 × 20-yard (40 yards total), or 2 × 25-yard (50 yards total). If you’re unsure which dumpster size or combination is right for your project, our team can help you choose the best option.",
       category: "booking"
     },
     {

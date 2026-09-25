@@ -142,7 +142,7 @@ export default function CommercialPageClient() {
         headline="READY TO KEEP YOUR BUSINESS"
         subheadline="CLEAN AND MOVING? BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Commercial Dumpster"
+        imageAlt="Wolf Ridge Commercial Dumpster"
       />
     </>
   );

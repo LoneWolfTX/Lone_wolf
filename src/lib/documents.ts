@@ -21,7 +21,7 @@ export interface PaymentRecord {
   notes?: string;
 }
 
-export interface LoneWolfDocument {
+export interface WolfRidgeDocument {
   id: string;
   type: DocumentType;
   number: string;
@@ -70,9 +70,9 @@ export interface LoneWolfDocument {
   [key: string]: any;
 }
 
-const DOC_KEY_PREFIX = 'lonewolf:doc:';
-const DOC_LIST_KEY = 'lonewolf:documents';
-const LEAD_DOCS_KEY_PREFIX = 'lonewolf:lead:docs:';
+const DOC_KEY_PREFIX = 'wolfridge:doc:';
+const DOC_LIST_KEY = 'wolfridge:documents';
+const LEAD_DOCS_KEY_PREFIX = 'wolfridge:lead:docs:';
 
 export async function generateAtomicDocumentNumber(type: DocumentType): Promise<string> {
   const prefixMap: Record<DocumentType, string> = {
@@ -86,7 +86,7 @@ export async function generateAtomicDocumentNumber(type: DocumentType): Promise<
 
   if (cfg) {
     try {
-      const seqKey = 'lonewolf:seq:' + type + ':' + year;
+      const seqKey = 'wolfridge:seq:' + type + ':' + year;
       const res = await fetch(cfg.url + '/incr/' + seqKey, {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + cfg.token },
@@ -107,7 +107,7 @@ export async function generateAtomicDocumentNumber(type: DocumentType): Promise<
   return prefix + '-' + year + '-' + randomSuffix;
 }
 
-export async function saveDocumentInRedis(doc: LoneWolfDocument): Promise<LoneWolfDocument | null> {
+export async function saveDocumentInRedis(doc: WolfRidgeDocument): Promise<WolfRidgeDocument | null> {
   try {
     const docId = doc.id;
     const jsonString = JSON.stringify(doc);
@@ -129,7 +129,7 @@ export async function saveDocumentInRedis(doc: LoneWolfDocument): Promise<LoneWo
   }
 }
 
-export async function getDocumentByIdFromRedis(docId: string): Promise<LoneWolfDocument | null> {
+export async function getDocumentByIdFromRedis(docId: string): Promise<WolfRidgeDocument | null> {
   const cfg = getRedisConfig();
   if (!cfg) return null;
 
@@ -147,14 +147,14 @@ export async function getDocumentByIdFromRedis(docId: string): Promise<LoneWolfD
     while (typeof resObj === 'string') {
       resObj = JSON.parse(resObj);
     }
-    return resObj as LoneWolfDocument;
+    return resObj as WolfRidgeDocument;
   } catch (err) {
     console.error('Failed to get document from Upstash Redis:', err);
     return null;
   }
 }
 
-export async function getDocumentsForLeadFromRedis(leadId: string): Promise<LoneWolfDocument[]> {
+export async function getDocumentsForLeadFromRedis(leadId: string): Promise<WolfRidgeDocument[]> {
   const cfg = getRedisConfig();
   if (!cfg) return [];
 
@@ -192,7 +192,7 @@ export async function getDocumentsForLeadFromRedis(leadId: string): Promise<Lone
     const mgetCommands = uniqueIds.map((id: string) => ['GET', DOC_KEY_PREFIX + id.trim()]);
     const results = await redisPipeline(mgetCommands);
 
-    const docs: LoneWolfDocument[] = [];
+    const docs: WolfRidgeDocument[] = [];
     for (const item of results) {
       if (item?.result) {
         try {
@@ -201,7 +201,7 @@ export async function getDocumentsForLeadFromRedis(leadId: string): Promise<Lone
             resObj = JSON.parse(resObj);
           }
           if (resObj && (resObj.leadId === cleanLeadId || !resObj.leadId)) {
-            docs.push(resObj as LoneWolfDocument);
+            docs.push(resObj as WolfRidgeDocument);
           }
         } catch {
           // Skip invalid

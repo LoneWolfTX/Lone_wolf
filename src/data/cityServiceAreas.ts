@@ -77,7 +77,7 @@ export const cityServiceAreas: CityServiceArea[] = [
       "76248"
     ],
     "headline": "Dumpster Rental in Keller, TX",
-    "localIntro": "Lone Wolf Dumpsters provides driveway-friendly 15, 20, and 25-yard roll-off dumpster rentals throughout Keller and surrounding North Tarrant County neighborhoods.",
+    "localIntro": "Wolf Ridge Dumpsters provides driveway-friendly 15, 20, and 25-yard roll-off dumpster rentals throughout Keller and surrounding North Tarrant County neighborhoods.",
     "keyProjects": [
       "Residential kitchen & bath remodels in Keller",
       "Garage & attic clearouts near Keller Town Center",

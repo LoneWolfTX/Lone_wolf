@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { NextRequest } from 'next/server';
 
-export const ADMIN_COOKIE_NAME = 'lonewolf_admin_session';
+export const ADMIN_COOKIE_NAME = 'wolfridge_admin_session';
 export const SESSION_DURATION_SECONDS = 12 * 60 * 60; // 12 hours
 
 function getSessionSecret(): string {
@@ -14,12 +14,12 @@ function getSessionSecret(): string {
     process.env.UPSTASH_REDIS_REST_TOKEN ||
     process.env.UPSTASH_REDIS_LW_KV_REST_API_TOKEN ||
     process.env.KV_REST_API_TOKEN ||
-    'lonewolf_production_session_salt_2026';
-  return crypto.createHash('sha256').update('lonewolf_session_hmac:' + seed).digest('hex');
+    'wolfridge_production_session_salt_2026';
+  return crypto.createHash('sha256').update('wolfridge_session_hmac:' + seed).digest('hex');
 }
 
 function getAdminPassword(): string {
-  return process.env.ADMIN_PASSWORD || 'LoneWolfAdmin2026!';
+  return process.env.ADMIN_PASSWORD || 'WolfRidgeAdmin2026!';
 }
 
 export function verifyAdminPassword(provided: string): boolean {
@@ -134,7 +134,7 @@ export function verifyCsrfOrigin(req: NextRequest | Request): boolean {
     }
 
     // 2. Canonical production domain match
-    const trustedDomains = ['lonewolfdumpsters.com', 'www.lonewolfdumpsters.com'];
+    const trustedDomains = ['wolfridgedumpsters.com', 'www.wolfridgedumpsters.com'];
     if (trustedDomains.includes(originUrl.hostname.toLowerCase())) {
       return true;
     }

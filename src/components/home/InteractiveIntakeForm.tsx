@@ -667,7 +667,7 @@ export const InteractiveIntakeForm: React.FC = () => {
           </div>
 
           <div style={{ marginTop: '12px', textAlign: 'center', fontSize: '0.76rem', color: '#94a3b8' }}>
-            🔒 Direct submission to Lone Wolf Dumpsters LLC. No spam or third-party sharing.
+            🔒 Direct submission to Wolf Ridge Dumpsters LLC. No spam or third-party sharing.
           </div>
         </form>
       )}

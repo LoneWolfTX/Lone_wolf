@@ -31,9 +31,9 @@ export function requireRedisConfig(): { url: string; token: string } {
   return cfg;
 }
 
-const CONTENT_KEY = 'lonewolf:site-content';
-const LEADS_KEY_PREFIX = 'lonewolf:lead:';
-const LEADS_LIST_KEY = 'lonewolf:leads';
+const CONTENT_KEY = 'wolfridge:site-content';
+const LEADS_KEY_PREFIX = 'wolfridge:lead:';
+const LEADS_LIST_KEY = 'wolfridge:leads';
 
 /**
  * Execute an atomic transaction of commands against Upstash Redis REST API using /multi-exec.
@@ -417,7 +417,7 @@ export async function checkRateLimit(
     return { allowed: true, remaining: limit };
   }
 
-  const key = `lonewolf:ratelimit:${prefix}:${ip}`;
+  const key = `wolfridge:ratelimit:${prefix}:${ip}`;
   try {
     const results = await redisTransaction([
       ['INCR', key],

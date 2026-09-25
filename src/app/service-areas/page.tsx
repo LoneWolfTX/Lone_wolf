@@ -18,7 +18,7 @@ export default function ServiceAreasPage() {
 
   const heroImg = siteContent.pageHeroes?.areasServed || {
     src: '/images/lone-wolf/lone_wolf_hero_top.png',
-    alt: 'Lone Wolf Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
+    alt: 'Wolf Ridge Dumpsters roll-off truck with black dumpster serving the Dallas-Fort Worth area',
     position: 'center right'
   };
 
@@ -424,7 +424,7 @@ export default function ServiceAreasPage() {
         headline="READY TO RENT YOUR DUMPSTER?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Dumpster Service"
+        imageAlt="Wolf Ridge Dumpster Service"
       />
     </>
   );

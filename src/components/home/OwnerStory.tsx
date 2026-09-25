@@ -14,7 +14,7 @@ export const OwnerStory: React.FC = () => {
             <div className="owner-image-container">
               <Image
                 src="/images/lone-wolf/real/about_owner_photo.jpg"
-                alt="Owner Wayne with Lone Wolf Dumpsters roll-off fleet in DFW"
+                alt="Wolf Ridge Dumpsters roll-off fleet in DFW"
                 fill
                 loading="eager"
                 sizes="(min-width: 960px) 440px, 100vw"
@@ -22,7 +22,7 @@ export const OwnerStory: React.FC = () => {
               />
               <div className="owner-badge">
                 <UserCheck size={16} className="text-accent" />
-                <span>Wayne — Owner & Operator</span>
+                <span>Wolf Ridge — Owner & Operator</span>
               </div>
             </div>
           </div>
@@ -39,11 +39,11 @@ export const OwnerStory: React.FC = () => {
             </h2>
 
             <blockquote className="owner-quote">
-              &ldquo;I&apos;m Wayne, owner of Lone Wolf Dumpsters. We are locally owned and operated right here in DFW. Whether you&apos;re cleaning out a garage, remodeling a home, or running a busy job site, our mission is simple: to make waste removal easy, transparent, and stress-free.&rdquo;
+              &ldquo;At Wolf Ridge Dumpsters, we are locally owned and operated right here in DFW. Whether you&apos;re cleaning out a garage, remodeling a home, or running a busy job site, our mission is simple: to make waste removal easy, transparent, and stress-free.&rdquo;
             </blockquote>
 
             <p className="owner-body-text">
-              When you call or text Lone Wolf, you speak directly with the team handling your delivery. We treat your property with respect, protect driveways with wood placement, and deliver dependable equipment with upfront pricing.
+              When you call or text Wolf Ridge, you speak directly with the team handling your delivery. We treat your property with respect, protect driveways with wood placement, and deliver dependable equipment with upfront pricing.
             </p>
 
             <div className="owner-values-grid">

@@ -159,7 +159,7 @@ export default function ResidentialPageClient() {
         headline="READY TO START YOUR CLEANUP?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Residential Dumpster"
+        imageAlt="Wolf Ridge Residential Dumpster"
       />
     </>
   );

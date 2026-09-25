@@ -58,7 +58,7 @@ export function normalizeSource(
   if (src === 'craigslist') return 'Craigslist';
   if (src === 'facebook_marketplace' || src === 'fb_marketplace') return 'Facebook Marketplace';
 
-  if (ref && !ref.includes(typeof window !== 'undefined' ? window.location.hostname : 'lonewolfdumpsters')) {
+  if (ref && !ref.includes(typeof window !== 'undefined' ? window.location.hostname : 'wolfridgedumpsters')) {
     return 'Referral';
   }
 
@@ -69,8 +69,8 @@ export function normalizeSource(
   return 'Unknown';
 }
 
-const FIRST_TOUCH_KEY = 'lonewolf_first_touch';
-const LAST_TOUCH_KEY = 'lonewolf_last_touch';
+const FIRST_TOUCH_KEY = 'wolfridge_first_touch';
+const LAST_TOUCH_KEY = 'wolfridge_last_touch';
 
 /**
  * Initialize visitor attribution in browser

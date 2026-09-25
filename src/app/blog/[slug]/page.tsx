@@ -20,13 +20,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = blogPosts.find((p) => p.slug === slug);
-  if (!post) return { title: 'Article | Lone Wolf Dumpsters' };
+  if (!post) return { title: 'Article | Wolf Ridge Dumpsters' };
 
   return {
-    title: `${post.title} | Lone Wolf Dumpsters DFW`,
+    title: `${post.title} | Wolf Ridge Dumpsters DFW`,
     description: post.excerpt,
     alternates: {
-      canonical: `https://lonewolfdumpsters.com/blog/${post.slug}`,
+      canonical: `https://wolfridgedumpsters.com/blog/${post.slug}`,
     },
   };
 }
@@ -46,7 +46,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
     description: post.excerpt,
     author: {
       '@type': 'Person',
-      name: 'Wayne',
+      name: 'Wolf Ridge Team',
       jobTitle: 'Owner & Operator',
       worksFor: {
         '@type': 'LocalBusiness',
@@ -58,10 +58,10 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
       name: siteSettings.businessName,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://lonewolfdumpsters.com/images/lone-wolf/logo.png',
+        url: 'https://wolfridgedumpsters.com/images/lone-wolf/logo.png',
       },
     },
-    mainEntityOfPage: `https://lonewolfdumpsters.com/blog/${post.slug}`,
+    mainEntityOfPage: `https://wolfridgedumpsters.com/blog/${post.slug}`,
   };
 
   return (
@@ -149,7 +149,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
                 NEED HELP RESERVING A DUMPSTER?
               </h3>
               <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '0 0 14px 0' }}>
-                Wayne is available Mon–Sat from 6:00 AM to 6:00 PM for direct scheduling and sizing advice.
+                Our local dispatch team is available Mon–Sat from 6:00 AM to 6:00 PM for direct scheduling and sizing advice.
               </p>
               <a
                 href={`tel:${siteSettings.contact.phoneRaw}`}
@@ -167,7 +167,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
                   textDecoration: 'none',
                 }}
               >
-                <span>Call Wayne at (214) 876-0321</span>
+                <span>Call Our Team at (214) 876-0321</span>
               </a>
             </div>
 
@@ -181,7 +181,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
         headline="READY TO RENT YOUR DUMPSTER?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt="Lone Wolf Dumpster Service"
+        imageAlt="Wolf Ridge Dumpster Service"
       />
     </>
   );

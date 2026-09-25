@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { LoneWolfDocument } from '@/lib/documents';
+import { WolfRidgeDocument } from '@/lib/documents';
 
 interface QuoteProposalViewProps {
-  document: LoneWolfDocument;
+  document: WolfRidgeDocument;
   logoBase64?: string;
 }
 
@@ -44,12 +44,12 @@ export const QuoteProposalView: React.FC<QuoteProposalViewProps> = ({ document: 
           {/* Logo */}
           <img
             src={logoSrc}
-            alt="Lone Wolf Dumpsters"
+            alt="Wolf Ridge Dumpsters"
             style={{ height: '54px', width: 'auto', objectFit: 'contain' }}
           />
           <div>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, letterSpacing: '1px', color: '#ffffff', textTransform: 'uppercase' }}>
-              {doc.companyName || 'LONE WOLF DUMPSTERS'}
+              {doc.companyName || 'WOLF RIDGE DUMPSTERS'}
             </div>
             <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
               {doc.companyTagline || 'RENT SMART • DUMP EASY'}
@@ -261,8 +261,8 @@ export const QuoteProposalView: React.FC<QuoteProposalViewProps> = ({ document: 
 
       {/* 7. Footer */}
       <div style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '16px 32px', fontSize: '0.82rem', textAlign: 'center', borderTop: '1px solid #1e293b' }}>
-        Questions? Call or text <strong>{doc.companyPhone || '(214) 876-0321'}</strong> | Email: <strong>{doc.companyEmail || 'lonewolfdumpsters@gmail.com'}</strong><br />
-        <strong>{doc.companyWebsite || 'www.lonewolfdumpsters.com'}</strong> • Direct Owner-Operator Dispatch Across 48 DFW Cities
+        Questions? Call or text <strong>{doc.companyPhone || '(214) 876-0321'}</strong> | Email: <strong>{doc.companyEmail || 'wolfridgedumpsters@gmail.com'}</strong><br />
+        <strong>{doc.companyWebsite || 'www.wolfridgedumpsters.com'}</strong> • Direct Owner-Operator Dispatch Across 48 DFW Cities
       </div>
     </div>
   );

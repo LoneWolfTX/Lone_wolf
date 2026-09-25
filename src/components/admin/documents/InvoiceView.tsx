@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { LoneWolfDocument } from '@/lib/documents';
+import { WolfRidgeDocument } from '@/lib/documents';
 
 interface InvoiceViewProps {
-  document: LoneWolfDocument;
+  document: WolfRidgeDocument;
   logoBase64?: string;
 }
 
@@ -42,10 +42,10 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ document: doc, logoBas
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <img src={logoSrc} alt="Lone Wolf Dumpsters" style={{ height: '54px', width: 'auto', objectFit: 'contain' }} />
+          <img src={logoSrc} alt="Wolf Ridge Dumpsters" style={{ height: '54px', width: 'auto', objectFit: 'contain' }} />
           <div>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, letterSpacing: '1px', color: '#ffffff', textTransform: 'uppercase' }}>
-              {doc.companyName || 'LONE WOLF DUMPSTERS'}
+              {doc.companyName || 'WOLF RIDGE DUMPSTERS'}
             </div>
             <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
               {doc.companyTagline || 'RENT SMART • DUMP EASY'}
@@ -208,7 +208,7 @@ export const InvoiceView: React.FC<InvoiceViewProps> = ({ document: doc, logoBas
       </div>
 
       <div style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '16px 32px', fontSize: '0.82rem', textAlign: 'center' }}>
-        Questions? Call or text <strong>{doc.companyPhone || '(214) 876-0321'}</strong> | <strong>{doc.companyWebsite || 'www.lonewolfdumpsters.com'}</strong>
+        Questions? Call or text <strong>{doc.companyPhone || '(214) 876-0321'}</strong> | <strong>{doc.companyWebsite || 'www.wolfridgedumpsters.com'}</strong>
       </div>
     </div>
   );

@@ -10,8 +10,8 @@ export const FAQSection: React.FC = () => {
 
   const leftFaqs = [
     {
-      q: 'How does dumpster rental work with Lone Wolf Dumpsters?',
-      a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
+      q: 'How does dumpster rental work with Wolf Ridge Dumpsters?',
+      a: 'Renting a dumpster with Wolf Ridge Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
     },
     {
       q: 'How long can I rent a dumpster?',
@@ -29,8 +29,8 @@ export const FAQSection: React.FC = () => {
       a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
     },
     {
-      q: 'What areas does Lone Wolf Dumpsters serve?',
-      a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+      q: 'What areas does Wolf Ridge Dumpsters serve?',
+      a: 'Wolf Ridge Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
     },
     {
       q: 'How fast can I get a dumpster delivered?',

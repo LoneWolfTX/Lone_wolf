@@ -129,9 +129,9 @@ export default function HomePageClient() {
         description={hp.heroDescription || 'Dumpsters for cleanouts, remodels, construction, roofing, and more — delivered across DFW.'}
         showRating={true}
         heroTopImageSrc={hp.heroTopImage?.src || '/images/lone-wolf/hero_tile_top.jpg'}
-        heroTopImageAlt={hp.heroTopImage?.alt || 'Wayne with Lone Wolf roll-off dumpster in Colleyville yard'}
+        heroTopImageAlt={hp.heroTopImage?.alt || 'Wolf Ridge roll-off dumpster on Texas driveway'}
         heroBottomImageSrc={hp.heroBottomImage?.src || '/images/lone-wolf/real/residential_landscape_full.jpg'}
-        heroBottomImageAlt={hp.heroBottomImage?.alt || 'Lone Wolf roll-off dumpster placed on residential driveway in DFW'}
+        heroBottomImageAlt={hp.heroBottomImage?.alt || 'Wolf Ridge roll-off dumpster placed on residential driveway in DFW'}
         trustItems={heroTrustItems}
       />
 
@@ -161,10 +161,10 @@ export default function HomePageClient() {
         buttonHref="/junk-removal"
       />
 
-      {/* 5. "Why Choose Lone Wolf Dumpsters?" Benefits (5 items) */}
+      {/* 5. "Why Choose Wolf Ridge Dumpsters?" Benefits (5 items) */}
       <BenefitIconGrid
         tagline="WHY CHOOSE"
-        titleBlack="LONE WOLF"
+        titleBlack="WOLF RIDGE"
         titleRed="DUMPSTERS"
         items={whyChooseItems}
         columns={5}
@@ -189,8 +189,8 @@ export default function HomePageClient() {
         titleBlack="QUESTIONS"
         leftFaqs={[
           {
-            q: 'How does dumpster rental work with Lone Wolf Dumpsters?',
-            a: 'Renting a dumpster with Lone Wolf Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
+            q: 'How does dumpster rental work with Wolf Ridge Dumpsters?',
+            a: 'Renting a dumpster with Wolf Ridge Dumpsters is simple. Choose the dumpster size that fits your project, select your delivery date, and provide a suitable placement location. We deliver the dumpster to your property, you fill it with approved materials, and we pick it up when you’re finished. Our goal is to make dumpster rental convenient, straightforward, and hassle-free.',
           },
           {
             q: 'How long can I rent a dumpster?',
@@ -207,8 +207,8 @@ export default function HomePageClient() {
             a: 'We are flexible and will do our best to accommodate your needs, depending on availability. Additional days are $20 per day and must be confirmed with us in advance by phone or text. Standard rentals can be extended up to 10 days. If you need the dumpster for 2–3 weeks or longer, please contact us to discuss availability and pricing.',
           },
           {
-            q: 'What areas does Lone Wolf Dumpsters serve?',
-            a: 'Lone Wolf Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
+            q: 'What areas does Wolf Ridge Dumpsters serve?',
+            a: 'Wolf Ridge Dumpsters provides dumpster rental services in Dallas, Fort Worth, Arlington, Grand Prairie, Lewisville, Euless, Keller, Irving, Bedford, Hurst, and surrounding areas throughout the DFW Metroplex. Service availability may vary by location, so please check our Service Areas page for the communities we currently serve.',
           },
           {
             q: 'How fast can I get a dumpster delivered?',
@@ -227,7 +227,7 @@ export default function HomePageClient() {
         headline="READY TO RENT YOUR DUMPSTER?"
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc={hp.closingBannerImage?.src || '/images/lone-wolf/real/contractor_environment_showcase.jpg'}
-        imageAlt={hp.closingBannerImage?.alt || 'Real Lone Wolf Roll-Off Dumpster Ready for Delivery in DFW'}
+        imageAlt={hp.closingBannerImage?.alt || 'Real Wolf Ridge Roll-Off Dumpster Ready for Delivery in DFW'}
         imageObjectPosition={hp.closingBannerImage?.position || 'center center'}
       />
     </>

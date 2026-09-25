@@ -1,5 +1,5 @@
 /**
- * Conversion Tracking Helper for Lone Wolf Dumpsters
+ * Conversion Tracking Helper for Wolf Ridge Dumpsters
  * Integrates Google Tag Manager, Google Analytics (GA4: G-WB2ZEEBZ4Y), and Meta Pixel (fbq: 99020332740911)
  */
 

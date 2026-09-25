@@ -28,8 +28,8 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
   if (!data) return {};
 
   const title = `Dumpster Rental in ${data.cityName}, TX | Affordable Roll-Off Containers`;
-  const description = `Looking for dumpster rentals in ${data.cityName}, TX? Lone Wolf Dumpsters provides fast, reliable, driveway-safe, and affordable roll-off container services. Get a free quote today!`;
-  const url = `https://lonewolfdumpsters.com/service-areas/${data.slug}`;
+  const description = `Looking for dumpster rentals in ${data.cityName}, TX? Wolf Ridge Dumpsters provides fast, reliable, driveway-safe, and affordable roll-off container services. Get a free quote today!`;
+  const url = `https://wolfridgedumpsters.com/service-areas/${data.slug}`;
 
   return {
     title,
@@ -68,8 +68,8 @@ export default async function CityServiceAreaPage({ params }: CityPageProps) {
       name: siteSettings.businessName,
       telephone: siteSettings.contact.phone,
       email: siteSettings.contact.email,
-      url: 'https://lonewolfdumpsters.com',
-      image: 'https://lonewolfdumpsters.com/images/lone-wolf/logo.png',
+      url: 'https://wolfridgedumpsters.com',
+      image: 'https://wolfridgedumpsters.com/images/lone-wolf/logo.png',
       address: {
         '@type': 'PostalAddress',
         streetAddress: siteSettings.yard.address,
@@ -131,7 +131,7 @@ export default async function CityServiceAreaPage({ params }: CityPageProps) {
                 RELIABLE ROLL-OFF RENTALS IN <span style={{ color: 'var(--accent-red)' }}>{data.cityName.toUpperCase()}</span>
               </h2>
               <p style={{ fontSize: '0.94rem', color: '#64748b', lineHeight: 1.5, margin: '0 0 16px 0' }}>
-                Whether you are managing a home renovation, roofing replacement, garage cleanout, or commercial project in <strong>{data.cityName}</strong>, Lone Wolf Dumpsters provides driveway-safe roll-off container delivery with transparent flat rates and direct owner accountability.
+                Whether you are managing a home renovation, roofing replacement, garage cleanout, or commercial project in <strong>{data.cityName}</strong>, Wolf Ridge Dumpsters provides driveway-safe roll-off container delivery with transparent flat rates and direct owner accountability.
               </p>
               <p style={{ fontSize: '0.94rem', color: '#64748b', lineHeight: 1.5, margin: '0 0 20px 0' }}>
                 Every container is delivered on protective wooden boards to prevent driveway scratches, with easy walk-in rear doors for effortless loading.
@@ -265,7 +265,7 @@ export default async function CityServiceAreaPage({ params }: CityPageProps) {
         headline={`READY TO RENT IN ${data.cityName.toUpperCase()}?`}
         subheadline="BOOK ONLINE OR CALL TODAY!"
         imageSrc="/images/lone-wolf/hero_dumpster_side.jpg"
-        imageAlt={`Lone Wolf Dumpster in ${data.cityName}`}
+        imageAlt={`Wolf Ridge Dumpster in ${data.cityName}`}
       />
     </>
   );

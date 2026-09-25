@@ -11,7 +11,7 @@ export const googleReviews: GoogleReview[] = [
     id: 'rev-1',
     author: 'Rick M.',
     rating: 5,
-    quote: 'Incredible services. I highly recommend using Lone Wolf Dumpsters. Very fast, reliable and personable.',
+    quote: 'Incredible services. I highly recommend using Wolf Ridge Dumpsters. Very fast, reliable and personable.',
     source: 'Google Review',
   },
   {
@@ -25,14 +25,14 @@ export const googleReviews: GoogleReview[] = [
     id: 'rev-3',
     author: 'Jonathan M.',
     rating: 5,
-    quote: 'On time drop off and pick up. Excellent service and price. Wayne has got it covered!',
+    quote: 'On time drop off and pick up. Excellent service and price. Wolf Ridge has got it covered!',
     source: 'Google Review',
   },
   {
     id: 'rev-4',
     author: 'Alfonso G.',
     rating: 5,
-    quote: 'Wayne was excellent. Lone Wolf Dumpster service had great pricing and delivery service. If you need dumpster service I would definitely recommend him.',
+    quote: 'The team was excellent. Wolf Ridge Dumpster service had great pricing and delivery service. If you need dumpster service I would definitely recommend them.',
     source: 'Google Review',
   },
   {

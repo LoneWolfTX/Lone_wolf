@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  LoneWolfDocument,
+  WolfRidgeDocument,
   DocumentType,
   DocumentLineItem,
   PaymentMethod,
@@ -17,10 +17,10 @@ interface DocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
   lead?: Lead | null;
-  existingDoc?: LoneWolfDocument | null;
+  existingDoc?: WolfRidgeDocument | null;
   initialType?: DocumentType;
   siteContent?: any;
-  onDocumentSaved?: (doc: LoneWolfDocument) => void;
+  onDocumentSaved?: (doc: WolfRidgeDocument) => void;
 }
 
 export const DocumentModal: React.FC<DocumentModalProps> = ({
@@ -36,7 +36,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
   const [saving, setSaving] = useState(false);
   const [emailing, setEmailing] = useState(false);
-  const [currentDoc, setCurrentDoc] = useState<LoneWolfDocument | null>(existingDoc);
+  const [currentDoc, setCurrentDoc] = useState<WolfRidgeDocument | null>(existingDoc);
 
   // Editable Form Fields
   const [customerName, setCustomerName] = useState('');
@@ -192,8 +192,8 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   };
 
   // Build document payload
-  const buildDocPayload = (): Partial<LoneWolfDocument> => {
-    let payments = (currentDoc as LoneWolfDocument | null)?.payments || [];
+  const buildDocPayload = (): Partial<WolfRidgeDocument> => {
+    let payments = (currentDoc as WolfRidgeDocument | null)?.payments || [];
     let calculatedPaid = totalPaid;
 
     if (docType === 'RECEIPT' && (!payments || payments.length === 0)) {
@@ -243,7 +243,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   };
 
   // Save Document
-  const handleSaveDocument = async (): Promise<LoneWolfDocument | null> => {
+  const handleSaveDocument = async (): Promise<WolfRidgeDocument | null> => {
     setSaving(true);
     try {
       const payload = buildDocPayload();
@@ -411,9 +411,9 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     setRecipientEmail(customerEmail || lead?.email || '');
     const docLabel = docType === 'QUOTE' ? 'Quote' : docType === 'INVOICE' ? 'Invoice' : 'Paid Receipt';
     const num = activeDoc.docNumber;
-    setEmailSubject(`🐺 Lone Wolf Dumpster Rentals: Your ${docLabel} (${num})`);
+    setEmailSubject(`🐺 Wolf Ridge Dumpster Rentals: Your ${docLabel} (${num})`);
     setEmailMessage(
-      `Hi ${customerName},\n\nThank you for reaching out to Lone Wolf Dumpsters. Please review your ${docLabel.toLowerCase()} below.\n\nIf you have any questions or need to adjust your delivery date or rental period, call or text us anytime at (214) 876-0321.\n\nLone Wolf Dumpster Rentals\nRent Smart • Dump Easy`
+      `Hi ${customerName},\n\nThank you for reaching out to Wolf Ridge Dumpsters. Please review your ${docLabel.toLowerCase()} below.\n\nIf you have any questions or need to adjust your delivery date or rental period, call or text us anytime at (214) 876-0321.\n\nWolf Ridge Dumpster Rentals\nRent Smart • Dump Easy`
     );
     setShowEmailModal(true);
   };
@@ -439,7 +439,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${currentDoc?.docNumber || 'LoneWolf_Document'}.pdf`);
+      pdf.save(`${currentDoc?.docNumber || 'WolfRidge_Document'}.pdf`);
     } catch (err) {
       console.error('PDF generation error:', err);
       window.print();
@@ -490,7 +490,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     }
   };
 
-  const previewDocObj: LoneWolfDocument = currentDoc || {
+  const previewDocObj: WolfRidgeDocument = currentDoc || {
     id: 'temp_preview',
     number: docType === 'QUOTE' ? 'Q-2026-DRAFT' : docType === 'INVOICE' ? 'INV-2026-DRAFT' : 'REC-2026-DRAFT',
     docNumber: docType === 'QUOTE' ? 'Q-2026-DRAFT' : docType === 'INVOICE' ? 'INV-2026-DRAFT' : 'REC-2026-DRAFT',
@@ -505,10 +505,10 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     tax: taxAmount,
     validThrough: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     paymentTerms,
-    companyName: 'Lone Wolf Dumpsters',
+    companyName: 'Wolf Ridge Dumpsters',
     companyPhone: '(214) 876-0321',
-    companyEmail: 'lonewolfdumpsters@gmail.com',
-    companyWebsite: 'www.lonewolfdumpsters.com',
+    companyEmail: 'wolfridgedumpsters@gmail.com',
+    companyWebsite: 'www.wolfridgedumpsters.com',
     companyTagline: 'Rent Smart • Dump Easy',
     customerName,
     customerPhone,
@@ -530,7 +530,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     taxAmount,
     discountAmount,
     total,
-    payments: (currentDoc as LoneWolfDocument | null)?.payments || [],
+    payments: (currentDoc as WolfRidgeDocument | null)?.payments || [],
     totalPaid,
     balanceDue,
   };
