@@ -3,6 +3,8 @@
 import React from 'react';
 import { useSiteContent } from '@/lib/useEditableContent';
 import { PageHero, TrustItem } from '@/components/shared/PageHero';
+import { Hero } from '@/components/home/Hero';
+import { PremiumServiceAreaSection } from '@/components/home/PremiumServiceAreaSection';
 import { HowItWorksSteps } from '@/components/shared/HowItWorksSteps';
 import { DumpsterSizeGrid } from '@/components/shared/DumpsterSizeGrid';
 import { HorizontalCallout } from '@/components/shared/HorizontalCallout';
@@ -120,20 +122,11 @@ export default function HomePageClient() {
 
   return (
     <>
-      {/* 1. Large Photographic Hero + Rating + Dual CTAs + 5-Item Trust Strip */}
-      <PageHero
-        isHomepage={true}
-        badgeText="DFW'S TRUSTED DUMPSTER RENTAL SERVICE"
-        headlineWhite={hp.heroHeadlineWhite || 'FAST & RELIABLE'}
-        headlineRed={hp.heroHeadlineRed || 'DUMPSTER RENTALS ACROSS DFW'}
-        description={hp.heroDescription || 'Dumpsters for cleanouts, remodels, construction, roofing, and more — delivered across DFW.'}
-        showRating={true}
-        heroTopImageSrc={hp.heroTopImage?.src || '/images/lone-wolf/hero_tile_top.jpg'}
-        heroTopImageAlt={hp.heroTopImage?.alt || 'Wayne standing with roll-off dumpsters in Colleyville yard'}
-        heroBottomImageSrc={hp.heroBottomImage?.src || '/images/lone-wolf/hero_tile_bottom.jpg'}
-        heroBottomImageAlt={hp.heroBottomImage?.alt || 'Wide roll-off dumpster fleet and property ready for delivery across DFW'}
-        trustItems={heroTrustItems}
-      />
+      {/* 1. Large Photographic Hero + Rating + Dual CTAs + 4-Item Integrated Benefits Strip */}
+      <Hero />
+
+      {/* 2. Premium Service-Area Section: Headline + Stylized Map + Dumpster Sizes Panel */}
+      <PremiumServiceAreaSection />
 
       {/* 2. "Renting a Dumpster Is Easy" Four-Step Process */}
       <HowItWorksSteps />
@@ -212,7 +205,7 @@ export default function HomePageClient() {
           },
           {
             q: 'How fast can I get a dumpster delivered?',
-            a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, and Denton Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-0321.',
+            a: 'Same-day and next-day dumpster delivery is available throughout most of Dallas, Tarrant, and Denton Counties, depending on availability. For immediate availability and delivery confirmation, call or text us at 214-876-8321.',
           },
         ]}
         showViewAllLink={true}

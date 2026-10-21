@@ -61,9 +61,8 @@ export default function RootLayout({
     email: siteSettings.contact.email,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: siteSettings.yard.city || 'Colleyville',
-      addressRegion: siteSettings.yard.state || 'TX',
-      postalCode: siteSettings.yard.zip || '76034',
+      addressLocality: 'Dallas-Fort Worth',
+      addressRegion: 'TX',
       addressCountry: 'US',
     },
     areaServed: [

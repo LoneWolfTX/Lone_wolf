@@ -167,7 +167,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
                   textDecoration: 'none',
                 }}
               >
-                <span>Call Our Team at (214) 876-0321</span>
+                <span>Call Our Team at (214) 876-8321</span>
               </a>
             </div>
 

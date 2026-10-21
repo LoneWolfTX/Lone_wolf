@@ -22,7 +22,7 @@ export function formatRentalPeriod(standardDays: string): string {
 }
 
 export function formatPhoneNumber(phone: string): string {
-  return phone || '(214) 876-0321';
+  return phone || '(214) 876-8321';
 }
 
 export function formatDumpsterSize(sizeYards: number | string): string {

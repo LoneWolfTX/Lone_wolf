@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     const rate = await checkRateLimit('quote_submission', ip, 5, 10 * 60);
     if (!rate.allowed) {
       return NextResponse.json(
-        { success: false, error: 'Too many submissions from this IP. Please call or text (214) 876-0321 directly.' },
+        { success: false, error: 'Too many submissions from this IP. Please call or text (214) 876-8321 directly.' },
         { status: 429 }
       );
     }
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Failed to record quote request in persistent storage. Please call or text (214) 876-0321 directly.',
+          error: 'Failed to record quote request in persistent storage. Please call or text (214) 876-8321 directly.',
         },
         { status: 500 }
       );

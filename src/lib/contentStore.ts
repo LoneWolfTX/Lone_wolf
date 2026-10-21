@@ -276,14 +276,14 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     companyName: "Wolf Ridge Dumpsters",
     legalName: "Wolf Ridge Dumpsters LLC",
     brandName: "Wolf Ridge Dumpsters",
-    phone: "(214) 876-0321",
-    phoneRaw: "+12148760321",
+    phone: "(214) 876-8321",
+    phoneRaw: "+12148768321",
     email: "wolfridgedumpsters@gmail.com",
-    yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034",
+    yardAddress: "Dallas–Fort Worth Metroplex, TX",
     yardStreet: "DFW Metroplex",
-    yardCity: "Colleyville",
+    yardCity: "Dallas–Fort Worth",
     yardState: "TX",
-    yardZip: "76034",
+    yardZip: "",
     businessHours: "Monday – Saturday: 6:00 AM – 6:00 PM | Sunday: Closed",
     googleReviewUrl: "https://g.page/r/wolfridgedumpsters/review",
     googleRating: "5.0",
@@ -292,10 +292,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     secondaryCtaText: "CALL / TEXT"
   },
   contact: {
-    phone: "(214) 876-0321",
-    phoneRaw: "+12148760321",
+    phone: "(214) 876-8321",
+    phoneRaw: "+12148768321",
     email: "wolfridgedumpsters@gmail.com",
-    yardAddress: "DFW Metroplex, Texas, Colleyville, TX 76034"
+    yardAddress: "Dallas–Fort Worth Metroplex, TX"
   },
   pricing: {
     fifteenYard: 385,

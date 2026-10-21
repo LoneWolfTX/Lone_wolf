@@ -4,18 +4,17 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Phone, ChevronDown, Calendar, ArrowRight } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, ArrowRight } from 'lucide-react';
 import { siteSettings } from '@/data/siteSettings';
 import { trackPhoneClick, trackBookOnlineClick } from '@/lib/tracking';
-
 import { useSiteContent } from '@/lib/useEditableContent';
-import { formatCurrency, formatPhoneNumber } from '@/lib/formatters';
+import { formatCurrency } from '@/lib/formatters';
 
 export const SiteHeader: React.FC = () => {
   const { content } = useSiteContent();
   const pr = content.pricing;
-  const phone = content.business?.phone || content.contact?.phone || '(214) 876-0321';
-  const phoneRaw = content.business?.phoneRaw || content.contact?.phoneRaw || '+12148760321';
+  const phone = content.business?.phone || content.contact?.phone || '(214) 876-8321';
+  const phoneRaw = content.business?.phoneRaw || content.contact?.phoneRaw || '+12148768321';
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dumpsterDropdownOpen, setDumpsterDropdownOpen] = useState(false);
@@ -67,62 +66,124 @@ export const SiteHeader: React.FC = () => {
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        backgroundColor: '#000000',
-        borderBottom: '1px solid #1e293b',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(7, 9, 13, 0.92)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 4px 24px rgba(0, 0, 0, 0.7)',
+        width: '100%',
       }}
     >
-      <div className="container">
-        <div className="site-header-inner">
-          {/* Logo on Left - High Visibility Responsive Branding */}
+      <div
+        className="container"
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: '76px',
+            gap: '16px',
+          }}
+        >
+          {/* Left: Wolf Ridge Logo + Service Area Tagline */}
           <Link
             href="/"
-            className="header-logo-link"
             onClick={closeMenu}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              textDecoration: 'none',
+              flexShrink: 0,
+            }}
           >
-            <div className="header-logo-icon">
+            {/* Mountain Wolf Icon */}
+            <div
+              style={{
+                position: 'relative',
+                width: '64px',
+                height: '26px',
+                flexShrink: 0,
+              }}
+            >
               <Image
-                src="/images/lone-wolf/logo.png"
-                alt="Wolf Ridge Dumpsters Logo"
+                src="/images/wolf-ridge/mountain_wolf_icon.png"
+                alt="Wolf Ridge Dumpsters Mountain Logo"
                 fill
                 priority
-                sizes="(max-width: 768px) 54px, 96px"
+                sizes="64px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
-            <div>
-              <span className="header-logo-text">
-                WOLF RIDGE <span style={{ color: 'var(--accent-red)' }}>DUMPSTERS</span>
+
+            {/* Brand Text Stack */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(1.12rem, 1.6vw, 1.35rem)',
+                  fontWeight: 900,
+                  letterSpacing: '0.04em',
+                  color: '#ffffff',
+                  lineHeight: 1.05,
+                  textTransform: 'uppercase',
+                }}
+              >
+                WOLF RIDGE <span style={{ color: '#ED171F' }}>DUMPSTERS</span>
               </span>
-              <span className="header-logo-tagline">
-                RENT. RELAX. WE HAUL.
+              <span
+                style={{
+                  fontSize: '0.62rem',
+                  color: '#94a3b8',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  fontWeight: 600,
+                  marginTop: '2px',
+                  fontFamily: 'var(--font-sans)',
+                }}
+              >
+                DALLAS • FORT WORTH • SURROUNDING CITIES
               </span>
             </div>
           </Link>
 
+          {/* Center Navigation (Desktop Only) */}
           <nav
             className="nav-desktop-only"
             aria-label="Main Navigation"
+            style={{
+              alignItems: 'center',
+              gap: 'clamp(14px, 1.8vw, 24px)',
+            }}
           >
+            {/* HOME */}
             <Link
               href="/"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 fontWeight: 700,
-                letterSpacing: '0.5px',
+                letterSpacing: '0.06em',
                 color: '#ffffff',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
-                padding: '6px 0',
+                padding: '8px 0',
                 whiteSpace: 'nowrap',
-                borderBottom: isActive('/') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                borderBottom: isActive('/') ? '2px solid #ED171F' : '2px solid transparent',
+                transition: 'border-color 0.15s ease, color 0.15s ease',
               }}
             >
               HOME
             </Link>
 
-            {/* Dumpster Rentals Dropdown */}
+            {/* DUMPSTER RENTALS Dropdown */}
             <div
               style={{ position: 'relative', whiteSpace: 'nowrap' }}
               onMouseEnter={() => setDumpsterDropdownOpen(true)}
@@ -143,18 +204,19 @@ export const SiteHeader: React.FC = () => {
                 aria-expanded={dumpsterDropdownOpen}
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '0.92rem',
+                  fontSize: '0.9rem',
                   fontWeight: 700,
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.06em',
                   color: '#ffffff',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  padding: '6px 0',
+                  padding: '8px 0',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
-                  borderBottom: isActive('/dumpster-rentals') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                  borderBottom: isActive('/dumpster-rentals') ? '2px solid #ED171F' : '2px solid transparent',
+                  transition: 'border-color 0.15s ease, color 0.15s ease',
                 }}
               >
                 <span>DUMPSTER RENTALS</span>
@@ -168,12 +230,13 @@ export const SiteHeader: React.FC = () => {
                     position: 'absolute',
                     top: '100%',
                     left: 0,
-                    backgroundColor: '#0a0d12',
-                    border: '1px solid #334155',
+                    backgroundColor: '#0a0d14',
+                    border: '1px solid #202a3c',
                     borderRadius: '4px',
                     padding: '6px 0',
                     minWidth: '270px',
-                    boxShadow: '0 12px 30px rgba(0,0,0,0.6)',
+                    boxShadow: '0 12px 32px rgba(0,0,0,0.8)',
+                    zIndex: 100,
                   }}
                 >
                   {dumpsterLinks.map((sub) => (
@@ -184,7 +247,7 @@ export const SiteHeader: React.FC = () => {
                       onClick={() => setDumpsterDropdownOpen(false)}
                       style={{
                         display: 'block',
-                        padding: '9px 16px',
+                        padding: '10px 18px',
                         color: '#cbd5e1',
                         fontSize: '0.86rem',
                         fontWeight: 600,
@@ -193,7 +256,7 @@ export const SiteHeader: React.FC = () => {
                         whiteSpace: 'nowrap',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1e293b';
+                        e.currentTarget.style.backgroundColor = '#161f30';
                         e.currentTarget.style.color = '#ffffff';
                       }}
                       onMouseLeave={(e) => {
@@ -208,7 +271,7 @@ export const SiteHeader: React.FC = () => {
               )}
             </div>
 
-            {/* Service Areas Dropdown */}
+            {/* AREAS SERVED Dropdown */}
             <div
               style={{ position: 'relative', whiteSpace: 'nowrap' }}
               onMouseEnter={() => setAreasDropdownOpen(true)}
@@ -229,18 +292,19 @@ export const SiteHeader: React.FC = () => {
                 aria-expanded={areasDropdownOpen}
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '0.92rem',
+                  fontSize: '0.9rem',
                   fontWeight: 700,
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.06em',
                   color: '#ffffff',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  padding: '6px 0',
+                  padding: '8px 0',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
-                  borderBottom: isActive('/service-areas') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                  borderBottom: isActive('/service-areas') ? '2px solid #ED171F' : '2px solid transparent',
+                  transition: 'border-color 0.15s ease, color 0.15s ease',
                 }}
               >
                 <span>AREAS SERVED</span>
@@ -254,12 +318,13 @@ export const SiteHeader: React.FC = () => {
                     position: 'absolute',
                     top: '100%',
                     left: 0,
-                    backgroundColor: '#0a0d12',
-                    border: '1px solid #334155',
+                    backgroundColor: '#0a0d14',
+                    border: '1px solid #202a3c',
                     borderRadius: '4px',
                     padding: '6px 0',
                     minWidth: '220px',
-                    boxShadow: '0 12px 30px rgba(0,0,0,0.6)',
+                    boxShadow: '0 12px 32px rgba(0,0,0,0.8)',
+                    zIndex: 100,
                   }}
                 >
                   {serviceAreaLinks.map((sub) => (
@@ -270,15 +335,16 @@ export const SiteHeader: React.FC = () => {
                       onClick={() => setAreasDropdownOpen(false)}
                       style={{
                         display: 'block',
-                        padding: '9px 16px',
+                        padding: '10px 18px',
                         color: '#cbd5e1',
                         fontSize: '0.86rem',
                         fontWeight: 600,
                         textDecoration: 'none',
+                        transition: 'all 0.15s ease',
                         whiteSpace: 'nowrap',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#1e293b';
+                        e.currentTarget.style.backgroundColor = '#161f30';
                         e.currentTarget.style.color = '#ffffff';
                       }}
                       onMouseLeave={(e) => {
@@ -293,89 +359,129 @@ export const SiteHeader: React.FC = () => {
               )}
             </div>
 
+            {/* ABOUT */}
             <Link
               href="/about"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 fontWeight: 700,
-                letterSpacing: '0.5px',
+                letterSpacing: '0.06em',
                 color: '#ffffff',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
-                padding: '6px 0',
+                padding: '8px 0',
                 whiteSpace: 'nowrap',
-                borderBottom: isActive('/about') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                borderBottom: isActive('/about') ? '2px solid #ED171F' : '2px solid transparent',
+                transition: 'border-color 0.15s ease, color 0.15s ease',
               }}
             >
               ABOUT
             </Link>
 
+            {/* RESOURCES (Guides) */}
             <Link
               href="/blog"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 fontWeight: 700,
-                letterSpacing: '0.5px',
+                letterSpacing: '0.06em',
                 color: '#ffffff',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
-                padding: '6px 0',
+                padding: '8px 0',
                 whiteSpace: 'nowrap',
-                borderBottom: isActive('/blog') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                borderBottom: isActive('/blog') ? '2px solid #ED171F' : '2px solid transparent',
+                transition: 'border-color 0.15s ease, color 0.15s ease',
               }}
             >
-              GUIDES
+              RESOURCES
             </Link>
 
+            {/* CONTACT */}
             <Link
               href="/contact"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 fontWeight: 700,
-                letterSpacing: '0.5px',
+                letterSpacing: '0.06em',
                 color: '#ffffff',
                 textDecoration: 'none',
                 textTransform: 'uppercase',
-                padding: '6px 0',
+                padding: '8px 0',
                 whiteSpace: 'nowrap',
-                borderBottom: isActive('/contact') ? '2px solid var(--accent-red)' : '2px solid transparent',
+                borderBottom: isActive('/contact') ? '2px solid #ED171F' : '2px solid transparent',
+                transition: 'border-color 0.15s ease, color 0.15s ease',
               }}
             >
               CONTACT
             </Link>
           </nav>
 
-          <div className="header-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-            {/* Phone */}
+          {/* Right Header Actions */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              flexShrink: 0,
+            }}
+          >
+            {/* Outlined Phone Pill Button */}
             <a
-              href={`tel:${siteSettings.contact.phoneRaw}`}
-              className="nav-desktop-only header-phone-link"
-              onClick={() => trackPhoneClick('header_phone')}
+              href={`tel:${phoneRaw}`}
+              onClick={() => trackPhoneClick('header_phone_button')}
+              className="header-phone-action"
               style={{
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'rgba(15, 20, 28, 0.75)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: '4px',
                 color: '#ffffff',
                 textDecoration: 'none',
+                fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
-                fontSize: '0.92rem',
+                fontSize: '0.88rem',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap',
               }}
             >
-              <Phone size={15} color="var(--accent-red)" />
-              <span>{siteSettings.contact.phone}</span>
+              <Phone size={14} color="#ED171F" strokeWidth={2.4} />
+              <span>{phone}</span>
             </a>
 
-            {/* Red Get a Quote Button */}
-            <Link
-              href="/contact"
-              className="header-book-btn"
-              onClick={() => trackBookOnlineClick('header_button')}
+            {/* Vivid Red GET A QUOTE Button */}
+            <a
+              href="#quote"
+              onClick={() => trackBookOnlineClick('header_quote_button')}
+              className="header-quote-action"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 18px',
+                backgroundColor: '#ED171F',
+                borderRadius: '4px',
+                color: '#ffffff',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-display)',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 14px rgba(237, 23, 31, 0.4)',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap',
+              }}
             >
-              <Calendar size={14} />
               <span>GET A QUOTE</span>
-            </Link>
+              <ArrowRight size={14} strokeWidth={2.4} />
+            </a>
 
             {/* Mobile Hamburger Button */}
             <button
@@ -384,21 +490,21 @@ export const SiteHeader: React.FC = () => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               style={{
                 color: '#ffffff',
-                padding: '6px',
+                padding: '8px',
+                display: 'none',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
+                backgroundColor: '#161f30',
+                border: '1px solid #28374f',
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
               aria-label="Toggle Navigation Menu"
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
-
         </div>
       </div>
 
@@ -406,16 +512,65 @@ export const SiteHeader: React.FC = () => {
       {mobileMenuOpen && (
         <div
           style={{
-            backgroundColor: '#0a0d12',
+            backgroundColor: '#07090D',
             borderTop: '1px solid #1e293b',
-            borderBottom: '2px solid var(--accent-red)',
-            padding: '16px 20px',
-            maxHeight: 'calc(100vh - 70px)',
+            borderBottom: '2px solid #ED171F',
+            padding: '16px 20px 24px',
+            maxHeight: 'calc(100vh - 76px)',
             overflowY: 'auto',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            
+            {/* Quick Actions in Mobile Drawer */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '12px' }}>
+              <a
+                href="#quote"
+                onClick={closeMenu}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px',
+                  backgroundColor: '#ED171F',
+                  borderRadius: '4px',
+                  color: '#ffffff',
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 800,
+                  fontSize: '1rem',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                }}
+              >
+                <span>GET A QUOTE</span>
+                <ArrowRight size={16} />
+              </a>
+
+              <a
+                href={`tel:${phoneRaw}`}
+                onClick={() => trackPhoneClick('mobile_nav_phone')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px',
+                  backgroundColor: '#121824',
+                  border: '1px solid #243044',
+                  borderRadius: '4px',
+                  color: '#ffffff',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  textDecoration: 'none',
+                }}
+              >
+                <Phone size={16} color="#ED171F" />
+                <span>CALL OR TEXT {phone}</span>
+              </a>
+            </div>
+
+            {/* Links List */}
             <Link
               href="/"
               onClick={closeMenu}
@@ -426,13 +581,14 @@ export const SiteHeader: React.FC = () => {
                 fontSize: '1.15rem',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                borderBottom: '1px solid #1e293b',
+                borderBottom: '1px solid #1a2230',
+                textDecoration: 'none',
               }}
             >
               HOME
             </Link>
 
-            {/* Mobile Dumpsters Accordion */}
+            {/* Dumpster Rentals Accordion */}
             <div>
               <button
                 type="button"
@@ -448,7 +604,13 @@ export const SiteHeader: React.FC = () => {
                   fontSize: '1.15rem',
                   fontWeight: 700,
                   textTransform: 'uppercase',
-                  borderBottom: '1px solid #1e293b',
+                  borderBottom: '1px solid #1a2230',
+                  background: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  borderTop: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
                 }}
               >
                 <span>DUMPSTER RENTALS</span>
@@ -456,7 +618,7 @@ export const SiteHeader: React.FC = () => {
               </button>
 
               {mobileDumpstersExpanded && (
-                <div style={{ paddingLeft: '14px', backgroundColor: '#111622', borderRadius: '4px', margin: '6px 0' }}>
+                <div style={{ paddingLeft: '14px', backgroundColor: '#0d131f', borderRadius: '4px', margin: '6px 0' }}>
                   {dumpsterLinks.map((sub) => (
                     <Link
                       key={sub.href}
@@ -467,7 +629,8 @@ export const SiteHeader: React.FC = () => {
                         padding: '10px 0',
                         color: '#cbd5e1',
                         fontSize: '0.92rem',
-                        borderBottom: '1px solid #1e293b',
+                        borderBottom: '1px solid #1a2230',
+                        textDecoration: 'none',
                       }}
                     >
                       {sub.label}
@@ -477,21 +640,57 @@ export const SiteHeader: React.FC = () => {
               )}
             </div>
 
-            <Link
-              href="/service-areas"
-              onClick={closeMenu}
-              style={{
-                padding: '10px 0',
-                color: '#ffffff',
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.15rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                borderBottom: '1px solid #1e293b',
-              }}
-            >
-              AREAS SERVED
-            </Link>
+            {/* Areas Served Accordion */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileAreasExpanded(!mobileAreasExpanded)}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '10px 0',
+                  color: '#ffffff',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '1.15rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  borderBottom: '1px solid #1a2230',
+                  background: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  borderTop: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <span>AREAS SERVED</span>
+                <ChevronDown size={18} className={mobileAreasExpanded ? 'rotate-180 transition-transform text-accent' : 'transition-transform'} />
+              </button>
+
+              {mobileAreasExpanded && (
+                <div style={{ paddingLeft: '14px', backgroundColor: '#0d131f', borderRadius: '4px', margin: '6px 0' }}>
+                  {serviceAreaLinks.map((sub) => (
+                    <Link
+                      key={sub.href}
+                      href={sub.href}
+                      onClick={closeMenu}
+                      style={{
+                        display: 'block',
+                        padding: '10px 0',
+                        color: '#cbd5e1',
+                        fontSize: '0.92rem',
+                        borderBottom: '1px solid #1a2230',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Link
               href="/about"
@@ -503,7 +702,8 @@ export const SiteHeader: React.FC = () => {
                 fontSize: '1.15rem',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                borderBottom: '1px solid #1e293b',
+                borderBottom: '1px solid #1a2230',
+                textDecoration: 'none',
               }}
             >
               ABOUT
@@ -519,10 +719,11 @@ export const SiteHeader: React.FC = () => {
                 fontSize: '1.15rem',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                borderBottom: '1px solid #1e293b',
+                borderBottom: '1px solid #1a2230',
+                textDecoration: 'none',
               }}
             >
-              GUIDES
+              RESOURCES
             </Link>
 
             <Link
@@ -535,34 +736,12 @@ export const SiteHeader: React.FC = () => {
                 fontSize: '1.15rem',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                borderBottom: '1px solid #1e293b',
+                borderBottom: '1px solid #1a2230',
+                textDecoration: 'none',
               }}
             >
               CONTACT
             </Link>
-
-            {/* Mobile Call Dispatch Button */}
-            <a
-              href={`tel:${siteSettings.contact.phoneRaw}`}
-              onClick={() => trackPhoneClick('mobile_nav_phone')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                marginTop: '12px',
-                padding: '12px',
-                backgroundColor: '#1e293b',
-                color: '#ffffff',
-                borderRadius: '4px',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
-            >
-              <Phone size={18} color="var(--accent-red)" />
-              <span>CALL {siteSettings.contact.phone}</span>
-            </a>
-
           </div>
         </div>
       )}

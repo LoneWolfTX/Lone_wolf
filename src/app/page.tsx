@@ -24,10 +24,8 @@ export default function HomePage() {
     priceRange: '$385 - $475',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: siteSettings.yard.address,
-      addressLocality: siteSettings.yard.city,
-      addressRegion: siteSettings.yard.state,
-      postalCode: siteSettings.yard.zip,
+      addressLocality: 'Dallas-Fort Worth',
+      addressRegion: 'TX',
       addressCountry: 'US',
     },
     geo: {

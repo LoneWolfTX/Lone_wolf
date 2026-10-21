@@ -18,7 +18,7 @@ export const SiteFooter: React.FC = () => {
   const pr = content.pricing;
   const b = content.business || content.contact;
   const phone = formatPhoneNumber(b.phone);
-  const phoneRaw = b.phoneRaw || '+12148760321';
+  const phoneRaw = b.phoneRaw || '+12148768321';
   const email = b.email || 'wolfridgedumpsters@gmail.com';
   const yardAddress = b.yardAddress || 'DFW Metroplex, Texas, Colleyville, TX 76034';
   return (

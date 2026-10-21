@@ -3333,4 +3333,108 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 }
 
+/* ==========================================================================
+   WOLF RIDGE PREMIUM HERO & SERVICE AREA REDESIGN STYLES
+   ========================================================================== */
+
+/* Header Action Buttons */
+.header-phone-action:hover {
+  border-color: #ED171F !important;
+  background-color: rgba(237, 23, 31, 0.12) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+.header-quote-action:hover {
+  background-color: #D6141B !important;
+  box-shadow: 0 6px 20px rgba(237, 23, 31, 0.55) !important;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .header-phone-action {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-quote-action {
+    padding: 7px 12px !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+/* Hero CTA Hover Effects */
+.hero-cta-primary:hover {
+  background-color: #D6141B !important;
+  box-shadow: 0 10px 30px rgba(237, 23, 31, 0.6) !important;
+  transform: translateY(-2px);
+}
+
+.hero-cta-secondary:hover {
+  border-color: #ED171F !important;
+  background-color: rgba(30, 41, 59, 0.95) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hero-cta-primary:focus-visible,
+.hero-cta-secondary:focus-visible {
+  outline: 2px solid #ED171F;
+  outline-offset: 3px;
+}
+
+/* Service Area Interactions */
+.service-area-arrow-link:hover {
+  gap: 10px !important;
+  color: #FF3B42 !important;
+}
+
+.dumpster-size-pill:hover {
+  background-color: #1A2438 !important;
+  border-color: #ED171F !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(237, 23, 31, 0.25);
+}
+
+.view-options-btn:hover {
+  background-color: #D6141B !important;
+  box-shadow: 0 6px 22px rgba(237, 23, 31, 0.55) !important;
+  transform: translateY(-1px);
+}
+
+/* Mobile & Tablet Responsiveness for Hero */
+@media (max-width: 1024px) {
+  .hero-bg-image {
+    object-position: 78% 30% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-bg-image {
+    object-position: 82% 25% !important;
+    opacity: 0.45;
+  }
+
+  .hero-benefits-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero-benefits-strip {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .hero-cta-primary,
+  .hero-cta-secondary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+
 

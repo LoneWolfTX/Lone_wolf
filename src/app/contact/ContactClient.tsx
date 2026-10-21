@@ -37,7 +37,7 @@ export default function ContactClient() {
       {/* 3. Closing CTA */}
       <ClosingCtaBanner
         headline="NEED IMMEDIATE ASSISTANCE?"
-        subheadline="CALL OR TEXT (214) 876-0321"
+        subheadline="CALL OR TEXT (214) 876-8321"
       />
     </>
   );
